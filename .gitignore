@@ -1,3 +1,7 @@
 *.pdf
 .env
+.ipynb_checkpoints
 
+.claude/
+.claude/settings.local.json
+.claude/settings.local.jsonc
