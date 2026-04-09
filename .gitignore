@@ -5,3 +5,7 @@
 .claude/
 .claude/settings.local.json
 .claude/settings.local.jsonc
+.gstack/
+node_modules/
+.next/
+*.tsbuildinfo
