@@ -105,7 +105,7 @@ function IntroSlide({ step }: SlideProps) {
           <Bullets items={[
             <><strong>Supervised classification</strong> — train on labeled data, predict on unseen examples</>,
             <><strong>Core question</strong> — can the model generalize beyond what it was trained on?</>,
-            <><strong>Our approach</strong> — compare KNN and SVM across two datasets with very different characteristics</>,
+            <><strong>The approach</strong> — compare KNN and SVM across two datasets with very different characteristics</>,
           ]} />
         </Card>
       </BuildStep>
@@ -747,19 +747,19 @@ function ConclusionSlide({ step }: SlideProps) {
 // ─── Slides Array (13 slides) ─────────────────────────────
 
 const slides = [
-  { element: <TitleSlide step={0} />, steps: 1 },
-  { element: <IntroSlide step={0} />, steps: 3 },
-  { element: <DatasetsSlide step={0} />, steps: 2 },
-  { element: <PreprocessingSlide step={0} />, steps: 3 },
-  { element: <MethodologySlide step={0} />, steps: 2 },
-  { element: <KnnIrisSlide step={0} />, steps: 2 },
-  { element: <KnnDiabetesSlide step={0} />, steps: 3 },
-  { element: <KnnHyperparamSlide step={0} />, steps: 2 },
-  { element: <SvmIrisSlide step={0} />, steps: 2 },
-  { element: <SvmDiabetesSlide step={0} />, steps: 2 },
-  { element: <ComparisonSlide step={0} />, steps: 2 },
-  { element: <FindingsSlide step={0} />, steps: 3 },
-  { element: <ConclusionSlide step={0} />, steps: 2 },
+  { element: <TitleSlide step={0} />, steps: 1, title: "Title" },
+  { element: <IntroSlide step={0} />, steps: 3, title: "Introduction" },
+  { element: <DatasetsSlide step={0} />, steps: 2, title: "Datasets" },
+  { element: <PreprocessingSlide step={0} />, steps: 3, title: "Preprocessing" },
+  { element: <MethodologySlide step={0} />, steps: 2, title: "Methodology" },
+  { element: <KnnIrisSlide step={0} />, steps: 2, title: "KNN: Iris" },
+  { element: <KnnDiabetesSlide step={0} />, steps: 3, title: "KNN: Diabetes" },
+  { element: <KnnHyperparamSlide step={0} />, steps: 2, title: "KNN Hyperparameters" },
+  { element: <SvmIrisSlide step={0} />, steps: 2, title: "SVM: Iris" },
+  { element: <SvmDiabetesSlide step={0} />, steps: 2, title: "SVM: Diabetes" },
+  { element: <ComparisonSlide step={0} />, steps: 2, title: "Comparative Analysis" },
+  { element: <FindingsSlide step={0} />, steps: 3, title: "Key Findings" },
+  { element: <ConclusionSlide step={0} />, steps: 2, title: "Conclusion" },
 ];
 
 export default function Home() {
