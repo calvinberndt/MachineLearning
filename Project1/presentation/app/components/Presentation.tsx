@@ -78,7 +78,7 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
     >
       {/* Header */}
       <header
-        className="h-12 flex items-center justify-between px-8 shrink-0"
+        className="h-10 flex items-center justify-between px-8 shrink-0"
         style={{ background: theme.gradient }}
       >
         <span className="text-sm font-bold tracking-wide opacity-90">
@@ -100,9 +100,9 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
             animate="center"
             exit="exit"
             transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="absolute inset-0 flex items-center justify-center p-12"
+            className="absolute inset-0 flex items-center justify-center p-6 px-10"
           >
-            <div className="w-full max-w-5xl">
+            <div className="w-full max-w-7xl">
               {/* Clone the slide element and inject step prop */}
               {(() => {
                 const { element } = slides[current];
@@ -115,7 +115,7 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
       </div>
 
       {/* Footer */}
-      <footer className="h-10 flex items-center justify-between px-8 shrink-0 opacity-50 text-xs">
+      <footer className="h-8 flex items-center justify-between px-8 shrink-0 opacity-50 text-xs">
         <span>Calvin Berndt | UW-Green Bay | Spring 2026</span>
         <div className="flex items-center gap-4">
           <span className="opacity-60">Press F for fullscreen</span>

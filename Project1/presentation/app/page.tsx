@@ -24,14 +24,14 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 
 function Title({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-bold mb-2 leading-tight" style={{ fontSize: theme.titleSize }}>
+    <h2 className="font-bold mb-2 leading-tight" style={{ fontSize: 44 }}>
       {children}
     </h2>
   );
 }
 
 function Subtitle({ children }: { children: React.ReactNode }) {
-  return <p className="text-base opacity-60 mb-8">{children}</p>;
+  return <p className="text-lg opacity-60 mb-5">{children}</p>;
 }
 
 function MetricCard({
@@ -47,31 +47,44 @@ function MetricCard({
   );
 }
 
+function Bullets({ items, className = "" }: { items: React.ReactNode[]; className?: string }) {
+  return (
+    <ul className={`space-y-2 ${className}`}>
+      {items.map((item, i) => (
+        <li key={i} className="flex gap-2 text-base leading-relaxed">
+          <span className="opacity-30 mt-0.5 shrink-0">&#8250;</span>
+          <span className="opacity-80">{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 // ─── Slide 1: Title ───────────────────────────────────────
 
 function TitleSlide({ step }: SlideProps) {
   return (
-    <div className="flex flex-col items-center justify-center text-center py-8">
+    <div className="flex flex-col items-center justify-center text-center py-6">
       <BuildStep visible={step >= 0}>
         <p
-          className="text-sm uppercase tracking-[4px] font-semibold mb-5"
+          className="text-base uppercase tracking-[4px] font-semibold mb-5"
           style={{ color: theme.accent1 }}
         >
           COMP SCI 465 | Machine Learning
         </p>
-        <h1 className="text-5xl font-extrabold leading-tight mb-4">
+        <h1 className="text-6xl font-extrabold leading-tight mb-4">
           Supervised Classification
           <br />
           Algorithm Comparison
         </h1>
-        <p className="text-lg opacity-50 mb-8">
-          KNN vs SVM vs Decision Tree on Iris &amp; Diabetes Datasets
+        <p className="text-xl opacity-50 mb-8">
+          KNN vs SVM on Iris &amp; Diabetes Datasets
         </p>
         <div
           className="w-24 h-1 rounded-full mx-auto mb-8"
           style={{ background: `linear-gradient(90deg, ${theme.accent1}, ${theme.accent2})` }}
         />
-        <p className="text-base opacity-40">Calvin Berndt | UW-Green Bay | Spring 2026</p>
+        <p className="text-lg opacity-40">Calvin Berndt | UW-Green Bay | Spring 2026</p>
       </BuildStep>
     </div>
   );
@@ -86,27 +99,51 @@ function IntroSlide({ step }: SlideProps) {
       <Subtitle>What is supervised classification and why does it matter?</Subtitle>
       <BuildStep visible={step >= 0}>
         <Card className="mb-4">
-          <h3 className="font-semibold mb-2" style={{ color: theme.accent1 }}>
+          <h3 className="font-semibold text-lg mb-3" style={{ color: theme.accent1 }}>
             The Problem
           </h3>
-          <p className="text-sm opacity-80 leading-relaxed">
-            Given labeled training data, can a machine learn to correctly classify new, unseen
-            examples? This is the core question of supervised classification, one of the most
-            widely used tasks in machine learning.
-          </p>
+          <Bullets items={[
+            <><strong>Supervised classification</strong> — train on labeled data, predict on unseen examples</>,
+            <><strong>Core question</strong> — can the model generalize beyond what it was trained on?</>,
+            <><strong>Our approach</strong> — compare KNN and SVM across two datasets with very different characteristics</>,
+          ]} />
         </Card>
       </BuildStep>
       <BuildStep visible={step >= 1}>
-        <Card>
-          <h3 className="font-semibold mb-2" style={{ color: theme.accent2 }}>
-            Our Objective
+        <Card className="mb-4">
+          <h3 className="font-semibold text-lg mb-3" style={{ color: theme.accent2 }}>
+            Objective
           </h3>
-          <p className="text-sm opacity-80 leading-relaxed">
-            Implement, evaluate, and compare three classification algorithms —{" "}
-            <strong>K-Nearest Neighbors (KNN)</strong>, <strong>Support Vector Machine (SVM)</strong>,
-            and <strong>Decision Tree</strong> — across two datasets with different characteristics
-            to understand when each algorithm excels or struggles.
-          </p>
+          <Bullets items={[
+            <><strong>Implement &amp; evaluate</strong> — K-Nearest Neighbors (KNN) and Support Vector Machine (SVM)</>,
+            <><strong>Compare across datasets</strong> — clean data (Iris) vs noisy real-world data (Diabetes)</>,
+            <><strong>Understand the &quot;why&quot;</strong> — when does each algorithm excel or struggle, and what drives the results?</>,
+          ]} />
+        </Card>
+      </BuildStep>
+      <BuildStep visible={step >= 2}>
+        <Card>
+          <h3 className="font-semibold text-lg mb-3" style={{ color: theme.accent3 }}>
+            Two Learning Paradigms
+          </h3>
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <p className="text-base font-bold mb-2" style={{ color: theme.accent1 }}>KNN — Lazy Learner</p>
+              <Bullets items={[
+                <><strong>Stores data</strong> — no model built during training</>,
+                <><strong>Works at predict time</strong> — computes distances to find K closest neighbors</>,
+                <><strong>Majority vote</strong> — neighbors vote on the class label</>,
+              ]} />
+            </div>
+            <div>
+              <p className="text-base font-bold mb-2" style={{ color: theme.accent2 }}>SVM — Eager Learner</p>
+              <Bullets items={[
+                <><strong>Builds a boundary</strong> — finds the optimal separating hyperplane during training</>,
+                <><strong>Maximizes margin</strong> — pushes boundary as far from both classes as possible</>,
+                <><strong>Fast prediction</strong> — just check which side of the line a point falls on</>,
+              ]} />
+            </div>
+          </div>
         </Card>
       </BuildStep>
     </div>
@@ -128,9 +165,9 @@ function DatasetsSlide({ step }: SlideProps) {
         {ds.map(({ d, color }, i) => (
           <BuildStep key={d.name} visible={step >= i}>
             <Card>
-              <h3 className="font-bold text-lg mb-3" style={{ color }}>{d.name}</h3>
-              <p className="text-xs opacity-50 mb-3">Source: {d.source}</p>
-              <div className="space-y-2 text-sm">
+              <h3 className="font-bold text-xl mb-3" style={{ color }}>{d.name}</h3>
+              <p className="text-sm opacity-50 mb-3">Source: {d.source}</p>
+              <div className="space-y-2 text-base">
                 <div className="flex justify-between">
                   <span className="opacity-60">Samples</span>
                   <span className="font-mono font-bold">{d.samples}</span>
@@ -145,7 +182,7 @@ function DatasetsSlide({ step }: SlideProps) {
                 </div>
                 <div className="flex justify-between">
                   <span className="opacity-60">Balance</span>
-                  <span className="font-bold text-xs">{d.balance}</span>
+                  <span className="font-bold text-sm">{d.balance}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="opacity-60">Split</span>
@@ -153,7 +190,7 @@ function DatasetsSlide({ step }: SlideProps) {
                 </div>
               </div>
               <div className="mt-3 pt-3 border-t border-white/10">
-                <p className="text-xs opacity-50">Features: {d.featureNames.join(", ")}</p>
+                <p className="text-sm opacity-50">Features: {d.featureNames.join(", ")}</p>
               </div>
             </Card>
           </BuildStep>
@@ -174,18 +211,30 @@ function PreprocessingSlide({ step }: SlideProps) {
         {[
           {
             title: "Missing Values",
-            desc: "Diabetes dataset had invalid zeros in Glucose, BP, SkinThickness, Insulin, and BMI. Replaced with column medians.",
             icon: "01",
+            bullets: [
+              <><strong>Invalid zeros</strong> — Glucose, BP, SkinThickness, Insulin, BMI can&apos;t be zero in real life</>,
+              <><strong>Replaced with medians</strong> — medians resist outlier influence better than means</>,
+              <><strong>Diabetes only</strong> — Iris was already clean, no preprocessing needed</>,
+            ],
           },
           {
             title: "Feature Scaling",
-            desc: "StandardScaler applied to normalize all features (mean=0, std=1). Critical for KNN distance calculations and SVM margin optimization.",
             icon: "02",
+            bullets: [
+              <><strong>StandardScaler</strong> — normalizes all features to mean=0, std=1</>,
+              <><strong>Critical for KNN</strong> — without scaling, large-range features dominate distance calculations</>,
+              <><strong>Critical for SVM</strong> — margin optimization is skewed by unscaled features</>,
+            ],
           },
           {
             title: "Train/Test Split",
-            desc: "80/20 split with random_state=42 across all notebooks. Same split ensures fair algorithm comparison.",
             icon: "03",
+            bullets: [
+              <><strong>80/20 split</strong> — 80% training, 20% testing</>,
+              <><strong>random_state=42</strong> — identical split across all notebooks</>,
+              <><strong>Fair comparison</strong> — any metric difference is the algorithm, not the data</>,
+            ],
           },
         ].map((item, i) => (
           <BuildStep key={item.title} visible={step >= i}>
@@ -196,10 +245,10 @@ function PreprocessingSlide({ step }: SlideProps) {
               >
                 {item.icon}
               </div>
-              <h3 className="font-semibold mb-2" style={{ color: theme.accent1 }}>
+              <h3 className="font-semibold text-base mb-3" style={{ color: theme.accent1 }}>
                 {item.title}
               </h3>
-              <p className="text-sm opacity-70 leading-relaxed">{item.desc}</p>
+              <Bullets items={item.bullets} />
             </Card>
           </BuildStep>
         ))}
@@ -211,54 +260,51 @@ function PreprocessingSlide({ step }: SlideProps) {
 // ─── Slide 5: Methodology ─────────────────────────────────
 
 function MethodologySlide({ step }: SlideProps) {
-  const algos = [
-    {
-      name: "K-Nearest Neighbors",
-      type: "Lazy Learner",
-      color: theme.accent1,
-      desc: "Classifies by majority vote among K nearest training points in feature space. No model is built during training.",
-      params: "K (number of neighbors)",
-    },
-    {
-      name: "Support Vector Machine",
-      type: "Eager Learner",
-      color: theme.accent2,
-      desc: "Finds the optimal hyperplane that maximizes margin between classes. Kernel trick enables nonlinear boundaries.",
-      params: "Kernel type (Linear, RBF, Poly)",
-    },
-    {
-      name: "Decision Tree",
-      type: "Eager Learner",
-      color: theme.accent3,
-      desc: "Recursively splits data on features that best separate classes using Gini impurity or entropy as the splitting criterion.",
-      params: "Criterion, max_depth",
-    },
-  ];
   return (
     <div>
       <Title>Methodology</Title>
-      <Subtitle>Three algorithms, two learning paradigms</Subtitle>
-      <div className="grid grid-cols-3 gap-4">
-        {algos.map((a, i) => (
-          <BuildStep key={a.name} visible={step >= i}>
-            <Card className="h-full">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-2 h-2 rounded-full" style={{ background: a.color }} />
-                <h3 className="font-bold" style={{ color: a.color }}>{a.name}</h3>
-              </div>
-              <span
-                className="inline-block text-xs px-2 py-0.5 rounded-full mb-3"
-                style={{ background: `${a.color}20`, color: a.color }}
-              >
-                {a.type}
-              </span>
-              <p className="text-sm opacity-70 leading-relaxed mb-3">{a.desc}</p>
-              <p className="text-xs opacity-50">
-                <strong>Key parameter:</strong> {a.params}
-              </p>
-            </Card>
-          </BuildStep>
-        ))}
+      <Subtitle>Two algorithms, two fundamentally different approaches</Subtitle>
+      <div className="grid grid-cols-2 gap-5">
+        <BuildStep visible={step >= 0}>
+          <Card className="h-full">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-3 h-3 rounded-full" style={{ background: theme.accent1 }} />
+              <h3 className="font-bold text-lg" style={{ color: theme.accent1 }}>K-Nearest Neighbors</h3>
+            </div>
+            <span
+              className="inline-block text-xs px-2 py-0.5 rounded-full mb-3"
+              style={{ background: `${theme.accent1}20`, color: theme.accent1 }}
+            >
+              Lazy Learner
+            </span>
+            <Bullets items={[
+              <><strong>How it works</strong> — finds K closest training points, takes majority vote</>,
+              <><strong>Key parameter</strong> — K (number of neighbors)</>,
+              <><strong>Strength</strong> — simple, no assumptions about boundary shape, adapts to local patterns</>,
+              <><strong>Weakness</strong> — slow at prediction (scans all training data), sensitive to noise at low K</>,
+            ]} />
+          </Card>
+        </BuildStep>
+        <BuildStep visible={step >= 1}>
+          <Card className="h-full">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-3 h-3 rounded-full" style={{ background: theme.accent2 }} />
+              <h3 className="font-bold text-lg" style={{ color: theme.accent2 }}>Support Vector Machine</h3>
+            </div>
+            <span
+              className="inline-block text-xs px-2 py-0.5 rounded-full mb-3"
+              style={{ background: `${theme.accent2}20`, color: theme.accent2 }}
+            >
+              Eager Learner
+            </span>
+            <Bullets items={[
+              <><strong>How it works</strong> — finds the hyperplane that maximizes margin between classes</>,
+              <><strong>Key parameter</strong> — kernel type (Linear, RBF, Polynomial)</>,
+              <><strong>Strength</strong> — compact model, fast prediction, kernels handle nonlinear data</>,
+              <><strong>Weakness</strong> — training can be expensive, needs hyperparameter tuning on messy data</>,
+            ]} />
+          </Card>
+        </BuildStep>
       </div>
     </div>
   );
@@ -271,29 +317,40 @@ function KnnIrisSlide({ step }: SlideProps) {
     <div>
       <Title>KNN: Iris Results</Title>
       <Subtitle>
-        Best K = {data.knnIris.bestK} | Perfect classification across all K values 1-20
+        Best K = {data.knnIris.bestK} | Perfect classification across K values 1 through 20
       </Subtitle>
-      <BuildStep visible={step >= 0}>
-        <KnnAccuracyChart
-          accuracies={data.knnIris.accuracies}
-          bestK={data.knnIris.bestK}
-          title="Accuracy vs K Value (Iris)"
-          domainMin={0.9}
-        />
-      </BuildStep>
-      <BuildStep visible={step >= 1}>
-        <div className="grid grid-cols-4 gap-3 mt-5">
-          {(["accuracy", "precision", "recall", "f1"] as const).map((m, i) => (
-            <MetricCard
-              key={m}
-              value={data.knnIris.metrics[m] * 100}
-              label={m === "f1" ? "F1 Score" : m}
-              color={[theme.accent1, theme.accent2, theme.accent3, theme.text][i]}
-              active={step >= 1}
+      <div className="grid grid-cols-5 gap-5">
+        <div className="col-span-3">
+          <BuildStep visible={step >= 0}>
+            <KnnAccuracyChart
+              accuracies={data.knnIris.accuracies}
+              bestK={data.knnIris.bestK}
+              title="Accuracy vs K Value (Iris)"
+              domainMin={0.9}
             />
-          ))}
+          </BuildStep>
         </div>
-      </BuildStep>
+        <div className="col-span-2">
+          <BuildStep visible={step >= 1}>
+            <Card>
+              <h3 className="font-semibold text-base mb-3" style={{ color: theme.accent1 }}>
+                Why perfect accuracy?
+              </h3>
+              <Bullets items={[
+                <><strong>Clean, well-separated data</strong> — species form tight clusters with almost no overlap</>,
+                <><strong>K=1 works here</strong> — nearest neighbor is almost always the correct class</>,
+                <><strong>Drops at K=31, 51</strong> — too many neighbors pulls in other species (underfitting)</>,
+              ]} />
+            </Card>
+          </BuildStep>
+          <BuildStep visible={step >= 1}>
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              <MetricCard value={100} label="Accuracy" color={theme.accent1} active={step >= 1} />
+              <MetricCard value={100} label="F1 Score" color={theme.accent2} active={step >= 1} />
+            </div>
+          </BuildStep>
+        </div>
+      </div>
     </div>
   );
 }
@@ -320,6 +377,19 @@ function KnnDiabetesSlide({ step }: SlideProps) {
         </div>
         <div className="col-span-2">
           <BuildStep visible={step >= 1}>
+            <Card>
+              <h3 className="font-semibold text-base mb-3" style={{ color: theme.accent2 }}>
+                Why only ~77% accuracy?
+              </h3>
+              <Bullets items={[
+                <><strong>Overlapping classes</strong> — diabetic and non-diabetic patients share similar feature values</>,
+                <><strong>8 noisy features</strong> — single-neighbor predictions become unreliable</>,
+                <><strong>Imbalanced (65/35%)</strong> — predicting &quot;not diabetic&quot; every time gets 65% for free</>,
+                <><strong>77% is modest</strong> — only 12 points above the naive baseline</>,
+              ]} />
+            </Card>
+          </BuildStep>
+          <BuildStep visible={step >= 2}>
             <ConfusionMatrix
               matrix={data.knnDiabetes.confusionMatrix}
               labels={data.knnDiabetes.classes}
@@ -329,15 +399,15 @@ function KnnDiabetesSlide({ step }: SlideProps) {
           <BuildStep visible={step >= 2}>
             <div className="grid grid-cols-2 gap-2 mt-3">
               <MetricCard
-                value={data.knnDiabetes.metrics.accuracy * 100}
-                label="Accuracy"
-                color={theme.accent1}
+                value={data.knnDiabetes.metrics.recall * 100}
+                label="Recall"
+                color={theme.accent2}
                 active={step >= 2}
               />
               <MetricCard
                 value={data.knnDiabetes.metrics.f1 * 100}
                 label="F1 Score"
-                color={theme.accent2}
+                color={theme.accent3}
                 active={step >= 2}
               />
             </div>
@@ -354,48 +424,60 @@ function KnnHyperparamSlide({ step }: SlideProps) {
   return (
     <div>
       <Title>KNN Hyperparameter Analysis</Title>
-      <Subtitle>The bias-variance tradeoff in action</Subtitle>
+      <Subtitle>Same algorithm, different data → different optimal K</Subtitle>
       <BuildStep visible={step >= 0}>
         <div className="grid grid-cols-2 gap-5 mb-5">
           <Card>
-            <h3 className="font-semibold mb-2" style={{ color: theme.accent1 }}>
+            <h3 className="font-semibold text-lg mb-3" style={{ color: theme.accent1 }}>
               Iris: Best K = 1
             </h3>
-            <p className="text-sm opacity-70 leading-relaxed">
-              Clean, well-separated data allows a small K. Decision boundaries can be tight
-              yet stable because classes don&apos;t overlap. Low bias wins.
-            </p>
+            <Bullets items={[
+              <><strong>Clean data</strong> — classes form tight, well-separated clusters</>,
+              <><strong>Tight boundaries work</strong> — no noise to mislead the nearest neighbor</>,
+              <><strong>Low bias wins</strong> — memorization works when the data is tidy</>,
+            ]} />
           </Card>
           <Card>
-            <h3 className="font-semibold mb-2" style={{ color: theme.accent2 }}>
+            <h3 className="font-semibold text-lg mb-3" style={{ color: theme.accent2 }}>
               Diabetes: Best K = 11
             </h3>
-            <p className="text-sm opacity-70 leading-relaxed">
-              Noisy, overlapping classes need more neighbors to smooth predictions.
-              Single neighbors are unreliable. Reduced variance wins.
-            </p>
+            <Bullets items={[
+              <><strong>Noisy, overlapping data</strong> — one neighbor could be an outlier</>,
+              <><strong>&quot;Vote among 11&quot;</strong> — smooths out noise, more robust predictions</>,
+              <><strong>Reduced variance wins</strong> — stability matters more than precision here</>,
+            ]} />
           </Card>
         </div>
       </BuildStep>
       <BuildStep visible={step >= 1}>
         <Card>
+          <h3 className="font-semibold text-base mb-4 text-center opacity-60">
+            The Bias-Variance Tradeoff
+          </h3>
           <div className="grid grid-cols-3 gap-6 text-center">
             <div>
-              <p className="text-sm font-bold mb-1" style={{ color: theme.accent2 }}>Low K (e.g., K=1)</p>
-              <p className="text-xs opacity-60">Low bias, high variance</p>
-              <p className="text-xs opacity-40 mt-1">Follows every bump in the data</p>
+              <p className="text-base font-bold mb-2" style={{ color: theme.accent2 }}>Low K (K=1)</p>
+              <Bullets items={[
+                <><strong>Low bias</strong> — follows the data closely</>,
+                <><strong>High variance</strong> — sensitive to noise</>,
+                <><strong>Risk</strong> — overfits on messy data</>,
+              ]} />
             </div>
             <div>
-              <p className="text-sm font-bold mb-1" style={{ color: theme.accent1 }}>
-                Sweet Spot
-              </p>
-              <p className="text-xs opacity-60">Balanced tradeoff</p>
-              <p className="text-xs opacity-40 mt-1">Best generalization</p>
+              <div className="w-8 h-1 rounded-full mx-auto mb-2" style={{ background: theme.accent1 }} />
+              <p className="text-base font-bold mb-2" style={{ color: theme.accent1 }}>Sweet Spot</p>
+              <Bullets items={[
+                <><strong>Balanced tradeoff</strong> — not too simple, not too complex</>,
+                <><strong>Best generalization</strong> — peak test accuracy</>,
+              ]} />
             </div>
             <div>
-              <p className="text-sm font-bold mb-1" style={{ color: theme.accent3 }}>High K (e.g., K=51)</p>
-              <p className="text-xs opacity-60">High bias, low variance</p>
-              <p className="text-xs opacity-40 mt-1">Over-smooths, misses patterns</p>
+              <p className="text-base font-bold mb-2" style={{ color: theme.accent3 }}>High K (K=51)</p>
+              <Bullets items={[
+                <><strong>High bias</strong> — oversimplifies patterns</>,
+                <><strong>Low variance</strong> — very stable but blunt</>,
+                <><strong>Risk</strong> — underfits, misses real signal</>,
+              ]} />
             </div>
           </div>
         </Card>
@@ -414,36 +496,41 @@ function SvmIrisSlide({ step }: SlideProps) {
         Best kernel: {data.svmIris.bestKernel} | Maximum-margin classification
       </Subtitle>
       <div className="grid grid-cols-2 gap-5">
-        <BuildStep visible={step >= 0}>
-          <SvmKernelChart
-            kernels={data.svmIris.kernels}
-            bestKernel={data.svmIris.bestKernel}
-            title="Accuracy by Kernel Type"
-            domainMin={0.9}
-          />
-        </BuildStep>
-        <BuildStep visible={step >= 1}>
-          <div>
-            <ConfusionMatrix
-              matrix={data.svmIris.confusionMatrix}
-              labels={data.svmIris.classes}
-              title="Confusion Matrix (RBF)"
+        <div>
+          <BuildStep visible={step >= 0}>
+            <SvmKernelChart
+              kernels={data.svmIris.kernels}
+              bestKernel={data.svmIris.bestKernel}
+              title="Accuracy by Kernel Type"
+              domainMin={0.9}
             />
+          </BuildStep>
+          <BuildStep visible={step >= 1}>
             <div className="grid grid-cols-2 gap-2 mt-3">
-              <MetricCard
-                value={100}
-                label="Accuracy"
-                color={theme.accent1}
-                active={step >= 1}
-              />
-              <MetricCard
-                value={100}
-                label="F1 Score"
-                color={theme.accent2}
-                active={step >= 1}
-              />
+              <MetricCard value={100} label="Accuracy" color={theme.accent1} active={step >= 1} />
+              <MetricCard value={100} label="F1 Score" color={theme.accent2} active={step >= 1} />
             </div>
-          </div>
+          </BuildStep>
+        </div>
+        <BuildStep visible={step >= 1}>
+          <Card className="h-full">
+            <h3 className="font-semibold text-base mb-3" style={{ color: theme.accent1 }}>
+              Why does RBF win?
+            </h3>
+            <Bullets items={[
+              <><strong>Curved boundaries</strong> — RBF maps data to higher dimensions where classes become linearly separable</>,
+              <><strong>Captures edge cases</strong> — Linear/Poly get 96.67%, RBF catches the 1-2 borderline flowers they miss</>,
+              <><strong>Iris is mostly linear</strong> — all kernels do well, RBF just edges ahead</>,
+            ]} />
+            <h3 className="font-semibold text-base mb-3 mt-5" style={{ color: theme.accent3 }}>
+              What are support vectors?
+            </h3>
+            <Bullets items={[
+              <><strong>Closest points to the boundary</strong> — they define where the decision line goes</>,
+              <><strong>All other points are irrelevant</strong> — removing them doesn&apos;t change the model</>,
+              <><strong>Compact representation</strong> — SVM only needs these critical points to classify</>,
+            ]} />
+          </Card>
         </BuildStep>
       </div>
     </div>
@@ -460,21 +547,16 @@ function SvmDiabetesSlide({ step }: SlideProps) {
         Best kernel: {data.svmDiabetes.bestKernel} | Linear separation competitive with defaults
       </Subtitle>
       <div className="grid grid-cols-2 gap-5">
-        <BuildStep visible={step >= 0}>
-          <SvmKernelChart
-            kernels={data.svmDiabetes.kernels}
-            bestKernel={data.svmDiabetes.bestKernel}
-            title="Accuracy by Kernel Type"
-            domainMin={0.7}
-          />
-        </BuildStep>
-        <BuildStep visible={step >= 1}>
-          <div>
-            <ConfusionMatrix
-              matrix={data.svmDiabetes.confusionMatrix}
-              labels={data.svmDiabetes.classes}
-              title="Confusion Matrix (Linear)"
+        <div>
+          <BuildStep visible={step >= 0}>
+            <SvmKernelChart
+              kernels={data.svmDiabetes.kernels}
+              bestKernel={data.svmDiabetes.bestKernel}
+              title="Accuracy by Kernel Type"
+              domainMin={0.7}
             />
+          </BuildStep>
+          <BuildStep visible={step >= 1}>
             <div className="grid grid-cols-2 gap-2 mt-3">
               <MetricCard
                 value={data.svmDiabetes.metrics.accuracy * 100}
@@ -489,7 +571,27 @@ function SvmDiabetesSlide({ step }: SlideProps) {
                 active={step >= 1}
               />
             </div>
-          </div>
+          </BuildStep>
+        </div>
+        <BuildStep visible={step >= 1}>
+          <Card className="h-full">
+            <h3 className="font-semibold text-base mb-3" style={{ color: theme.accent2 }}>
+              Why does Linear win?
+            </h3>
+            <Bullets items={[
+              <><strong>Roughly linear separation</strong> — after scaling, the boundary between classes is nearly straight</>,
+              <><strong>More complexity hurts</strong> — RBF/Poly overfit to noise in the overlap region</>,
+              <><strong>Default hyperparameters</strong> — no tuning of C or gamma, Linear is most robust out-of-box</>,
+            ]} />
+            <h3 className="font-semibold text-base mb-3 mt-5" style={{ color: theme.accent3 }}>
+              Medical context
+            </h3>
+            <Bullets items={[
+              <><strong>Recall = 61.8%</strong> — we miss ~38% of diabetic patients</>,
+              <><strong>False negatives are dangerous</strong> — missed diagnosis means delayed treatment</>,
+              <><strong>Room for improvement</strong> — class weights or SMOTE could boost diabetic recall</>,
+            ]} />
+          </Card>
         </BuildStep>
       </div>
     </div>
@@ -505,7 +607,7 @@ function ComparisonSlide({ step }: SlideProps) {
       <Subtitle>KNN vs SVM — same data, same split, different mechanisms</Subtitle>
       <BuildStep visible={step >= 0}>
         <Card>
-          <table className="w-full text-sm">
+          <table className="w-full text-base">
             <thead>
               <tr style={{ background: `${theme.header}80` }}>
                 <th className="text-left p-3 text-xs uppercase tracking-wider opacity-60">Metric</th>
@@ -532,18 +634,24 @@ function ComparisonSlide({ step }: SlideProps) {
       <BuildStep visible={step >= 1}>
         <div className="grid grid-cols-2 gap-4 mt-4">
           <Card>
-            <h3 className="text-sm font-bold mb-1" style={{ color: theme.accent1 }}>Iris Takeaway</h3>
-            <p className="text-xs opacity-70">
-              Both algorithms achieve perfect accuracy. The comparison is about mechanism
-              (neighbor voting vs margin maximization), not who wins.
-            </p>
+            <h3 className="font-bold text-base mb-3" style={{ color: theme.accent1 }}>
+              Iris: Sanity check
+            </h3>
+            <Bullets items={[
+              <><strong>Both hit 100%</strong> — Iris doesn&apos;t separate the algorithms</>,
+              <><strong>Shows mechanism</strong> — neighbor voting vs margin boundary</>,
+              <><strong>Proves setup works</strong> — validates our pipeline before the hard test</>,
+            ]} />
           </Card>
           <Card>
-            <h3 className="text-sm font-bold mb-1" style={{ color: theme.accent2 }}>Diabetes Takeaway</h3>
-            <p className="text-xs opacity-70">
-              KNN slightly edges SVM (76.6% vs 75.3%). Small margin suggests both capture
-              similar signal. Recall for diabetic class matters most medically.
-            </p>
+            <h3 className="font-bold text-base mb-3" style={{ color: theme.accent2 }}>
+              Diabetes: The real test
+            </h3>
+            <Bullets items={[
+              <><strong>KNN edges SVM</strong> — 76.6% vs 75.3%, small but consistent margin</>,
+              <><strong>Same ceiling</strong> — class overlap limits both algorithms to ~75%</>,
+              <><strong>Different inductive bias</strong> — local neighborhoods (KNN) vs global boundary (SVM)</>,
+            ]} />
           </Card>
         </div>
       </BuildStep>
@@ -551,97 +659,7 @@ function ComparisonSlide({ step }: SlideProps) {
   );
 }
 
-// ─── Slide 12: Decision Tree ──────────────────────────────
-
-function DecisionTreeSlide({ step }: SlideProps) {
-  const features = [
-    { name: "Petal Width", importance: 0.92 },
-    { name: "Petal Length", importance: 0.06 },
-    { name: "Sepal Length", importance: 0.02 },
-    { name: "Sepal Width", importance: 0.0 },
-  ];
-  return (
-    <div>
-      <Title>Decision Tree: Iris</Title>
-      <Subtitle>Interpretable classification with feature importance</Subtitle>
-      <div className="grid grid-cols-2 gap-5">
-        <BuildStep visible={step >= 0}>
-          <Card>
-            <h3 className="text-sm font-semibold mb-3 opacity-60">
-              Gini vs Entropy (max_depth=4)
-            </h3>
-            <p className="text-sm opacity-70 mb-4">
-              Both splitting criteria produce similar results on Iris.
-              Decision trees split data by asking yes/no questions about feature values,
-              choosing splits that maximize class purity.
-            </p>
-            <div className="space-y-2 mt-4">
-              <h4 className="text-xs uppercase tracking-wider opacity-50">Feature Importance</h4>
-              {features.map((f) => (
-                <div key={f.name} className="flex items-center gap-3">
-                  <span className="text-xs w-24 opacity-60">{f.name}</span>
-                  <div className="flex-1 h-5 rounded overflow-hidden" style={{ background: `${theme.cardBg}` }}>
-                    <div
-                      className="h-full rounded"
-                      style={{
-                        width: `${f.importance * 100}%`,
-                        background: f.importance > 0.5
-                          ? theme.accent1
-                          : f.importance > 0 ? theme.accent3 : "transparent",
-                        boxShadow: f.importance > 0.5
-                          ? `0 0 8px ${theme.accent1}40` : "none",
-                      }}
-                    />
-                  </div>
-                  <span className="text-xs font-mono w-12 text-right">
-                    {(f.importance * 100).toFixed(0)}%
-                  </span>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </BuildStep>
-        <BuildStep visible={step >= 1}>
-          <Card>
-            <h3 className="text-sm font-semibold mb-3 opacity-60">
-              Strengths &amp; Trade-offs
-            </h3>
-            <div className="space-y-3 text-sm">
-              <div className="flex gap-2">
-                <span style={{ color: theme.accent1 }}>+</span>
-                <span className="opacity-70">Highly interpretable — you can read the decision rules</span>
-              </div>
-              <div className="flex gap-2">
-                <span style={{ color: theme.accent1 }}>+</span>
-                <span className="opacity-70">No feature scaling required</span>
-              </div>
-              <div className="flex gap-2">
-                <span style={{ color: theme.accent1 }}>+</span>
-                <span className="opacity-70">Reveals which features drive classification</span>
-              </div>
-              <div className="flex gap-2">
-                <span style={{ color: theme.accent2 }}>-</span>
-                <span className="opacity-70">Prone to overfitting without depth limits</span>
-              </div>
-              <div className="flex gap-2">
-                <span style={{ color: theme.accent2 }}>-</span>
-                <span className="opacity-70">Unstable — small data changes can alter the tree</span>
-              </div>
-            </div>
-            <div className="mt-4 pt-3 border-t border-white/10">
-              <p className="text-xs opacity-50">
-                <strong>Key finding:</strong> Petal width alone accounts for 92% of classification
-                power on Iris, confirming it is the strongest discriminator between species.
-              </p>
-            </div>
-          </Card>
-        </BuildStep>
-      </div>
-    </div>
-  );
-}
-
-// ─── Slide 13: Key Findings ───────────────────────────────
+// ─── Slide 12: Key Findings ───────────────────────────────
 
 function FindingsSlide({ step }: SlideProps) {
   return (
@@ -651,28 +669,40 @@ function FindingsSlide({ step }: SlideProps) {
       <div className="grid grid-cols-3 gap-4">
         {[
           {
-            title: "Data difficulty matters more than algorithm choice",
-            body: "Both KNN and SVM achieved 100% on Iris but ~75% on Diabetes. The dataset's inherent difficulty is the dominant factor.",
+            title: "Data difficulty > algorithm choice",
             color: theme.accent1,
+            bullets: [
+              <><strong>100% on Iris</strong> — both algorithms ace clean, separated data</>,
+              <><strong>~75% on Diabetes</strong> — class overlap sets the ceiling</>,
+              <><strong>Dataset matters most</strong> — switching algorithms barely moves the needle</>,
+            ],
           },
           {
-            title: "KNN slightly outperforms SVM on Diabetes",
-            body: "76.6% vs 75.3% accuracy. KNN's local neighborhood approach captured slightly more signal than SVM's global boundary.",
+            title: "Accuracy alone is misleading",
             color: theme.accent2,
+            bullets: [
+              <><strong>65% baseline</strong> — just predicting majority class gets you this far</>,
+              <><strong>Recall tells the truth</strong> — are we actually catching diabetic patients?</>,
+              <><strong>In healthcare</strong> — missed diagnoses (false negatives) are worse than false alarms</>,
+            ],
           },
           {
-            title: "Hyperparameters must match the data",
-            body: "Iris favors K=1 (clean data). Diabetes favors K=11 (noisy data). SVM Iris favors RBF. SVM Diabetes favors Linear.",
+            title: "Hyperparameters must match data",
             color: theme.accent3,
+            bullets: [
+              <><strong>KNN</strong> — K=1 for clean data, K=11 for noisy data</>,
+              <><strong>SVM</strong> — RBF for nonlinear separation, Linear when boundary is simple</>,
+              <><strong>No universal best</strong> — optimal config depends on dataset characteristics</>,
+            ],
           },
         ].map((f, i) => (
           <BuildStep key={f.title} visible={step >= i}>
             <Card className="h-full">
-              <div className="w-2 h-2 rounded-full mb-3" style={{ background: f.color }} />
-              <h3 className="font-semibold text-sm mb-2" style={{ color: f.color }}>
+              <div className="w-3 h-3 rounded-full mb-3" style={{ background: f.color }} />
+              <h3 className="font-semibold text-base mb-3" style={{ color: f.color }}>
                 {f.title}
               </h3>
-              <p className="text-sm opacity-70 leading-relaxed">{f.body}</p>
+              <Bullets items={f.bullets} />
             </Card>
           </BuildStep>
         ))}
@@ -681,7 +711,7 @@ function FindingsSlide({ step }: SlideProps) {
   );
 }
 
-// ─── Slide 14: Conclusion ─────────────────────────────────
+// ─── Slide 13: Conclusion ─────────────────────────────────
 
 function ConclusionSlide({ step }: SlideProps) {
   return (
@@ -690,47 +720,44 @@ function ConclusionSlide({ step }: SlideProps) {
       <Subtitle>Summary and future directions</Subtitle>
       <BuildStep visible={step >= 0}>
         <Card className="mb-4">
-          <h3 className="font-semibold mb-2" style={{ color: theme.accent1 }}>Best Model</h3>
-          <p className="text-sm opacity-70 leading-relaxed">
-            <strong>KNN with K=11</strong> gave the best Diabetes classification (76.6% accuracy,
-            66.0% F1). For Iris, all three algorithms performed near-perfectly. In medical contexts,{" "}
-            <strong>recall for the positive class</strong> is especially important — missing a diabetic
-            patient has real consequences.
-          </p>
+          <h3 className="font-semibold text-lg mb-3" style={{ color: theme.accent1 }}>Best Model</h3>
+          <Bullets items={[
+            <><strong>KNN with K=11</strong> — best Diabetes result (76.6% accuracy, 66.0% F1)</>,
+            <><strong>Both algorithms perfect on Iris</strong> — not a meaningful differentiator</>,
+            <><strong>Recall is the critical metric</strong> — missing a diabetic patient has real consequences</>,
+            <><strong>Neither model excels at recall (~63%)</strong> — significant room for improvement</>,
+          ]} />
         </Card>
       </BuildStep>
       <BuildStep visible={step >= 1}>
         <Card>
-          <h3 className="font-semibold mb-2" style={{ color: theme.accent2 }}>Future Improvements</h3>
-          <div className="grid grid-cols-2 gap-x-8 gap-y-2 text-sm opacity-70">
-            <p>Cross-validation instead of single train/test split</p>
-            <p>Hyperparameter tuning (GridSearchCV for C, gamma)</p>
-            <p>Ensemble methods (Random Forest, Gradient Boosting)</p>
-            <p>Address class imbalance (SMOTE, class weights)</p>
-            <p>Feature engineering and selection</p>
-            <p>Larger, more diverse datasets</p>
-          </div>
+          <h3 className="font-semibold text-lg mb-3" style={{ color: theme.accent2 }}>Future Improvements</h3>
+          <Bullets items={[
+            <><strong>Cross-validation</strong> — single train/test split can be lucky or unlucky, K-fold gives stable estimates</>,
+            <><strong>Hyperparameter tuning</strong> — GridSearchCV for SVM&apos;s C and gamma, currently using defaults</>,
+            <><strong>Address class imbalance</strong> — SMOTE oversampling or class weights to boost diabetic recall</>,
+            <><strong>Ensemble methods</strong> — Random Forest, Gradient Boosting for stronger baselines</>,
+          ]} />
         </Card>
       </BuildStep>
     </div>
   );
 }
 
-// ─── Slides Array ─────────────────────────────────────────
+// ─── Slides Array (13 slides) ─────────────────────────────
 
 const slides = [
   { element: <TitleSlide step={0} />, steps: 1 },
-  { element: <IntroSlide step={0} />, steps: 2 },
+  { element: <IntroSlide step={0} />, steps: 3 },
   { element: <DatasetsSlide step={0} />, steps: 2 },
   { element: <PreprocessingSlide step={0} />, steps: 3 },
-  { element: <MethodologySlide step={0} />, steps: 3 },
+  { element: <MethodologySlide step={0} />, steps: 2 },
   { element: <KnnIrisSlide step={0} />, steps: 2 },
   { element: <KnnDiabetesSlide step={0} />, steps: 3 },
   { element: <KnnHyperparamSlide step={0} />, steps: 2 },
   { element: <SvmIrisSlide step={0} />, steps: 2 },
   { element: <SvmDiabetesSlide step={0} />, steps: 2 },
   { element: <ComparisonSlide step={0} />, steps: 2 },
-  { element: <DecisionTreeSlide step={0} />, steps: 2 },
   { element: <FindingsSlide step={0} />, steps: 3 },
   { element: <ConclusionSlide step={0} />, steps: 2 },
 ];

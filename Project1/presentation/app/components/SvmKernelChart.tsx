@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, CartesianGrid,
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, CartesianGrid, LabelList,
 } from "recharts";
 import { theme } from "@/lib/theme";
 
@@ -41,8 +41,8 @@ export function SvmKernelChart({ kernels, bestKernel, title, domainMin = 0.7 }: 
         className="p-4 rounded-lg"
         style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}` }}
       >
-        <ResponsiveContainer width="100%" height={200}>
-          <BarChart data={kernels} margin={{ top: 8, right: 8, bottom: 0, left: -10 }}>
+        <ResponsiveContainer width="100%" height={240}>
+          <BarChart data={kernels} margin={{ top: 24, right: 8, bottom: 0, left: -10 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(84,224,61,0.08)" />
             <XAxis
               dataKey="name"
@@ -50,7 +50,7 @@ export function SvmKernelChart({ kernels, bestKernel, title, domainMin = 0.7 }: 
               axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
             />
             <YAxis
-              domain={[domainMin, 1.02]}
+              domain={[domainMin, 1.0]}
               tick={{ fill: theme.text, fontSize: 11 }}
               tickFormatter={(v: number) => `${(v * 100).toFixed(0)}%`}
               axisLine={{ stroke: "rgba(255,255,255,0.1)" }}
@@ -68,6 +68,12 @@ export function SvmKernelChart({ kernels, bestKernel, title, domainMin = 0.7 }: 
                   }
                 />
               ))}
+              <LabelList
+                dataKey="accuracy"
+                position="top"
+                formatter={(v: number) => `${(v * 100).toFixed(2)}%`}
+                style={{ fill: theme.text, fontSize: 13, fontWeight: 700, fontFamily: "monospace" }}
+              />
             </Bar>
           </BarChart>
         </ResponsiveContainer>
