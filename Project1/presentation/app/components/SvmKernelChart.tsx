@@ -41,7 +41,7 @@ export function SvmKernelChart({ kernels, bestKernel, title, domainMin = 0.7 }: 
         className="p-4 rounded-lg"
         style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}` }}
       >
-        <ResponsiveContainer width="100%" height={240}>
+        <ResponsiveContainer width="100%" height={180} className="sm:!h-[240px]">
           <BarChart data={kernels} margin={{ top: 24, right: 8, bottom: 0, left: -10 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(84,224,61,0.08)" />
             <XAxis

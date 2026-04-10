@@ -14,7 +14,7 @@ import * as data from "@/lib/data";
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
     <div
-      className={`p-5 rounded-lg ${className}`}
+      className={`p-3 sm:p-5 rounded-lg ${className}`}
       style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}` }}
     >
       {children}
@@ -24,14 +24,14 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 
 function Title({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-bold mb-2 leading-tight" style={{ fontSize: 48 }}>
+    <h2 className="font-bold mb-2 leading-tight text-2xl sm:text-4xl lg:text-[48px]">
       {children}
     </h2>
   );
 }
 
 function Subtitle({ children }: { children: React.ReactNode }) {
-  return <p className="text-xl opacity-60 mb-5">{children}</p>;
+  return <p className="text-sm sm:text-xl opacity-60 mb-3 sm:mb-5">{children}</p>;
 }
 
 function MetricCard({
@@ -42,16 +42,16 @@ function MetricCard({
   return (
     <Card className="text-center">
       <AnimatedValue value={value} color={color} active={active} />
-      <p className="text-xs uppercase tracking-wider mt-2 opacity-60">{label}</p>
+      <p className="text-[10px] sm:text-xs uppercase tracking-wider mt-1 sm:mt-2 opacity-60">{label}</p>
     </Card>
   );
 }
 
 function Bullets({ items, className = "" }: { items: React.ReactNode[]; className?: string }) {
   return (
-    <ul className={`space-y-2 ${className}`}>
+    <ul className={`space-y-1.5 sm:space-y-2 ${className}`}>
       {items.map((item, i) => (
-        <li key={i} className="flex gap-2 text-lg leading-relaxed">
+        <li key={i} className="flex gap-2 text-sm sm:text-lg leading-relaxed">
           <span className="opacity-30 mt-0.5 shrink-0">&#8250;</span>
           <span className="opacity-80">{item}</span>
         </li>
@@ -67,12 +67,12 @@ function TitleSlide({ step }: SlideProps) {
     <div className="flex flex-col items-center justify-center text-center py-6">
       <BuildStep visible={step >= 0}>
         <p
-          className="text-base uppercase tracking-[4px] font-semibold mb-5"
+          className="text-xs sm:text-base uppercase tracking-[3px] sm:tracking-[4px] font-semibold mb-3 sm:mb-5"
           style={{ color: theme.accent1 }}
         >
           COMP SCI 465 | Machine Learning
         </p>
-        <h1 className="text-6xl font-extrabold leading-tight mb-4">
+        <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-4">
           Supervised Classification
           <br />
           Algorithm Comparison
@@ -126,7 +126,7 @@ function IntroSlide({ step }: SlideProps) {
           <h3 className="font-semibold text-lg mb-3" style={{ color: theme.accent3 }}>
             Two Learning Paradigms
           </h3>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <p className="text-base font-bold mb-2" style={{ color: theme.accent1 }}>KNN — Lazy Learner</p>
               <Bullets items={[
@@ -161,7 +161,7 @@ function DatasetsSlide({ step }: SlideProps) {
     <div>
       <Title>Datasets</Title>
       <Subtitle>Two datasets with very different characteristics</Subtitle>
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
         {ds.map(({ d, color }, i) => (
           <BuildStep key={d.name} visible={step >= i}>
             <Card>
@@ -207,7 +207,7 @@ function PreprocessingSlide({ step }: SlideProps) {
     <div>
       <Title>Data Preprocessing</Title>
       <Subtitle>Preparing raw data for model training</Subtitle>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         {[
           {
             title: "Missing Values",
@@ -264,7 +264,7 @@ function MethodologySlide({ step }: SlideProps) {
     <div>
       <Title>Methodology</Title>
       <Subtitle>Two algorithms, two fundamentally different approaches</Subtitle>
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
         <BuildStep visible={step >= 0}>
           <Card className="h-full">
             <div className="flex items-center gap-2 mb-3">
@@ -319,8 +319,8 @@ function KnnIrisSlide({ step }: SlideProps) {
       <Subtitle>
         Best K = {data.knnIris.bestK} | Perfect classification across K values 1 through 20
       </Subtitle>
-      <div className="grid grid-cols-5 gap-5">
-        <div className="col-span-3">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 sm:gap-5">
+        <div className="lg:col-span-3">
           <BuildStep visible={step >= 0}>
             <KnnAccuracyChart
               accuracies={data.knnIris.accuracies}
@@ -330,7 +330,7 @@ function KnnIrisSlide({ step }: SlideProps) {
             />
           </BuildStep>
         </div>
-        <div className="col-span-2">
+        <div className="lg:col-span-2">
           <BuildStep visible={step >= 1}>
             <Card>
               <h3 className="font-semibold text-base mb-3" style={{ color: theme.accent1 }}>
@@ -344,7 +344,7 @@ function KnnIrisSlide({ step }: SlideProps) {
             </Card>
           </BuildStep>
           <BuildStep visible={step >= 1}>
-            <div className="grid grid-cols-2 gap-2 mt-3">
+            <div className="grid grid-cols-2 gap-2 mt-2 sm:mt-3">
               <MetricCard value={100} label="Accuracy" color={theme.accent1} active={step >= 1} />
               <MetricCard value={100} label="F1 Score" color={theme.accent2} active={step >= 1} />
             </div>
@@ -364,8 +364,8 @@ function KnnDiabetesSlide({ step }: SlideProps) {
       <Subtitle>
         Best K = {data.knnDiabetes.bestK} | Harder dataset shows meaningful accuracy variation
       </Subtitle>
-      <div className="grid grid-cols-5 gap-4">
-        <div className="col-span-3">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 sm:gap-4">
+        <div className="lg:col-span-3">
           <BuildStep visible={step >= 0}>
             <KnnAccuracyChart
               accuracies={data.knnDiabetes.accuracies}
@@ -375,7 +375,7 @@ function KnnDiabetesSlide({ step }: SlideProps) {
             />
           </BuildStep>
         </div>
-        <div className="col-span-2">
+        <div className="lg:col-span-2">
           <BuildStep visible={step >= 1}>
             <Card>
               <h3 className="font-semibold text-base mb-3" style={{ color: theme.accent2 }}>
@@ -397,7 +397,7 @@ function KnnDiabetesSlide({ step }: SlideProps) {
             />
           </BuildStep>
           <BuildStep visible={step >= 2}>
-            <div className="grid grid-cols-2 gap-2 mt-3">
+            <div className="grid grid-cols-2 gap-2 mt-2 sm:mt-3">
               <MetricCard
                 value={data.knnDiabetes.metrics.recall * 100}
                 label="Recall"
@@ -454,7 +454,7 @@ function KnnHyperparamSlide({ step }: SlideProps) {
           <h3 className="font-semibold text-base mb-4 text-center opacity-60">
             The Bias-Variance Tradeoff
           </h3>
-          <div className="grid grid-cols-3 gap-6 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 text-center">
             <div>
               <p className="text-base font-bold mb-2" style={{ color: theme.accent2 }}>Low K (K=1)</p>
               <Bullets items={[
@@ -495,7 +495,7 @@ function SvmIrisSlide({ step }: SlideProps) {
       <Subtitle>
         Best kernel: {data.svmIris.bestKernel} | Maximum-margin classification
       </Subtitle>
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
         <div>
           <BuildStep visible={step >= 0}>
             <SvmKernelChart
@@ -506,7 +506,7 @@ function SvmIrisSlide({ step }: SlideProps) {
             />
           </BuildStep>
           <BuildStep visible={step >= 1}>
-            <div className="grid grid-cols-2 gap-2 mt-3">
+            <div className="grid grid-cols-2 gap-2 mt-2 sm:mt-3">
               <MetricCard value={100} label="Accuracy" color={theme.accent1} active={step >= 1} />
               <MetricCard value={100} label="F1 Score" color={theme.accent2} active={step >= 1} />
             </div>
@@ -546,7 +546,7 @@ function SvmDiabetesSlide({ step }: SlideProps) {
       <Subtitle>
         Best kernel: {data.svmDiabetes.bestKernel} | Linear separation competitive with defaults
       </Subtitle>
-      <div className="grid grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
         <div>
           <BuildStep visible={step >= 0}>
             <SvmKernelChart
@@ -557,7 +557,7 @@ function SvmDiabetesSlide({ step }: SlideProps) {
             />
           </BuildStep>
           <BuildStep visible={step >= 1}>
-            <div className="grid grid-cols-2 gap-2 mt-3">
+            <div className="grid grid-cols-2 gap-2 mt-2 sm:mt-3">
               <MetricCard
                 value={data.svmDiabetes.metrics.accuracy * 100}
                 label="Accuracy"
@@ -607,7 +607,7 @@ function ComparisonSlide({ step }: SlideProps) {
       <Subtitle>KNN vs SVM — same data, same split, different mechanisms</Subtitle>
       <BuildStep visible={step >= 0}>
         <Card>
-          <table className="w-full text-base">
+          <table className="w-full text-xs sm:text-base">
             <thead>
               <tr style={{ background: `${theme.header}80` }}>
                 <th className="text-left p-3 text-xs uppercase tracking-wider opacity-60">Metric</th>
@@ -666,7 +666,7 @@ function FindingsSlide({ step }: SlideProps) {
     <div>
       <Title>Key Findings</Title>
       <Subtitle>What we learned from comparing algorithms across datasets</Subtitle>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         {[
           {
             title: "Data difficulty > algorithm choice",

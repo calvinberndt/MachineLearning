@@ -45,7 +45,7 @@ export function KnnAccuracyChart({ accuracies, bestK, title, domainMin = 0.6 }: 
         className="p-4 rounded-lg"
         style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}` }}
       >
-        <ResponsiveContainer width="100%" height={260}>
+        <ResponsiveContainer width="100%" height={200} className="sm:!h-[260px]">
           <LineChart data={data} margin={{ top: 12, right: 12, bottom: 0, left: -10 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(84,224,61,0.08)" />
             <XAxis

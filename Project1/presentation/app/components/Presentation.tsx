@@ -55,14 +55,11 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
 
   useEffect(() => {
     function handler(e: KeyboardEvent) {
-      // Close menu on Escape
       if (e.key === "Escape") {
         setMenuOpen(false);
         setNumBuffer("");
         return;
       }
-
-      // Number key input for slide jumping
       if (e.key >= "0" && e.key <= "9" && !menuOpen) {
         e.preventDefault();
         const next = numBuffer + e.key;
@@ -71,8 +68,6 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
         numTimer.current = setTimeout(() => setNumBuffer(""), 1500);
         return;
       }
-
-      // Enter confirms number jump
       if (e.key === "Enter" && numBuffer) {
         e.preventDefault();
         const target = parseInt(numBuffer, 10) - 1;
@@ -81,31 +76,18 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
         if (numTimer.current) clearTimeout(numTimer.current);
         return;
       }
-
-      if (e.key === "ArrowRight" || e.key === " ") {
-        e.preventDefault();
-        next();
-      }
-      if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        prev();
-      }
+      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); next(); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
       if (e.key === "f" || e.key === "F") {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen?.();
-        } else {
-          document.exitFullscreen?.();
-        }
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+        else document.exitFullscreen?.();
       }
-      if (e.key === "g" || e.key === "G") {
-        setMenuOpen((v) => !v);
-      }
+      if (e.key === "g" || e.key === "G") setMenuOpen((v) => !v);
     }
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   }, [next, prev, goTo, numBuffer, menuOpen]);
 
-  // Close menu when clicking outside
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (menuOpen && menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -115,6 +97,30 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, [menuOpen]);
+
+  // Swipe support for mobile
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  useEffect(() => {
+    function onTouchStart(e: TouchEvent) {
+      touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    }
+    function onTouchEnd(e: TouchEvent) {
+      if (!touchStart.current) return;
+      const dx = e.changedTouches[0].clientX - touchStart.current.x;
+      const dy = e.changedTouches[0].clientY - touchStart.current.y;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+        if (dx < 0) next();
+        else prev();
+      }
+      touchStart.current = null;
+    }
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    return () => {
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchend", onTouchEnd);
+    };
+  }, [next, prev]);
 
   const progress = ((current + 1) / total) * 100;
 
@@ -129,7 +135,6 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
       className="h-screen w-screen flex flex-col overflow-hidden select-none"
       style={{ background: theme.bg, color: theme.text }}
       onClick={(e) => {
-        // Don't advance slide if clicking on the menu area
         if (menuRef.current?.contains(e.target as Node)) return;
         if (menuOpen) { setMenuOpen(false); return; }
         next();
@@ -137,24 +142,20 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
     >
       {/* Header */}
       <header
-        className="h-10 flex items-center justify-between px-8 shrink-0 relative z-20"
+        className="h-10 sm:h-10 flex items-center justify-between px-4 sm:px-8 shrink-0 relative z-20"
         style={{ background: theme.gradient }}
       >
-        <span className="text-sm font-bold tracking-wide opacity-90">
+        <span className="text-xs sm:text-sm font-bold tracking-wide opacity-90 truncate mr-2">
           COMP SCI 465 | Machine Learning
         </span>
 
-        {/* Clickable slide counter + dropdown */}
         <div className="relative" ref={menuRef}>
           <button
-            className="text-xs font-mono opacity-60 hover:opacity-100 transition-opacity cursor-pointer px-2 py-1 rounded"
+            className="text-xs font-mono opacity-60 hover:opacity-100 transition-opacity cursor-pointer px-2 py-1 rounded whitespace-nowrap"
             style={{ background: menuOpen ? "rgba(255,255,255,0.1)" : "transparent" }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setMenuOpen((v) => !v);
-            }}
+            onClick={(e) => { e.stopPropagation(); setMenuOpen((v) => !v); }}
           >
-            {current + 1} / {total} ▾
+            {current + 1}/{total} ▾
           </button>
 
           <AnimatePresence>
@@ -164,12 +165,8 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -8, scale: 0.95 }}
                 transition={{ duration: 0.15 }}
-                className="absolute right-0 top-full mt-1 rounded-lg overflow-hidden shadow-2xl"
-                style={{
-                  background: theme.cardBg,
-                  border: `1px solid ${theme.cardBorder}`,
-                  minWidth: 240,
-                }}
+                className="absolute right-0 top-full mt-1 rounded-lg overflow-hidden shadow-2xl max-h-[70vh] overflow-y-auto"
+                style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}`, minWidth: 200 }}
               >
                 {slides.map((s, i) => (
                   <button
@@ -179,22 +176,13 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
                       background: i === current ? `${theme.accent1}15` : "transparent",
                       color: i === current ? theme.accent1 : theme.text,
                     }}
-                    onMouseEnter={(e) => {
-                      if (i !== current) e.currentTarget.style.background = "rgba(255,255,255,0.05)";
-                    }}
-                    onMouseLeave={(e) => {
-                      if (i !== current) e.currentTarget.style.background = "transparent";
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      goTo(i);
-                    }}
+                    onMouseEnter={(e) => { if (i !== current) e.currentTarget.style.background = "rgba(255,255,255,0.05)"; }}
+                    onMouseLeave={(e) => { if (i !== current) e.currentTarget.style.background = "transparent"; }}
+                    onClick={(e) => { e.stopPropagation(); goTo(i); }}
                   >
                     <span className="font-mono text-xs opacity-50 w-5 text-right">{i + 1}</span>
                     <span className={i === current ? "font-semibold" : "opacity-70"}>{s.title}</span>
-                    {i === current && (
-                      <span className="ml-auto text-xs opacity-40">●</span>
-                    )}
+                    {i === current && <span className="ml-auto text-xs opacity-40">●</span>}
                   </button>
                 ))}
               </motion.div>
@@ -210,17 +198,17 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className="fixed top-16 right-8 z-30 px-4 py-2 rounded-lg font-mono text-lg"
+            className="fixed top-14 right-4 sm:right-8 z-30 px-4 py-2 rounded-lg font-mono text-lg"
             style={{ background: theme.cardBg, border: `1px solid ${theme.cardBorder}` }}
           >
-            Go to slide: <span style={{ color: theme.accent1 }}>{numBuffer}</span>
+            Go to: <span style={{ color: theme.accent1 }}>{numBuffer}</span>
             <span className="text-xs opacity-40 ml-2">Enter ↵</span>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Slide area */}
-      <div className="flex-1 relative overflow-hidden">
+      <div className="flex-1 relative overflow-hidden overflow-y-auto sm:overflow-y-hidden">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={current}
@@ -230,7 +218,7 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
             animate="center"
             exit="exit"
             transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="absolute inset-0 flex items-center justify-center py-4 px-8"
+            className="sm:absolute sm:inset-0 flex items-start sm:items-center justify-center py-4 px-4 sm:px-8"
           >
             <div className="w-full max-w-[1400px]">
               {(() => {
@@ -244,14 +232,13 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
       </div>
 
       {/* Footer */}
-      <footer className="h-8 flex items-center justify-between px-8 shrink-0 opacity-50 text-xs">
-        <span>Calvin Berndt | UW-Green Bay | Spring 2026</span>
-        <div className="flex items-center gap-4">
-          <span className="opacity-60">F fullscreen · G menu · # Enter jump</span>
-          <div
-            className="w-48 h-1 rounded-full overflow-hidden"
-            style={{ background: theme.cardBg }}
-          >
+      <footer className="h-8 flex items-center justify-between px-4 sm:px-8 shrink-0 opacity-50 text-xs">
+        <span className="hidden sm:inline">Calvin Berndt | UW-Green Bay | Spring 2026</span>
+        <span className="sm:hidden">Calvin Berndt | UWGB</span>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <span className="opacity-60 hidden sm:inline">F fullscreen · G menu · # Enter jump</span>
+          <span className="opacity-60 sm:hidden">Swipe or tap</span>
+          <div className="w-24 sm:w-48 h-1 rounded-full overflow-hidden" style={{ background: theme.cardBg }}>
             <motion.div
               className="h-full rounded-full"
               style={{ background: theme.accent1 }}
