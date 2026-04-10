@@ -24,14 +24,14 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 
 function Title({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-bold mb-2 leading-tight" style={{ fontSize: 44 }}>
+    <h2 className="font-bold mb-2 leading-tight" style={{ fontSize: 48 }}>
       {children}
     </h2>
   );
 }
 
 function Subtitle({ children }: { children: React.ReactNode }) {
-  return <p className="text-lg opacity-60 mb-5">{children}</p>;
+  return <p className="text-xl opacity-60 mb-5">{children}</p>;
 }
 
 function MetricCard({
@@ -51,7 +51,7 @@ function Bullets({ items, className = "" }: { items: React.ReactNode[]; classNam
   return (
     <ul className={`space-y-2 ${className}`}>
       {items.map((item, i) => (
-        <li key={i} className="flex gap-2 text-base leading-relaxed">
+        <li key={i} className="flex gap-2 text-lg leading-relaxed">
           <span className="opacity-30 mt-0.5 shrink-0">&#8250;</span>
           <span className="opacity-80">{item}</span>
         </li>

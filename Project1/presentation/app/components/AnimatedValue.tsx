@@ -17,7 +17,7 @@ export function AnimatedValue({
   suffix = "%",
   decimals = 1,
   color,
-  className = "text-3xl font-bold font-mono",
+  className = "text-4xl font-bold font-mono",
   active = true,
 }: AnimatedValueProps) {
   const ref = useRef<HTMLSpanElement>(null);

@@ -100,9 +100,9 @@ export function Presentation({ slides }: { slides: SlideEntry[] }) {
             animate="center"
             exit="exit"
             transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="absolute inset-0 flex items-center justify-center p-6 px-10"
+            className="absolute inset-0 flex items-center justify-center py-4 px-8"
           >
-            <div className="w-full max-w-7xl">
+            <div className="w-full max-w-[1400px]">
               {/* Clone the slide element and inject step prop */}
               {(() => {
                 const { element } = slides[current];
