@@ -717,26 +717,15 @@ function ConclusionSlide({ step }: SlideProps) {
   return (
     <div>
       <Title>Conclusion</Title>
-      <Subtitle>Summary and future directions</Subtitle>
+      <Subtitle>What we learned and why it matters</Subtitle>
       <BuildStep visible={step >= 0}>
-        <Card className="mb-4">
+        <Card>
           <h3 className="font-semibold text-lg mb-3" style={{ color: theme.accent1 }}>Best Model</h3>
           <Bullets items={[
             <><strong>KNN with K=11</strong> — best Diabetes result (76.6% accuracy, 66.0% F1)</>,
             <><strong>Both algorithms perfect on Iris</strong> — not a meaningful differentiator</>,
             <><strong>Recall is the critical metric</strong> — missing a diabetic patient has real consequences</>,
             <><strong>Neither model excels at recall (~63%)</strong> — significant room for improvement</>,
-          ]} />
-        </Card>
-      </BuildStep>
-      <BuildStep visible={step >= 1}>
-        <Card>
-          <h3 className="font-semibold text-lg mb-3" style={{ color: theme.accent2 }}>Future Improvements</h3>
-          <Bullets items={[
-            <><strong>Cross-validation</strong> — single train/test split can be lucky or unlucky, K-fold gives stable estimates</>,
-            <><strong>Hyperparameter tuning</strong> — GridSearchCV for SVM&apos;s C and gamma, currently using defaults</>,
-            <><strong>Address class imbalance</strong> — SMOTE oversampling or class weights to boost diabetic recall</>,
-            <><strong>Ensemble methods</strong> — Random Forest, Gradient Boosting for stronger baselines</>,
           ]} />
         </Card>
       </BuildStep>
@@ -759,7 +748,7 @@ const slides = [
   { element: <SvmDiabetesSlide step={0} />, steps: 2, title: "SVM: Diabetes" },
   { element: <ComparisonSlide step={0} />, steps: 2, title: "Comparative Analysis" },
   { element: <FindingsSlide step={0} />, steps: 3, title: "Key Findings" },
-  { element: <ConclusionSlide step={0} />, steps: 2, title: "Conclusion" },
+  { element: <ConclusionSlide step={0} />, steps: 1, title: "Conclusion" },
 ];
 
 export default function Home() {
