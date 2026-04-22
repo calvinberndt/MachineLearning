@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { LearningTracks, SourceTrail, sourceGroups } from "../source-trail";
 
 type LabView = "clusters" | "knn" | "svm";
 
@@ -199,6 +200,19 @@ export function Module3Lab() {
         </aside>
       </section>
 
+      <LearningTracks
+        cram={[
+          "K-means is unsupervised; KNN and SVM are supervised.",
+          "K-means repeats: choose K, assign to nearest centroid, update centroid, repeat until stable.",
+          "KNN predicts by majority vote from the nearest labeled points; SVM maximizes margin using support vectors.",
+        ]}
+        deep={[
+          "Think in feature space: points move between clusters because distance to centroids changes.",
+          "KNN stores examples instead of learning a formula, so scaling and k choice matter.",
+          "SVM is about boundary geometry: C controls forgiveness, kernels bend the boundary for nonlinear data.",
+        ]}
+      />
+
       <div className="lab-nav" role="tablist" aria-label="Module 3 sections">
         {moduleViews.map((item) => (
           <button
@@ -279,12 +293,20 @@ export function Module3Lab() {
             <p className="section-tag">Further study</p>
             <ul className="resource-list">
               <li>
-                <Link href="https://scikit-learn.org/stable/modules/clustering.html" target="_blank">
+                <Link
+                  href="https://scikit-learn.org/stable/modules/clustering.html"
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   scikit-learn clustering guide
                 </Link>
               </li>
               <li>
-                <Link href="https://www.youtube.com/watch?v=4b5d3muPQmA" target="_blank">
+                <Link
+                  href="https://www.youtube.com/watch?v=4b5d3muPQmA"
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   StatQuest: K-means clustering
                 </Link>
               </li>
@@ -413,7 +435,11 @@ export function Module3Lab() {
             <p className="section-tag">Further study</p>
             <ul className="resource-list">
               <li>
-                <Link href="https://scikit-learn.org/stable/modules/neighbors.html" target="_blank">
+                <Link
+                  href="https://scikit-learn.org/stable/modules/neighbors.html"
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   scikit-learn nearest neighbors guide
                 </Link>
               </li>
@@ -519,12 +545,20 @@ export function Module3Lab() {
             <p className="section-tag">Further study</p>
             <ul className="resource-list">
               <li>
-                <Link href="https://scikit-learn.org/stable/modules/svm.html" target="_blank">
+                <Link
+                  href="https://scikit-learn.org/stable/modules/svm.html"
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   scikit-learn SVM guide
                 </Link>
               </li>
               <li>
-                <Link href="https://www.youtube.com/watch?v=efR1C6CvhmE" target="_blank">
+                <Link
+                  href="https://www.youtube.com/watch?v=efR1C6CvhmE"
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   StatQuest: SVM main ideas
                 </Link>
               </li>
@@ -532,6 +566,8 @@ export function Module3Lab() {
           </aside>
         </section>
       ) : null}
+
+      <SourceTrail title="Module 3 source trail" sources={sourceGroups.module3} />
     </article>
   );
 }

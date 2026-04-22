@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LearningTracks, SourceTrail, sourceGroups } from "./source-trail";
 
 const modules = [
   {
@@ -44,15 +45,16 @@ export default function HomePage() {
     <div className="page-shell">
       <section className="poster">
         <div className="poster-copy">
-          <p className="hero-kicker">Interactive review built from your Canvas material</p>
+          <p className="hero-kicker">Canvas-first review with visible outside sources</p>
           <h1 className="hero-title">
-            Your second-half machine learning atlas,
+            A whiteboard study lab
             <br />
-            built for studying fast.
+            for cramming and actually understanding.
           </h1>
           <p className="hero-copy">
-            Three visual labs and one practice exam, tuned to the exact topics your professor has
-            been posting. Read the idea, move the controls, and then test yourself in the same run.
+            Three visual labs and one practice exam, anchored to your professor&apos;s Canvas material.
+            Use the Cram track for fast recall, then use the Deep track and diagrams to make the
+            concepts durable.
           </p>
           <div className="hero-actions">
             <Link className="action action--primary" href="/module-3">
@@ -64,16 +66,16 @@ export default function HomePage() {
           </div>
           <div className="poster-notes">
             <div className="poster-note">
-              <span className="section-tag">Coverage</span>
-              <strong>Modules 3, 4, 6, plus quiz mode</strong>
+              <span className="section-tag">Source of truth</span>
+              <strong>Canvas notes decide what matters for the course</strong>
             </div>
             <div className="poster-note">
-              <span className="section-tag">Format</span>
-              <strong>Visual demos, sliders, tabs, and auto-graded checks</strong>
+              <span className="section-tag">Study modes</span>
+              <strong>Exam-cram memory hooks plus deeper representations</strong>
             </div>
             <div className="poster-note">
-              <span className="section-tag">Best flow</span>
-              <strong>Learn the module, then immediately switch into exam mode</strong>
+              <span className="section-tag">Citations</span>
+              <strong>Outside links are visible where they influence the lesson</strong>
             </div>
           </div>
         </div>
@@ -111,6 +113,19 @@ export default function HomePage() {
         </div>
       </section>
 
+      <LearningTracks
+        cram={[
+          "Memorize the professor's definitions, algorithm steps, and compare/contrast traps.",
+          "After each module, switch into Quiz mode and grade yourself immediately.",
+          "Use source trails only when a Canvas idea needs a second explanation.",
+        ]}
+        deep={[
+          "Treat each algorithm as a representation: points, distances, margins, trees, tokens, matrices, or feature maps.",
+          "Move sliders and tabs until you can predict the diagram before it changes.",
+          "Use outside sources to verify intuition, not to replace the Canvas emphasis.",
+        ]}
+      />
+
       <section className="module-strip" aria-label="Module navigation">
         {modules.map((module) => (
           <Link
@@ -134,11 +149,10 @@ export default function HomePage() {
       <section className="study-grid">
         <article className="study-panel">
           <p className="section-tag">How to use it</p>
-          <h2 className="section-title">Study the concept, then touch the concept.</h2>
+          <h2 className="section-title">Read it, draw it, move it, test it.</h2>
           <p className="section-copy">
-            Each module page has one big visual explanation and one or more interactive demos.
-            Change the sliders, switch the tabs, and watch how the algorithm responds. That is the
-            fastest way to turn the professor&apos;s notes into intuition.
+            The new structure is built for two passes. First, cram the Canvas Core and memory
+            hooks. Second, use the diagrams to understand how the model represents the data.
           </p>
         </article>
         <article className="study-panel">
@@ -167,6 +181,8 @@ export default function HomePage() {
           </p>
         </article>
       </section>
+
+      <SourceTrail title="Learning design references" sources={sourceGroups.learning} />
     </div>
   );
 }
