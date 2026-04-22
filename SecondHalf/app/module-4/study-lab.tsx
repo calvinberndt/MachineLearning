@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { LearningTracks, SourceTrail, sourceGroups } from "../source-trail";
 
 type LabView = "ensemble" | "forest" | "tradeoffs";
 
@@ -139,6 +140,19 @@ export function Module4Lab() {
         </aside>
       </section>
 
+      <LearningTracks
+        cram={[
+          "Ensemble learning combines multiple models to improve accuracy and generalization.",
+          "Bagging reduces variance; boosting focuses on hard examples; stacking uses a meta-model.",
+          "Random Forest uses bootstrap samples, random feature subsets, and voting or averaging.",
+        ]}
+        deep={[
+          "A single decision tree is unstable; a forest smooths out that instability by aggregating many trees.",
+          "Random feature selection makes trees disagree in useful ways, reducing correlation across the forest.",
+          "Feature importance is helpful, but impurity-based importance can be misleading for high-cardinality features.",
+        ]}
+      />
+
       <div className="lab-nav" role="tablist" aria-label="Module 4 sections">
         {sectionTabs.map((tab) => (
           <button
@@ -258,12 +272,20 @@ export function Module4Lab() {
             <p className="section-tag">Further study</p>
             <ul className="resource-list">
               <li>
-                <Link href="https://scikit-learn.org/stable/modules/ensemble.html" target="_blank">
+                <Link
+                  href="https://scikit-learn.org/stable/modules/ensemble.html"
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   scikit-learn ensemble methods guide
                 </Link>
               </li>
               <li>
-                <Link href="https://www.youtube.com/watch?v=J4Wdy0Wc_xQ" target="_blank">
+                <Link
+                  href="https://www.youtube.com/watch?v=J4Wdy0Wc_xQ"
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   StatQuest: Random Forests Part 1
                 </Link>
               </li>
@@ -455,6 +477,8 @@ export function Module4Lab() {
           </aside>
         </section>
       ) : null}
+
+      <SourceTrail title="Module 4 source trail" sources={sourceGroups.module4} />
     </article>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { startTransition, useMemo, useState } from "react";
+import { SourceTrail, sourceGroups } from "../source-trail";
 import { generateExam, normalize, type Question } from "./exam-utils";
 
 export function PracticeQuizLab() {
@@ -124,6 +125,8 @@ export function PracticeQuizLab() {
           );
         })}
       </section>
+
+      <SourceTrail title="Quiz source trail" sources={sourceGroups.quiz} />
     </article>
   );
 }

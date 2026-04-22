@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useDeferredValue, useState } from "react";
+import { LearningTracks, SourceTrail, sourceGroups } from "../source-trail";
 
 type LabView = "network" | "nlp" | "cnn";
 
@@ -242,6 +243,19 @@ export function Module6Lab() {
         </aside>
       </section>
 
+      <LearningTracks
+        cram={[
+          "Neural networks have input, hidden, and output layers; forward propagation makes the prediction.",
+          "Loss measures error; backpropagation sends error backward to update weights.",
+          "NLP turns raw language into tokens, features, vectors, and outputs; CNNs go convolution, ReLU, pooling, flatten, classify.",
+        ]}
+        deep={[
+          "Representations become more useful as they move through the model: raw text becomes tokens, images become feature maps.",
+          "CNN filters act like pattern detectors, and deeper layers combine simple features into object-level evidence.",
+          "Embeddings and feature visualizations help explain what learned representations are organizing or detecting.",
+        ]}
+      />
+
       <div className="lab-nav" role="tablist" aria-label="Module 6 sections">
         {tabs.map((tab) => (
           <button
@@ -350,7 +364,11 @@ export function Module6Lab() {
             <p className="section-tag">Further study</p>
             <ul className="resource-list">
               <li>
-                <Link href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank">
+                <Link
+                  href="https://www.youtube.com/watch?v=aircAruvnKk"
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   3Blue1Brown: But what is a neural network?
                 </Link>
               </li>
@@ -453,7 +471,7 @@ export function Module6Lab() {
             <p className="section-tag">Further study</p>
             <ul className="resource-list">
               <li>
-                <Link href="https://www.nltk.org/book/" target="_blank">
+                <Link href="https://www.nltk.org/book/" rel="noreferrer" target="_blank">
                   Natural Language Processing with Python
                 </Link>
               </li>
@@ -501,6 +519,7 @@ export function Module6Lab() {
                     row.map((value, colIndex) => (
                       <button
                         key={`cell-${rowIndex}-${colIndex}`}
+                        aria-label={`Toggle input image cell row ${rowIndex + 1}, column ${colIndex + 1}. Current value ${value}.`}
                         className="matrix-cell"
                         data-on={value === 1}
                         type="button"
@@ -577,12 +596,20 @@ export function Module6Lab() {
             <p className="section-tag">Further study</p>
             <ul className="resource-list">
               <li>
-                <Link href="https://www.tensorflow.org/tutorials/images/cnn" target="_blank">
+                <Link
+                  href="https://www.tensorflow.org/tutorials/images/cnn"
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   TensorFlow CNN tutorial
                 </Link>
               </li>
               <li>
-                <Link href="https://www.youtube.com/watch?v=YRhxdVk_sIs" target="_blank">
+                <Link
+                  href="https://www.youtube.com/watch?v=YRhxdVk_sIs"
+                  rel="noreferrer"
+                  target="_blank"
+                >
                   deeplizard: CNNs explained
                 </Link>
               </li>
@@ -590,6 +617,8 @@ export function Module6Lab() {
           </aside>
         </section>
       ) : null}
+
+      <SourceTrail title="Module 6 source trail" sources={sourceGroups.module6} />
     </article>
   );
 }
