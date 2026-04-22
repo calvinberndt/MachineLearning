@@ -17,7 +17,7 @@
   --primary-hover: #24485a;
   --correction: #b8583a;
   --correction-tint: rgba(184, 88, 58, 0.1);
-  --focus-ring: rgba(45, 90, 107, 0.45);
+  --focus-ring: rgba(45, 90, 107, 0.75);
 
   /* Module tints (desaturated — classification, not decoration) */
   --module-3-tint: rgba(45, 90, 107, 0.08);
@@ -122,9 +122,12 @@ a:hover {
   border-radius: 4px;
 }
 
-button {
+button, input, textarea, select {
   font: inherit;
   color: inherit;
+}
+
+button {
   background: none;
   border: 0;
   cursor: pointer;
