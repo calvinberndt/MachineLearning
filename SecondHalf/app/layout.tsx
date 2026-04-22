@@ -1,44 +1,51 @@
-import type { Metadata } from "next";
-import { Fraunces, IBM_Plex_Mono, Manrope } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Fraunces, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google";
 import type { ReactNode } from "react";
 import "./globals.css";
-import { SiteHeader } from "./site-header";
+import { SiteHeader } from "./(shell)/header";
 
 const display = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "600", "700"],
+  weight: "variable",
+  axes: ["SOFT", "opsz"],
+  display: "swap",
 });
 
-const body = Manrope({
+const body = IBM_Plex_Sans({
   subsets: ["latin"],
   variable: "--font-body",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
 });
 
-const mono = IBM_Plex_Mono({
+const mono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "ML Second Half Study Lab",
   description:
-    "Interactive study pages and practice exam tabs for clustering, KNN, SVM, ensemble learning, random forests, deep learning, NLP, and CNNs.",
+    "A whiteboard-style study lab for machine learning — Module 3 (clustering, KNN, SVM), Module 4 (ensembles), Module 6 (deep learning, NLP, CNNs) — grounded in COMP SCI 465 Canvas notes.",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#fbf7ee",
+  colorScheme: "light",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: ReactNode;
-}>) {
+}: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={`${display.variable} ${body.variable} ${mono.variable}`}>
+    <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
+      <body>
         <div className="site-shell">
           <SiteHeader />
-          <main>{children}</main>
+          <main id="main">{children}</main>
         </div>
       </body>
     </html>
