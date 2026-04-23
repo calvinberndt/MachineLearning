@@ -119,37 +119,6 @@ export const sourceGroups = {
   ],
 };
 
-export function LearningTracks({
-  cram,
-  deep,
-}: {
-  cram: string[];
-  deep: string[];
-}) {
-  return (
-    <section className="learning-mode-grid" aria-label="Study modes">
-      <article className="learning-mode learning-mode--cram">
-        <p className="section-tag">Cram track</p>
-        <h2>What to remember under exam pressure</h2>
-        <ul className="insight-list">
-          {cram.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </article>
-      <article className="learning-mode learning-mode--deep">
-        <p className="section-tag">Deep track</p>
-        <h2>What to understand so it sticks</h2>
-        <ul className="insight-list">
-          {deep.map((item) => (
-            <li key={item}>{item}</li>
-          ))}
-        </ul>
-      </article>
-    </section>
-  );
-}
-
 export function SourceTrail({
   sources,
   title = "Source trail",
