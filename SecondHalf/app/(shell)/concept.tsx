@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { buildConceptHeadingId } from "./concept";
+import { buildConceptHeadingId } from "./concept-helpers";
 
 export function Concept({
   section,

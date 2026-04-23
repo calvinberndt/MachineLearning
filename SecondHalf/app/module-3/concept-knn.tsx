@@ -1,4 +1,4 @@
-import { Concept } from "../(shell)/concept.tsx";
+import { Concept } from "../(shell)/concept";
 import { BlockMath, InlineMath } from "../(shell)/katex";
 import { MarginNote } from "../(shell)/margin-note";
 import { KnnLab } from "./labs/knn-lab";

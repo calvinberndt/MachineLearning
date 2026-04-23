@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { buildConceptHeadingId } from "../app/(shell)/concept.ts";
+import { buildConceptHeadingId } from "../app/(shell)/concept-helpers.ts";
 
 test("builds stable id from section + slug", () => {
   assert.equal(buildConceptHeadingId("3.1", "k-means"), "s-3-1-k-means");
