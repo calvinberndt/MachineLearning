@@ -42,8 +42,8 @@ export function Sidebar({
     return () => observer.disconnect();
   }, [allIds.join("|")]);
 
-  return (
-    <aside className="sidebar" aria-label={ariaLabel}>
+  const tocContent = (
+    <>
       {moduleLabel ? <p className="sidebar__module">{moduleLabel}</p> : null}
       {groups.map((group) => (
         <div key={group.label} className="sidebar__group">
@@ -68,6 +68,22 @@ export function Sidebar({
           </ul>
         </div>
       ))}
+    </>
+  );
+
+  return (
+    <aside className="sidebar" aria-label={ariaLabel}>
+      {/* On narrow phones this renders as a collapsible disclosure */}
+      <details className="sidebar__details">
+        <summary className="sidebar__summary">
+          {moduleLabel ?? "On this page"}
+        </summary>
+        {tocContent}
+      </details>
+      {/* Desktop / tablet — visible always (details hidden via CSS) */}
+      <div className="sidebar__always" aria-hidden="true">
+        {tocContent}
+      </div>
     </aside>
   );
 }

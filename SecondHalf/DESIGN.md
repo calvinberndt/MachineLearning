@@ -83,6 +83,60 @@ Motion is `opacity` + `transform` only. Never `transition: all`. Easing:
 
 ---
 
+## Mobile + Responsive
+
+The Studio Notebook palette, type families, hairline borders, KaTeX math, and the 6-slot
+Concept template are **unchanged on all viewports**. Responsive work is structural only.
+
+### Breakpoints
+
+| Name | Value | Behavior change |
+|---|---|---|
+| `--bp-desktop` | `1040px` | Below: sidebar goes static (full-width block above main); concept drops to 1 column; lab-layout, dual-grid, cnn-grid, source-list stack to 1 column; forest-grid stays 2 columns. |
+| `--bp-tablet` | `780px` | Below: `nn-stage` drops to 1 column. |
+| `--bp-phone` | `600px` | Below: all phone-specific rules apply (see below). |
+| `720px` | — | Home chapter link collapses to 1 column; arrow hidden; forest-grid + forest-summary go single-column. |
+
+### Phone behavior (≤600px)
+
+- **Header nav pill group** (`site-nav`) hidden entirely. The wordmark button (`.site-mark`) is
+  the sole navigation entry point, opening the existing slide drawer. This avoids overflow
+  and keeps the header calm.
+- **Per-module sidebar** renders as a native `<details>` / `<summary>` disclosure widget. Collapsed
+  by default; tap "Module N ▸" to expand the section list. On ≥601px the `<details>` is hidden and
+  the always-visible div renders normally.
+- **Module hero title** uses `clamp(2rem, 11vw, 52px)` so it scales down on narrow widths without
+  wrapping to an awkward number of lines.
+- **Lab surface controls** (`lab-surface__controls`) switch from `flex-wrap: wrap` to
+  `flex-direction: column` so kernel buttons and range sliders each take the full row width.
+- **Pipeline grid** and **forest grid** collapse to 1 column.
+- **CNN cnn-grid** is already 1 column at `≤1040px`; each stage (input, kernel, conv, pool) stacks.
+- **Vote chips** stretch full-width.
+
+### Tap targets
+
+All interactive elements (`.site-mark`, `.site-link`, `.mini-switch`, `.range-field`,
+`.home-cta`, `.quiz-option`, `.sidebar__link` at ≤600px, `.nav-drawer__close`,
+`.sidebar__summary`) carry `min-height: 44px` to meet Apple HIG / WCAG 2.5.5.
+
+### Safe-area insets
+
+- `.site-header` top padding includes `env(safe-area-inset-top)` for notch devices.
+- `.nav-drawer__foot` bottom padding includes `env(safe-area-inset-bottom)` for home-indicator bar.
+
+### Overflow prevention
+
+All `max-width: Nch` values on text elements are wrapped with `min(Nch, 100%)` so grid containers
+with `ch`-based children do not force horizontal scroll. Grid containers that hold these elements
+carry `min-width: 0` (standard CSS grid fix for intrinsic-size overflow).
+
+### Viewport meta
+
+The `viewport` export in `app/layout.tsx` sets `width=device-width, initialScale=1`.
+`maximumScale` and `userScalable` are intentionally unset — pinch-to-zoom must remain enabled.
+
+---
+
 ## Shell Primitives (`app/(shell)/`)
 
 | File | What it does |
