@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="color-scheme" content="dark" />
+<title>ML Study Lab — Design Playground</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=Newsreader:opsz,wght@6..72,300..700&family=Instrument+Serif:ital@0;1&family=Source+Serif+4:opsz,wght@8..60,300..700&family=Playfair+Display:wght@400..700&family=Manrope:wght@300..800&family=Inter:wght@300..700&family=Geist:wght@300..700&family=IBM+Plex+Sans:wght@300..600&family=IBM+Plex+Mono:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap"
+/>
+<style>
+  :root {
+    --ui-bg: #0f1012;
+    --ui-surface: #17191d;
+    --ui-surface-2: #1f2227;
+    --ui-border: #2a2e34;
+    --ui-text: #e8e6e1;
+    --ui-muted: #8b8e95;
+    --ui-accent: #7ac8b8;
+    --ui-mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; background: var(--ui-bg); color: var(--ui-text); font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+  body { overflow: hidden; }
+  #root { height: 100vh; }
+
+  .app { display: grid; grid-template-columns: 360px 1fr; height: 100vh; }
+  .controls { background: var(--ui-surface); border-right: 1px solid var(--ui-border); overflow-y: auto; padding: 1rem; }
+  .preview-wrap { display: grid; grid-template-rows: 1fr auto; overflow: hidden; }
+  .preview-scroll { overflow: auto; background: #1c1e22; }
+  .prompt-panel { border-top: 1px solid var(--ui-border); background: var(--ui-surface); padding: 0.9rem 1.1rem; }
+
+  .controls h1 { font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ui-muted); margin: 0 0 0.25rem; }
+  .controls h2 { font-size: 1.1rem; margin: 0 0 1rem; color: var(--ui-text); }
+  .controls .group { border-top: 1px solid var(--ui-border); padding: 1rem 0; }
+  .controls .group:first-of-type { border-top: none; padding-top: 0.25rem; }
+  .controls .group-label { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ui-muted); margin-bottom: 0.65rem; }
+  .controls label.field { display: grid; gap: 0.25rem; margin-bottom: 0.7rem; }
+  .controls label.field .lbl { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--ui-muted); }
+  .controls label.field .val { color: var(--ui-text); font-family: var(--ui-mono); font-size: 0.74rem; }
+  .controls select, .controls input[type="text"], .controls input[type="number"] {
+    width: 100%; padding: 0.5rem 0.65rem; border-radius: 8px; border: 1px solid var(--ui-border);
+    background: var(--ui-surface-2); color: var(--ui-text); font-family: inherit; font-size: 0.85rem;
+  }
+  .controls input[type="range"] { width: 100%; accent-color: var(--ui-accent); }
+  .controls input[type="color"] { width: 100%; height: 2.1rem; border: 1px solid var(--ui-border); border-radius: 8px; background: transparent; cursor: pointer; padding: 2px; }
+
+  .seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px; padding: 3px; background: var(--ui-surface-2); border-radius: 10px; border: 1px solid var(--ui-border); }
+  .seg button { background: transparent; border: 0; color: var(--ui-muted); padding: 0.45rem 0.4rem; font-size: 0.75rem; border-radius: 7px; cursor: pointer; font-family: inherit; }
+  .seg button[data-active="true"] { background: var(--ui-accent); color: #0f1012; font-weight: 600; }
+  .seg button:hover:not([data-active="true"]) { color: var(--ui-text); }
+
+  .presets { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .preset-btn { text-align: left; padding: 0.6rem 0.7rem; border-radius: 10px; border: 1px solid var(--ui-border); background: var(--ui-surface-2); color: var(--ui-text); cursor: pointer; font-family: inherit; }
+  .preset-btn:hover { border-color: var(--ui-accent); }
+  .preset-btn[data-active="true"] { border-color: var(--ui-accent); background: #1d2a29; }
+  .preset-btn .p-name { font-size: 0.78rem; font-weight: 600; display: block; }
+  .preset-btn .p-sub { font-size: 0.66rem; color: var(--ui-muted); display: block; margin-top: 2px; }
+
+  .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0; }
+  .toggle-row .lbl { font-size: 0.82rem; color: var(--ui-text); }
+  .toggle { width: 34px; height: 20px; background: var(--ui-surface-2); border: 1px solid var(--ui-border); border-radius: 999px; position: relative; cursor: pointer; transition: background 160ms; }
+  .toggle[data-on="true"] { background: var(--ui-accent); border-color: var(--ui-accent); }
+  .toggle::after { content: ""; position: absolute; top: 1px; left: 1px; width: 16px; height: 16px; border-radius: 50%; background: var(--ui-text); transition: transform 160ms; }
+  .toggle[data-on="true"]::after { transform: translateX(14px); background: #0f1012; }
+
+  /* Prompt panel */
+  .prompt-panel .prompt-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+  .prompt-panel .prompt-head h3 { font-size: 0.74rem; margin: 0; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ui-muted); }
+  .copy-btn { background: var(--ui-accent); color: #0f1012; border: 0; border-radius: 8px; padding: 0.45rem 0.85rem; font-weight: 600; cursor: pointer; font-family: inherit; font-size: 0.78rem; }
+  .copy-btn:hover { filter: brightness(1.08); }
+  .copy-btn[data-copied="true"] { background: #a6e8d8; }
+  .prompt-text { background: var(--ui-bg); border: 1px solid var(--ui-border); border-radius: 10px; padding: 0.85rem 1rem; font-family: var(--ui-mono); font-size: 0.82rem; color: var(--ui-text); line-height: 1.55; white-space: pre-wrap; max-height: 18vh; overflow: auto; }
+
+  /* Preview */
+  .preview-frame { min-height: 100%; padding: 2rem clamp(1rem, 3vw, 3rem); display: grid; place-items: start center; }
+  .preview {
+    --paper: #fbf7ee; --ink: #1b1b1b; --muted: #5a564e; --muted-2: #8a857a;
+    --primary: #2d5a6b; --primary-tint: rgba(45,90,107,0.08); --correction: #b8583a;
+    --radius: 16px; --gap: 1.25rem; --pad: 1.6rem;
+    --display-font: "Fraunces", serif; --body-font: "Manrope", sans-serif; --mono-font: "IBM Plex Mono", monospace;
+    --base-size: 16px;
+    width: min(1180px, 100%); background: var(--paper); color: var(--ink);
+    font-family: var(--body-font); font-size: var(--base-size); line-height: 1.65;
+    border-radius: 18px; border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.35);
+    overflow: hidden;
+    display: grid;
+  }
+  .preview[data-graph="true"] {
+    background-image:
+      linear-gradient(rgba(27,27,27,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(27,27,27,0.04) 1px, transparent 1px);
+    background-size: 28px 28px, 28px 28px;
+    background-color: var(--paper);
+  }
+  .preview[data-density="compact"]  { --gap: 0.85rem; --pad: 1.15rem; }
+  .preview[data-density="airy"]     { --gap: 1.8rem; --pad: 2.2rem; }
+
+  .preview h1, .preview h2, .preview h3, .preview h4 { font-family: var(--display-font); font-weight: 500; letter-spacing: -0.01em; color: var(--ink); margin: 0; line-height: 1.1; text-wrap: balance; }
+  .preview p { margin: 0; }
+  .preview .kicker { font-family: var(--mono-font); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
+  .preview a { color: var(--primary); text-underline-offset: 3px; text-decoration-thickness: 1.5px; }
+
+  .p-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.9rem var(--pad); border-bottom: 1px solid rgba(0,0,0,0.08);
+    font-family: var(--mono-font); font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  .p-header nav { display: flex; gap: 1.1rem; }
+  .p-header nav a { color: var(--muted); text-decoration: none; }
+  .p-header nav a.active { color: var(--ink); }
+
+  .p-progress { height: 3px; background: rgba(0,0,0,0.06); position: relative; }
+  .p-progress::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 34%; background: var(--primary); }
+
+  .p-body { display: grid; }
+  .preview[data-layout="sidebar"] .p-body { grid-template-columns: 230px 1fr; }
+  .preview[data-layout="mixed"]   .p-body { grid-template-columns: 210px 1fr; }
+  .preview[data-layout="topnav"]  .p-body { grid-template-columns: 1fr; }
+
+  .p-sidebar {
+    padding: var(--pad); border-right: 1px solid rgba(0,0,0,0.08);
+    font-family: var(--mono-font); font-size: 0.76rem; color: var(--muted); display: grid; gap: 0.45rem; align-content: start;
+  }
+  .p-sidebar .sb-group { margin-top: 0.8rem; font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted-2); }
+  .p-sidebar a { display: flex; justify-content: space-between; padding: 0.25rem 0; color: var(--muted); text-decoration: none; border-radius: 4px; }
+  .p-sidebar a.active { color: var(--ink); font-weight: 600; }
+  .p-sidebar a.active::before { content: "▸ "; color: var(--primary); }
+
+  .p-main { padding: var(--pad) clamp(var(--pad), 4vw, 3rem); display: grid; gap: var(--gap); }
+
+  .p-hero { display: grid; gap: 0.7rem; padding-bottom: 0.4rem; border-bottom: 1px solid rgba(0,0,0,0.06); }
+  .p-hero .section-number { font-family: var(--display-font); font-variant-numeric: tabular-nums; font-weight: 300; font-size: 0.95rem; color: var(--muted); letter-spacing: 0.03em; }
+  .p-hero h1 { font-size: clamp(2.1rem, 3.5vw, 3.2rem); font-family: var(--display-font); }
+  .p-hero p { max-width: 62ch; color: var(--muted); font-size: 1.02rem; }
+
+  .track-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+  .track-card {
+    padding: calc(var(--pad) * 0.82) var(--pad); border-radius: var(--radius);
+    background: #fff; position: relative;
+  }
+  .preview[data-card="bordered"] .track-card { border: 1px solid rgba(0,0,0,0.1); box-shadow: none; }
+  .preview[data-card="flat"] .track-card { background: var(--primary-tint); border: 0; box-shadow: none; }
+  .preview[data-card="elevated"] .track-card { border: 0; box-shadow: 0 12px 32px rgba(27,27,27,0.08); }
+  .preview[data-card="notebook"] .track-card { border: 1px solid rgba(0,0,0,0.12); border-left: 4px double var(--primary); box-shadow: none; border-radius: 6px; }
+
+  .preview[data-accent="stripe"] .track-card::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--primary);
+  }
+  .preview[data-accent="tint"] .track-card--deep { background: var(--primary-tint); }
+  .preview[data-accent="none"] .track-card::before { display: none; }
+
+  .track-card h3 { font-size: 1.25rem; margin-bottom: 0.45rem; }
+  .track-card .kicker { margin-bottom: 0.3rem; }
+  .track-card ul { margin: 0; padding-left: 1.1rem; color: var(--muted); font-size: 0.94rem; }
+  .track-card ul li { margin-bottom: 0.2rem; }
+
+  .figure { display: grid; grid-template-columns: minmax(0,1fr) 220px; gap: var(--gap); align-items: start; }
+  .preview:not([data-margin="true"]) .figure { grid-template-columns: minmax(0,1fr); }
+
+  .figure-body {
+    background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: var(--radius); padding: var(--pad); display: grid; gap: 0.9rem;
+  }
+  .figure-caption { font-family: var(--mono-font); font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .figure svg { width: 100%; height: auto; }
+
+  .margin-note {
+    font-family: var(--body-font); font-size: 0.86rem; color: var(--muted);
+    border-left: 2px solid var(--primary); padding: 0.25rem 0.9rem; line-height: 1.55;
+  }
+  .margin-note .mn-label { font-family: var(--mono-font); font-size: 0.66rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--primary); display: block; margin-bottom: 4px; }
+  .margin-note .mn-label.correction { color: var(--correction); }
+
+  .formula {
+    background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: var(--radius);
+    padding: calc(var(--pad) * 0.85) var(--pad); display: grid; gap: 0.6rem;
+  }
+  .formula .eq {
+    font-family: "Latin Modern Roman", "Computer Modern", "Cambria Math", "STIX Two Math", serif;
+    font-size: 1.35rem; text-align: center; color: var(--ink);
+  }
+  .formula .eq em { font-style: italic; }
+  .formula .eq .sum { font-size: 1.9rem; vertical-align: middle; }
+  .formula .derivation { font-family: var(--mono-font); font-size: 0.82rem; color: var(--muted); display: grid; gap: 0.2rem; }
+
+  .worked {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.6rem;
+  }
+  .worked .step { border: 1px dashed rgba(0,0,0,0.14); border-radius: 10px; padding: 0.65rem; background: #fff; }
+  .worked .step .kicker { font-size: 0.64rem; }
+  .worked .step strong { font-family: var(--display-font); font-size: 1.3rem; display: block; margin-top: 0.25rem; }
+
+  .pitfall {
+    background: #fff; border-radius: var(--radius); padding: calc(var(--pad) * 0.85) var(--pad);
+    border-left: 4px solid var(--correction); border-top: 1px solid rgba(0,0,0,0.08); border-right: 1px solid rgba(0,0,0,0.08); border-bottom: 1px solid rgba(0,0,0,0.08);
+  }
+  .pitfall .kicker { color: var(--correction); margin-bottom: 0.35rem; }
+  .pitfall h4 { font-size: 1.15rem; margin-bottom: 0.35rem; font-family: var(--display-font); }
+  .pitfall p { color: var(--muted); font-size: 0.96rem; }
+
+  .trail { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  .trail-card { padding: 0.85rem 1rem; border-radius: var(--radius); border: 1px solid rgba(0,0,0,0.08); background: #fff; }
+  .trail-card .kicker { margin-bottom: 0.3rem; }
+  .trail-card strong { font-family: var(--display-font); font-size: 1rem; display: block; margin-bottom: 0.2rem; }
+  .trail-card p { font-size: 0.86rem; color: var(--muted); margin: 0; }
+
+  /* Motion */
+  .preview[data-motion="subtle"] .motion-el { animation: fadeUp 520ms ease both; }
+  .preview[data-motion="expressive"] .motion-el { animation: fadeUp 720ms cubic-bezier(0.2, 0.9, 0.2, 1) both; }
+  .preview[data-motion="expressive"] .motion-el:nth-child(2) { animation-delay: 80ms; }
+  .preview[data-motion="expressive"] .motion-el:nth-child(3) { animation-delay: 160ms; }
+  .preview[data-motion="expressive"] .motion-el:nth-child(4) { animation-delay: 240ms; }
+  .preview[data-motion="none"] .motion-el { animation: none; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) { .motion-el { animation: none !important; } }
+
+  /* Tabs mock */
+  .tabs { display: flex; gap: 0.4rem; }
+  .tab { font-family: var(--mono-font); font-size: 0.74rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.5rem 0.8rem; border-radius: 999px; border: 1px solid rgba(0,0,0,0.12); background: transparent; color: var(--muted); cursor: pointer; }
+  .tab.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* Density font scaling on preview */
+  .preview[data-size="14"] { font-size: 14px; }
+  .preview[data-size="15"] { font-size: 15px; }
+  .preview[data-size="16"] { font-size: 16px; }
+  .preview[data-size="17"] { font-size: 17px; }
+  .preview[data-size="18"] { font-size: 18px; }
+
+  /* Small helpers */
+  .stack-sm { display: grid; gap: 0.45rem; }
+  .row { display: flex; align-items: center; gap: 0.5rem; }
+  .pill { display: inline-flex; padding: 0.2rem 0.55rem; border-radius: 999px; background: var(--primary-tint); color: var(--primary); font-family: var(--mono-font); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  @media (max-width: 960px) {
+    .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    .controls { max-height: 50vh; border-right: none; border-bottom: 1px solid var(--ui-border); }
+  }
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/htm@3.1.1/dist/htm.js"></script>
+
+  <script>
+  (function () {
+    const html = htm.bind(React.createElement);
+    const { useState, useMemo, useCallback, useEffect } = React;
+
+    const DISPLAY_FONTS = ["Fraunces", "Newsreader", "Instrument Serif", "Source Serif 4", "Playfair Display"];
+    const BODY_FONTS = ["Manrope", "Inter", "Geist", "IBM Plex Sans", "system-ui"];
+    const MONO_FONTS = ["IBM Plex Mono", "JetBrains Mono", "ui-monospace"];
+
+    const PRESETS = {
+      "studio-notebook": {
+        label: "Studio Notebook", sub: "Recommended — C + A + B blend",
+        displayFont: "Fraunces", bodyFont: "Manrope", monoFont: "IBM Plex Mono",
+        baseSize: 16, displaySoft: 50,
+        paper: "#fbf7ee", ink: "#1b1b1b", muted: "#5a564e",
+        primary: "#2d5a6b", correction: "#b8583a",
+        layout: "sidebar", density: "comfortable", cardStyle: "bordered", accentStyle: "tint",
+        mathRigor: "medium", marginNotes: true, graphPaper: true, sectionNumbering: true, scrollProgress: true,
+        motion: "subtle",
+      },
+      "scholarly-press": {
+        label: "Scholarly Press", sub: "Editorial academic",
+        displayFont: "Source Serif 4", bodyFont: "IBM Plex Sans", monoFont: "IBM Plex Mono",
+        baseSize: 16, displaySoft: 20,
+        paper: "#faf7f0", ink: "#1a1a1a", muted: "#4a4a4a",
+        primary: "#8b2f28", correction: "#6b1e1a",
+        layout: "sidebar", density: "comfortable", cardStyle: "flat", accentStyle: "none",
+        mathRigor: "heavy", marginNotes: true, graphPaper: false, sectionNumbering: true, scrollProgress: true,
+        motion: "subtle",
+      },
+      "lab-notebook": {
+        label: "Lab Notebook", sub: "Feynman-style",
+        displayFont: "Newsreader", bodyFont: "IBM Plex Sans", monoFont: "JetBrains Mono",
+        baseSize: 15, displaySoft: 0,
+        paper: "#fcfcf9", ink: "#222", muted: "#5f5f5f",
+        primary: "#d95d2a", correction: "#b83a22",
+        layout: "topnav", density: "compact", cardStyle: "flat", accentStyle: "stripe",
+        mathRigor: "medium", marginNotes: true, graphPaper: true, sectionNumbering: false, scrollProgress: false,
+        motion: "none",
+      },
+      "textbook-modern": {
+        label: "Textbook Modern", sub: "Structured, full color",
+        displayFont: "Newsreader", bodyFont: "Inter", monoFont: "IBM Plex Mono",
+        baseSize: 16, displaySoft: 0,
+        paper: "#ffffff", ink: "#131416", muted: "#565b66",
+        primary: "#1e3a8a", correction: "#c2410c",
+        layout: "sidebar", density: "comfortable", cardStyle: "elevated", accentStyle: "stripe",
+        mathRigor: "medium", marginNotes: false, graphPaper: false, sectionNumbering: true, scrollProgress: true,
+        motion: "expressive",
+      },
+      "current-whiteboard": {
+        label: "Current", sub: "Whiteboard / notebook (today)",
+        displayFont: "Fraunces", bodyFont: "Manrope", monoFont: "IBM Plex Mono",
+        baseSize: 16, displaySoft: 60,
+        paper: "#fbf6e8", ink: "#202020", muted: "#64615a",
+        primary: "#f5c84c", correction: "#ef7a5f",
+        layout: "topnav", density: "comfortable", cardStyle: "bordered", accentStyle: "stripe",
+        mathRigor: "light", marginNotes: false, graphPaper: true, sectionNumbering: false, scrollProgress: false,
+        motion: "subtle",
+      },
+    };
+
+    const DEFAULT_KEY = "studio-notebook";
+
+    function hexToRgba(hex, alpha) {
+      const m = hex.replace("#", "");
+      const b = m.length === 3 ? m.split("").map((c) => c + c).join("") : m;
+      const num = parseInt(b, 16);
+      const r = (num >> 16) & 255, g = (num >> 8) & 255, bl = num & 255;
+      return `rgba(${r},${g},${bl},${alpha})`;
+    }
+
+    function App() {
+      const [state, setState] = useState({ ...PRESETS[DEFAULT_KEY], _preset: DEFAULT_KEY });
+      const [copied, setCopied] = useState(false);
+
+      const update = useCallback((patch) => {
+        setState((s) => ({ ...s, ...patch, _preset: "custom" }));
+      }, []);
+
+      const applyPreset = useCallback((key) => {
+        setState({ ...PRESETS[key], _preset: key });
+      }, []);
+
+      const prompt = useMemo(() => buildPrompt(state), [state]);
+
+      const onCopy = useCallback(async () => {
+        try {
+          await navigator.clipboard.writeText(prompt);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        } catch (_e) {
+          const ta = document.createElement("textarea");
+          ta.value = prompt; document.body.appendChild(ta); ta.select();
+          document.execCommand("copy"); ta.remove(); setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        }
+      }, [prompt]);
+
+      return html`
+        <div className="app">
+          <${ControlPanel} state=${state} update=${update} applyPreset=${applyPreset} />
+          <div className="preview-wrap">
+            <div className="preview-scroll">
+              <div className="preview-frame">
+                <${Preview} state=${state} />
+              </div>
+            </div>
+            <div className="prompt-panel">
+              <div className="prompt-head">
+                <h3>Copy this direction back to Claude</h3>
+                <button className="copy-btn" data-copied=${copied} onClick=${onCopy}>${copied ? "Copied!" : "Copy prompt"}</button>
+              </div>
+              <div className="prompt-text">${prompt}</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function Segmented({ value, options, onChange }) {
+      return html`
+        <div className="seg">
+          ${options.map((opt) => html`
+            <button key=${opt.value} data-active=${value === opt.value} onClick=${() => onChange(opt.value)}>${opt.label}</button>
+          `)}
+        </div>
+      `;
+    }
+
+    function Toggle({ value, onChange, label }) {
+      return html`
+        <div className="toggle-row">
+          <span className="lbl">${label}</span>
+          <div className="toggle" data-on=${value} onClick=${() => onChange(!value)} role="switch" aria-checked=${value} tabIndex=${0}
+            onKeyDown=${(e) => { if (e.key === " " || e.key === "Enter") { e.preventDefault(); onChange(!value); } }} />
+        </div>
+      `;
+    }
+
+    function Field({ label, value, children }) {
+      return html`
+        <label className="field">
+          <span className="lbl"><span>${label}</span>${value != null ? html`<span className="val">${value}</span>` : null}</span>
+          ${children}
+        </label>
+      `;
+    }
+
+    function ControlPanel({ state, update, applyPreset }) {
+      return html`
+        <aside className="controls" aria-label="Design controls">
+          <h1>ML Study Lab</h1>
+          <h2>Design Playground</h2>
+
+          <div className="group">
+            <div className="group-label">Presets</div>
+            <div className="presets">
+              ${Object.entries(PRESETS).map(([key, p]) => html`
+                <button key=${key} className="preset-btn" data-active=${state._preset === key} onClick=${() => applyPreset(key)}>
+                  <span className="p-name">${p.label}</span>
+                  <span className="p-sub">${p.sub}</span>
+                </button>
+              `)}
+            </div>
+          </div>
+
+          <div className="group">
+            <div className="group-label">Typography</div>
+            <${Field} label="Display font">
+              <select value=${state.displayFont} onChange=${(e) => update({ displayFont: e.target.value })}>
+                ${DISPLAY_FONTS.map((f) => html`<option key=${f} value=${f}>${f}</option>`)}
+              </select>
+            <//>
+            <${Field} label="Body font">
+              <select value=${state.bodyFont} onChange=${(e) => update({ bodyFont: e.target.value })}>
+                ${BODY_FONTS.map((f) => html`<option key=${f} value=${f}>${f}</option>`)}
+              </select>
+            <//>
+            <${Field} label="Mono / equations">
+              <select value=${state.monoFont} onChange=${(e) => update({ monoFont: e.target.value })}>
+                ${MONO_FONTS.map((f) => html`<option key=${f} value=${f}>${f}</option>`)}
+              </select>
+            <//>
+            <${Field} label="Base size" value=${state.baseSize + "px"}>
+              <input type="range" min="14" max="18" step="1" value=${state.baseSize} onChange=${(e) => update({ baseSize: +e.target.value })} />
+            <//>
+            ${state.displayFont === "Fraunces" ? html`
+              <${Field} label="Fraunces SOFT axis" value=${state.displaySoft}>
+                <input type="range" min="0" max="100" step="5" value=${state.displaySoft} onChange=${(e) => update({ displaySoft: +e.target.value })} />
+              <//>
+            ` : null}
+          </div>
+
+          <div className="group">
+            <div className="group-label">Palette</div>
+            <${Field} label="Paper" value=${state.paper}>
+              <input type="color" value=${state.paper} onChange=${(e) => update({ paper: e.target.value })} />
+            <//>
+            <${Field} label="Ink" value=${state.ink}>
+              <input type="color" value=${state.ink} onChange=${(e) => update({ ink: e.target.value })} />
+            <//>
+            <${Field} label="Muted" value=${state.muted}>
+              <input type="color" value=${state.muted} onChange=${(e) => update({ muted: e.target.value })} />
+            <//>
+            <${Field} label="Primary accent" value=${state.primary}>
+              <input type="color" value=${state.primary} onChange=${(e) => update({ primary: e.target.value })} />
+            <//>
+            <${Field} label="Correction accent" value=${state.correction}>
+              <input type="color" value=${state.correction} onChange=${(e) => update({ correction: e.target.value })} />
+            <//>
+          </div>
+
+          <div className="group">
+            <div className="group-label">Layout</div>
+            <${Field} label="Structure">
+              <${Segmented} value=${state.layout} onChange=${(v) => update({ layout: v })} options=${[
+                { value: "sidebar", label: "Sidebar" },
+                { value: "mixed", label: "Mixed" },
+                { value: "topnav", label: "Top nav" },
+              ]} />
+            <//>
+            <${Field} label="Density">
+              <${Segmented} value=${state.density} onChange=${(v) => update({ density: v })} options=${[
+                { value: "compact", label: "Compact" },
+                { value: "comfortable", label: "Comfort" },
+                { value: "airy", label: "Airy" },
+              ]} />
+            <//>
+            <${Field} label="Card style">
+              <${Segmented} value=${state.cardStyle} onChange=${(v) => update({ cardStyle: v })} options=${[
+                { value: "flat", label: "Flat" },
+                { value: "bordered", label: "Border" },
+                { value: "elevated", label: "Shadow" },
+                { value: "notebook", label: "Notebook" },
+              ]} />
+            <//>
+            <${Field} label="Module accent">
+              <${Segmented} value=${state.accentStyle} onChange=${(v) => update({ accentStyle: v })} options=${[
+                { value: "tint", label: "Tint" },
+                { value: "stripe", label: "Stripe" },
+                { value: "none", label: "None" },
+              ]} />
+            <//>
+          </div>
+
+          <div className="group">
+            <div className="group-label">Content features</div>
+            <${Field} label="Math rigor">
+              <${Segmented} value=${state.mathRigor} onChange=${(v) => update({ mathRigor: v })} options=${[
+                { value: "light", label: "Light" },
+                { value: "medium", label: "Medium" },
+                { value: "heavy", label: "Heavy" },
+              ]} />
+            <//>
+            <${Toggle} value=${state.marginNotes} onChange=${(v) => update({ marginNotes: v })} label="Margin notes (Tufte sidenotes)" />
+            <${Toggle} value=${state.graphPaper} onChange=${(v) => update({ graphPaper: v })} label="Graph-paper background" />
+            <${Toggle} value=${state.sectionNumbering} onChange=${(v) => update({ sectionNumbering: v })} label="Section numbering (§3.1)" />
+            <${Toggle} value=${state.scrollProgress} onChange=${(v) => update({ scrollProgress: v })} label="Scroll progress bar" />
+          </div>
+
+          <div className="group">
+            <div className="group-label">Motion</div>
+            <${Field} label="Entrance">
+              <${Segmented} value=${state.motion} onChange=${(v) => update({ motion: v })} options=${[
+                { value: "none", label: "None" },
+                { value: "subtle", label: "Subtle" },
+                { value: "expressive", label: "Expressive" },
+              ]} />
+            <//>
+            <p style=${{ fontSize: "0.72rem", color: "var(--ui-muted)", margin: "0.45rem 0 0", lineHeight: 1.5 }}>
+              <code>prefers-reduced-motion</code> is always respected.
+            </p>
+          </div>
+        </aside>
+      `;
+    }
+
+    function Preview({ state }) {
+      const cssVars = {
+        "--paper": state.paper, "--ink": state.ink, "--muted": state.muted,
+        "--muted-2": hexToRgba(state.muted, 0.6),
+        "--primary": state.primary,
+        "--primary-tint": hexToRgba(state.primary, 0.08),
+        "--correction": state.correction,
+        "--display-font": `"${state.displayFont}", serif`,
+        "--body-font": `"${state.bodyFont}", sans-serif`,
+        "--mono-font": `"${state.monoFont}", monospace`,
+        fontVariationSettings: state.displayFont === "Fraunces" ? `'SOFT' ${state.displaySoft}` : undefined,
+      };
+
+      return html`
+        <article
+          className="preview"
+          style=${cssVars}
+          data-layout=${state.layout}
+          data-density=${state.density}
+          data-card=${state.cardStyle}
+          data-accent=${state.accentStyle}
+          data-graph=${state.graphPaper}
+          data-margin=${state.marginNotes}
+          data-motion=${state.motion}
+          data-size=${state.baseSize}
+        >
+          <${PreviewHeader} state=${state} />
+          ${state.scrollProgress ? html`<div className="p-progress" aria-hidden="true" />` : null}
+
+          <div className="p-body">
+            ${state.layout !== "topnav" ? html`<${Sidebar} state=${state} />` : null}
+            <${MainContent} state=${state} />
+          </div>
+        </article>
+      `;
+    }
+
+    function PreviewHeader({ state }) {
+      return html`
+        <header className="p-header">
+          <span>ML Study Lab / Module 3</span>
+          <nav>
+            <a className="active">Module 3</a>
+            <a>Module 4</a>
+            <a>Module 6</a>
+            <a>Quiz</a>
+          </nav>
+        </header>
+      `;
+    }
+
+    function Sidebar({ state }) {
+      return html`
+        <aside className="p-sidebar" aria-label="On this page">
+          <div className="sb-group">Module 3</div>
+          <a className="active">${state.sectionNumbering ? "§3.1 " : ""}K-means</a>
+          <a>${state.sectionNumbering ? "§3.2 " : ""}K-Nearest Neighbors</a>
+          <a>${state.sectionNumbering ? "§3.3 " : ""}Support Vector Machines</a>
+          <div className="sb-group">On this page</div>
+          <a>Objective</a>
+          <a>Algorithm</a>
+          <a>Worked example</a>
+          <a>Pitfalls</a>
+          <a>Further reading</a>
+        </aside>
+      `;
+    }
+
+    function MainContent({ state }) {
+      return html`
+        <main className="p-main">
+          <section className="p-hero motion-el">
+            <span className="kicker">Module 3 · Unsupervised learning</span>
+            ${state.sectionNumbering ? html`<span className="section-number">§ 3.1</span>` : null}
+            <h1>K-means clustering: finding structure without labels.</h1>
+            <p>
+              An unsupervised algorithm that partitions <em>n</em> observations into <em>k</em> clusters
+              by iteratively minimising the within-cluster sum of squares.
+            </p>
+            <div className="row"><span className="pill">Unsupervised</span><span className="pill">Centroid-based</span><span className="pill">Canvas core</span></div>
+          </section>
+
+          <section className="track-grid motion-el">
+            <div className="track-card">
+              <span className="kicker">Cram track</span>
+              <h3>Remember under exam pressure</h3>
+              <ul>
+                <li>Pick <em>k</em>; initialise centroids; assign nearest; update means; repeat.</li>
+                <li>K-means is unsupervised. KNN and SVM are supervised.</li>
+                <li>Sensitive to initialisation — use k-means++ by default.</li>
+              </ul>
+            </div>
+            <div className="track-card track-card--deep">
+              <span className="kicker">Deep track</span>
+              <h3>Understand so it sticks</h3>
+              <ul>
+                <li>Minimises inertia: squared Euclidean distance to centroids.</li>
+                <li>Guaranteed to converge; not guaranteed to reach the global optimum.</li>
+                <li>Choose <em>k</em> with the elbow curve or silhouette coefficient.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section className="motion-el">
+            <div className="tabs">
+              <button className="tab active">K-means</button>
+              <button className="tab">KNN</button>
+              <button className="tab">SVM</button>
+            </div>
+          </section>
+
+          <section className="figure motion-el">
+            <div className="figure-body">
+              <span className="figure-caption">Figure 3.1 · Assignment after two iterations</span>
+              <${KMeansPlot} state=${state} />
+              <p style=${{ color: "var(--muted)", fontSize: "0.94rem", margin: 0 }}>
+                Each student is assigned to the nearer centroid. Diamonds are cluster means.
+              </p>
+            </div>
+            ${state.marginNotes ? html`
+              <div className="stack-sm">
+                <div className="margin-note">
+                  <span className="mn-label">Citation</span>
+                  Lloyd, S. (1982). Least squares quantisation in PCM. <em>IEEE TIT, 28(2)</em>.
+                </div>
+                <div className="margin-note">
+                  <span className="mn-label correction">Watch out</span>
+                  Without feature scaling, a feature measured in the thousands will dominate every distance.
+                </div>
+              </div>
+            ` : null}
+          </section>
+
+          <section className="formula motion-el">
+            <span className="figure-caption">Objective · Inertia / Within-cluster sum of squares</span>
+            <${FormulaInertia} rigor=${state.mathRigor} />
+            ${state.mathRigor !== "light" ? html`
+              <div className="derivation">
+                <span>· Assignment step: C(i) = argmin<sub>j</sub> ‖x<sub>i</sub> − μ<sub>j</sub>‖²</span>
+                <span>· Update step: μ<sub>j</sub> = (1 / |S<sub>j</sub>|) Σ<sub>i ∈ S<sub>j</sub></sub> x<sub>i</sub></span>
+                ${state.mathRigor === "heavy" ? html`
+                  <span>· Converges because each step weakly decreases J; finite partitions ⇒ stops.</span>
+                ` : null}
+              </div>
+            ` : null}
+          </section>
+
+          <section className="motion-el">
+            <span className="figure-caption" style=${{ display: "block", marginBottom: "0.5rem" }}>Worked example · Professor's four-step walkthrough</span>
+            <div className="worked">
+              <div className="step"><span className="kicker">1 · Seed</span><strong>A, D</strong><p style=${{ margin: 0, color: "var(--muted)", fontSize: "0.88rem" }}>Pick initial centroids</p></div>
+              <div className="step"><span className="kicker">2 · Assign</span><strong>3 + 3</strong><p style=${{ margin: 0, color: "var(--muted)", fontSize: "0.88rem" }}>Nearest centroid</p></div>
+              <div className="step"><span className="kicker">3 · Update</span><strong>(83.3, 71.7)</strong><p style=${{ margin: 0, color: "var(--muted)", fontSize: "0.88rem" }}>New mean</p></div>
+              <div className="step"><span className="kicker">4 · Converge</span><strong>stable</strong><p style=${{ margin: 0, color: "var(--muted)", fontSize: "0.88rem" }}>Assignments fixed</p></div>
+            </div>
+          </section>
+
+          <section className="pitfall motion-el">
+            <span className="kicker">Common misconception</span>
+            <h4>"K-means always finds the best clusters."</h4>
+            <p>It only finds a <em>local</em> minimum of inertia. Different initialisations can land in different solutions — which is why scikit-learn runs <code>n_init</code> restarts and keeps the best.</p>
+          </section>
+
+          <section className="trail motion-el">
+            <div className="trail-card">
+              <span className="kicker">Canvas</span>
+              <strong>Professor's Module 3 notes</strong>
+              <p>Source of truth for definitions and exam emphasis.</p>
+            </div>
+            <div className="trail-card">
+              <span className="kicker">External</span>
+              <strong>scikit-learn clustering guide</strong>
+              <p>Implementation details for k-means++ and inertia.</p>
+            </div>
+          </section>
+        </main>
+      `;
+    }
+
+    function FormulaInertia({ rigor }) {
+      if (rigor === "light") {
+        return html`<div className="eq">J &nbsp;=&nbsp; <span>Σ</span> ‖ x<sub>i</sub> − μ<sub>C(i)</sub> ‖²</div>`;
+      }
+      return html`
+        <div className="eq">
+          J(C, μ) &nbsp;=&nbsp;
+          <span className="sum">Σ</span><sub style=${{ fontSize: "0.7rem" }}>j=1..k</sub>
+          &nbsp;<span className="sum">Σ</span><sub style=${{ fontSize: "0.7rem" }}>i ∈ S<sub>j</sub></sub>
+          &nbsp;‖ x<sub>i</sub> − μ<sub>j</sub> ‖²
+        </div>
+      `;
+    }
+
+    function KMeansPlot({ state }) {
+      const pts = [
+        { id: "A", x: 85, y: 70, g: "amber" },
+        { id: "B", x: 90, y: 85, g: "amber" },
+        { id: "C", x: 75, y: 60, g: "amber" },
+        { id: "D", x: 40, y: 45, g: "teal" },
+        { id: "E", x: 50, y: 50, g: "teal" },
+        { id: "F", x: 55, y: 35, g: "teal" },
+      ];
+      const centroids = [
+        { x: 83.3, y: 71.7, g: "amber" },
+        { x: 48.3, y: 43.3, g: "teal" },
+      ];
+      const px = (x) => 40 + (x / 100) * 360;
+      const py = (y) => 230 - (y / 100) * 200;
+      const amber = state.primary;
+      const teal = state.correction;
+      return html`
+        <svg viewBox="0 0 420 260" role="img" aria-label="K-means after two iterations">
+          <defs>
+            <pattern id="grid-pv" width="28" height="28" patternUnits="userSpaceOnUse">
+              <path d="M 28 0 L 0 0 0 28" fill="none" stroke=${hexToRgba(state.ink, 0.06)} strokeWidth="1" />
+            </pattern>
+          </defs>
+          <rect x="30" y="20" width="380" height="220" fill="url(#grid-pv)" />
+          <line x1="40" y1="232" x2="400" y2="232" stroke=${hexToRgba(state.ink, 0.25)} strokeWidth="1.2" />
+          <line x1="40" y1="232" x2="40" y2="22" stroke=${hexToRgba(state.ink, 0.25)} strokeWidth="1.2" />
+          <text x="404" y="248" fontFamily=${state.monoFont} fontSize="10" fill=${state.muted}>Math</text>
+          <text x="14" y="22" fontFamily=${state.monoFont} fontSize="10" fill=${state.muted}>Science</text>
+          ${pts.map((p) => html`
+            <g key=${p.id} transform=${`translate(${px(p.x)}, ${py(p.y)})`}>
+              <circle r="11" fill=${p.g === "amber" ? amber : teal} fillOpacity="0.22" stroke=${p.g === "amber" ? amber : teal} strokeWidth="1.5" />
+              <text textAnchor="middle" dy="4" fontSize="11" fontFamily=${state.monoFont} fill=${state.ink}>${p.id}</text>
+            </g>
+          `)}
+          ${centroids.map((c, i) => html`
+            <g key=${"c" + i} transform=${`translate(${px(c.x)}, ${py(c.y)}) rotate(45)`}>
+              <rect x="-9" y="-9" width="18" height="18" fill=${c.g === "amber" ? amber : teal} fillOpacity="0.18" stroke=${c.g === "amber" ? amber : teal} strokeWidth="2" />
+            </g>
+          `)}
+        </svg>
+      `;
+    }
+
+    // -------- prompt generation --------
+    function buildPrompt(s) {
+      const lines = [];
+      lines.push("Redesign the Second Half ML Study Lab using this direction:");
+      lines.push("");
+
+      lines.push("TYPOGRAPHY");
+      lines.push(`  · Display font: ${s.displayFont}${s.displayFont === "Fraunces" ? ` (SOFT axis ${s.displaySoft})` : ""}`);
+      lines.push(`  · Body font: ${s.bodyFont}`);
+      lines.push(`  · Mono / equations: ${s.monoFont}`);
+      lines.push(`  · Base body size: ${s.baseSize}px`);
+
+      lines.push("");
+      lines.push("PALETTE");
+      lines.push(`  · Paper: ${s.paper}`);
+      lines.push(`  · Ink: ${s.ink}`);
+      lines.push(`  · Muted text: ${s.muted}`);
+      lines.push(`  · Primary accent: ${s.primary} (links, active nav, primary diagrams)`);
+      lines.push(`  · Correction accent: ${s.correction} (misconceptions, errata only)`);
+
+      lines.push("");
+      lines.push("LAYOUT");
+      const layoutDesc = s.layout === "sidebar" ? "sticky left sidebar with section ToC" : s.layout === "mixed" ? "mixed — sidebar on modules, top nav on index" : "top navigation only";
+      lines.push(`  · Structure: ${layoutDesc}`);
+      lines.push(`  · Density: ${s.density}`);
+      const cardDesc = {
+        flat: "flat, background-tinted surfaces (no borders)",
+        bordered: "thin bordered cards, no shadow",
+        elevated: "elevated cards with soft shadows",
+        notebook: "notebook-style cards (thin border with double-rule left edge)",
+      }[s.cardStyle];
+      lines.push(`  · Card style: ${cardDesc}`);
+      const accentDesc = {
+        tint: "desaturated color tints to classify modules",
+        stripe: "a top accent stripe per module",
+        none: "no module-level color decoration",
+      }[s.accentStyle];
+      lines.push(`  · Module accents: ${accentDesc}`);
+
+      lines.push("");
+      lines.push("CONTENT FEATURES");
+      const rigorDesc = {
+        light: "formulas shown, no derivations",
+        medium: "formulas plus short derivations (assignment/update steps, SVM margin = 2/‖w‖, CNN output = (H−F+2P)/S+1)",
+        heavy: "full derivations including Lagrangian for SVM, gradient computation for backprop, convergence proofs",
+      }[s.mathRigor];
+      lines.push(`  · Math rigor: ${rigorDesc}. Use KaTeX for real math rendering.`);
+      lines.push(`  · Tufte-style margin notes (citations + 'watch out' misconceptions): ${s.marginNotes ? "on" : "off"}`);
+      lines.push(`  · Graph-paper plot backgrounds: ${s.graphPaper ? "on" : "off"}`);
+      lines.push(`  · Section numbering (§3.1 etc.): ${s.sectionNumbering ? "on" : "off"}`);
+      lines.push(`  · Scroll progress bar: ${s.scrollProgress ? "on" : "off"}`);
+
+      lines.push("");
+      lines.push("MOTION");
+      lines.push(`  · Entrance animation: ${s.motion}. Always honor prefers-reduced-motion.`);
+
+      lines.push("");
+      lines.push("PER-CONCEPT STRUCTURE");
+      lines.push("  Every concept (K-means, KNN, SVM, ensembles, NN, NLP, CNN) follows this order:");
+      lines.push("    1. Definition (precise one-sentence statement)");
+      lines.push("    2. Formula block (KaTeX)");
+      lines.push("    3. Intuition (Canvas emphasis, plain language)");
+      lines.push("    4. Worked example (same data as the interactive lab)");
+      lines.push("    5. Pitfall / misconception (uses correction accent)");
+      lines.push("    6. Further reading (1–2 curated links, in margin if notes are on)");
+
+      lines.push("");
+      lines.push("CONTENT ACCURACY UPGRADES (research-grounded)");
+      lines.push("  · K-means: add inertia formula, k-means++ init, elbow + silhouette for K selection, note non-globular limitation.");
+      lines.push("  · KNN: add feature scaling rationale, curse of dimensionality (brute force preferred when D>15), distance-weighted voting, k→bias/variance tradeoff.");
+      lines.push("  · SVM: add primal with slack variables, clarify C (larger C = harder margin, less regularisation), show RBF kernel formula with γ, note one-vs-rest for multiclass.");
+      lines.push("  · Ensembles: clarify RF's sqrt(n_features) default, OOB ~37%, keep impurity-importance warning and add permutation-importance alternative.");
+      lines.push("  · Neural networks: show cross-entropy loss, explicit forward/backward pass, why non-linear activations matter mathematically.");
+      lines.push("  · NLP: clarify that tokenisation/lemmatisation is the simplified classroom pipeline; production uses subword tokens and learned embeddings.");
+      lines.push("  · CNN: add output-dim formula (H−F+2P)/S+1, parameter sharing, pooling purpose (translation tolerance + compute).");
+
+      lines.push("");
+      lines.push("TECHNICAL CONSTRAINTS");
+      lines.push("  · Stay in Next.js 16 / React 19.");
+      lines.push("  · Apply Vercel react-best-practices: parallel async, no barrel imports, dynamic imports for KaTeX, memoise heavy diagrams, useDeferredValue on text-input-driven labs.");
+      lines.push("  · Apply composition-patterns: compound components for labs, no boolean-prop proliferation, lift state to providers, prefer use() over useContext in React 19.");
+      lines.push("  · Apply Vercel web-interface-guidelines: aria-labels on icon buttons, focus-visible states, tabular-nums for numbers, text-wrap: balance for headings, semantic HTML, no transition: all.");
+
+      return lines.join("\n");
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+  })();
+  </script>
+</body>
+</html>
