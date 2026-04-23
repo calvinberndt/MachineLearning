@@ -1686,3 +1686,36 @@ main {
   text-align: right;
   color: var(--ink);
 }
+
+/* ---------- Module hero ---------- */
+
+.module-hero {
+  display: grid;
+  gap: var(--space-3);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--line);
+}
+
+.module-hero__kicker {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+
+.module-hero__title {
+  font-size: var(--text-4xl);
+  max-width: 22ch;
+}
+
+.module-hero__deck {
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: var(--text-lg);
+}
+
+.module-page[data-tone="module-3"] { --module-tint: var(--module-3-tint); --module-line: var(--module-3-line); }
+.module-page[data-tone="module-4"] { --module-tint: var(--module-4-tint); --module-line: var(--module-4-line); }
+.module-page[data-tone="module-6"] { --module-tint: var(--module-6-tint); --module-line: var(--module-6-line); }
