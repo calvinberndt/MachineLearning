@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { SiteNavDrawer } from "./site-nav-drawer";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -16,10 +17,7 @@ export function SiteHeader() {
 
   return (
     <header className="site-header" aria-label="Primary">
-      <Link className="site-mark" href="/">
-        <span className="site-mark__kicker">COMP&nbsp;SCI&nbsp;465</span>
-        <span className="site-mark__title">ML Study Lab</span>
-      </Link>
+      <SiteNavDrawer />
       <nav className="site-nav" aria-label="Main navigation">
         {NAV.map((item) => {
           const active = item.href === "/"
