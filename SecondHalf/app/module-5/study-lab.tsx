@@ -171,7 +171,7 @@ function renderIntensity(value: number, positiveOnly = false) {
   return `rgba(255, 181, 79, ${alpha})`;
 }
 
-export function Module6Lab() {
+export function Module5Lab() {
   const [view, setView] = useState<LabView>("network");
   const [studyHours, setStudyHours] = useState(6);
   const [attendance, setAttendance] = useState(82);
@@ -222,10 +222,10 @@ export function Module6Lab() {
   const strongestFeature = Math.max(...pooled.flat());
 
   return (
-    <article className="module-page" data-tone="module-6">
+    <article className="module-page" data-tone="module-5">
       <section className="module-hero">
         <div>
-          <p className="hero-kicker">Module 6</p>
+          <p className="hero-kicker">Module 5</p>
           <h1 className="module-title">Deep learning turns raw input into layered features.</h1>
           <p className="module-copy">
             Start with neuron activations, move through an NLP pipeline, then watch a CNN pull edges
@@ -256,7 +256,7 @@ export function Module6Lab() {
         ]}
       />
 
-      <div className="lab-nav" role="tablist" aria-label="Module 6 sections">
+      <div className="lab-nav" role="tablist" aria-label="Module 5 sections">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -618,7 +618,7 @@ export function Module6Lab() {
         </section>
       ) : null}
 
-      <SourceTrail title="Module 6 source trail" sources={sourceGroups.module6} />
+      <SourceTrail title="Module 5 source trail" sources={sourceGroups.module5} />
     </article>
   );
 }

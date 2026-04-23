@@ -29,7 +29,7 @@ const mono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "ML Second Half Study Lab",
   description:
-    "A whiteboard-style study lab for machine learning — Module 3 (clustering, KNN, SVM), Module 4 (ensembles), Module 6 (deep learning, NLP, CNNs) — grounded in COMP SCI 465 Canvas notes.",
+    "A whiteboard-style study lab for machine learning — Module 3 (clustering, KNN, SVM), Module 4 (ensembles), Module 5 (deep learning, NLP, CNNs) — grounded in COMP SCI 465 Canvas notes.",
 };
 
 export const viewport: Viewport = {

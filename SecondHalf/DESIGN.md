@@ -67,7 +67,7 @@ Module 4:
 - Deep focus: variance reduction, bootstrapped samples, feature subsampling, tree disagreement, feature importance caveats.
 - Diagrams: bagging/boosting/stacking/voting flow, forest simulator, tradeoff comparison.
 
-Module 6:
+Module 5:
 
 - Cram focus: neural-network parts, forward propagation, loss, backpropagation, NLP pipeline, CNN layer order.
 - Deep focus: representations moving from raw input to vectors, tokens, embeddings, filters, feature maps, and class scores.
