@@ -1,5 +1,6 @@
-import type { ReactNode } from "react";
+import { Children, isValidElement, type ReactNode } from "react";
 import { buildConceptHeadingId } from "./concept-helpers";
+import { MarginNote } from "./margin-note";
 
 export function Concept({
   section,
@@ -13,13 +14,23 @@ export function Concept({
   children: ReactNode;
 }) {
   const id = buildConceptHeadingId(section, slug);
+
+  const all = Children.toArray(children);
+  const asides = all.filter(
+    (child) => isValidElement(child) && child.type === MarginNote,
+  );
+  const body = all.filter(
+    (child) => !(isValidElement(child) && child.type === MarginNote),
+  );
+
   return (
     <section id={id} className="concept" aria-labelledby={`${id}-title`}>
       <header className="concept__head">
         <span className="concept__section-number tabular">§&nbsp;{section}</span>
         <h2 id={`${id}-title`} className="concept__title">{title}</h2>
       </header>
-      <div className="concept__body">{children}</div>
+      <div className="concept__body">{body}</div>
+      {asides}
     </section>
   );
 }

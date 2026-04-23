@@ -2,6 +2,7 @@
 
 import { useDeferredValue, useMemo } from "react";
 import { useModule3Lab } from "./lab-context";
+import { plotX, plotY } from "./plot-utils";
 
 type KnnSample = { x: number; y: number; label: "A" | "B" };
 
@@ -16,14 +17,6 @@ const training: KnnSample[] = [
 
 function distance(a: { x: number; y: number }, b: { x: number; y: number }) {
   return Math.hypot(a.x - b.x, a.y - b.y);
-}
-
-function plotX(value: number, max: number, width = 420, padding = 36) {
-  return padding + (value / max) * (width - padding * 2);
-}
-
-function plotY(value: number, max: number, height = 280, padding = 28) {
-  return height - padding - (value / max) * (height - padding * 2);
 }
 
 export function KnnLab() {

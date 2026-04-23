@@ -43,6 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body>
+        <a href="#main" className="skip-link">Skip to content</a>
         <div className="site-shell">
           <SiteHeader />
           <main id="main">{children}</main>

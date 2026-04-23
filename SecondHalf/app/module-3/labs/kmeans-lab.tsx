@@ -1,6 +1,7 @@
 "use client";
 
 import { useModule3Lab } from "./lab-context";
+import { plotX, plotY } from "./plot-utils";
 
 type ScorePoint = { id: string; math: number; science: number };
 
@@ -58,14 +59,6 @@ const clusterSteps: ClusterStep[] = [
     assignments: { A: "amber", B: "amber", C: "amber", D: "teal", E: "teal", F: "teal" },
   },
 ];
-
-function plotX(value: number, max: number, width = 420, padding = 36) {
-  return padding + (value / max) * (width - padding * 2);
-}
-
-function plotY(value: number, max: number, height = 280, padding = 28) {
-  return height - padding - (value / max) * (height - padding * 2);
-}
 
 export function KMeansLab() {
   const { clusterStep, setClusterStep } = useModule3Lab();

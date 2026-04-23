@@ -2,12 +2,7 @@
 
 import { createContext, use, useCallback, useMemo, useState, type ReactNode } from "react";
 
-export type LabView = "kmeans" | "knn" | "svm";
-
 export type Module3LabState = {
-  view: LabView;
-  setView: (view: LabView) => void;
-
   clusterStep: number;
   setClusterStep: (step: number) => void;
 
@@ -27,7 +22,6 @@ export type Module3LabState = {
 const Module3LabContext = createContext<Module3LabState | null>(null);
 
 export function Module3LabProvider({ children }: { children: ReactNode }) {
-  const [view, setView] = useState<LabView>("kmeans");
   const [clusterStep, setClusterStep] = useState(0);
   const [testPoint, setTestPoint] = useState({ x: 5, y: 3 });
   const [k, setK] = useState(3);
@@ -41,14 +35,13 @@ export function Module3LabProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<Module3LabState>(
     () => ({
-      view, setView,
       clusterStep, setClusterStep,
       testPoint, setTestPoint: setTestPointStable,
       k, setK,
       kernel, setKernel,
       cValue, setCValue,
     }),
-    [view, clusterStep, testPoint, k, kernel, cValue, setTestPointStable],
+    [clusterStep, testPoint, k, kernel, cValue, setTestPointStable],
   );
 
   return <Module3LabContext value={value}>{children}</Module3LabContext>;

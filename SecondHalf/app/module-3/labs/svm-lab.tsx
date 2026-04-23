@@ -1,6 +1,7 @@
 "use client";
 
 import { useModule3Lab } from "./lab-context";
+import { plotX, plotY } from "./plot-utils";
 
 type SvmSample = { id: string; x: number; y: number; label: "0" | "1" };
 
@@ -16,14 +17,6 @@ const samples: SvmSample[] = [
   { id: "p9", x: 10, y: 3, label: "1" },
   { id: "p10", x: 11, y: 4, label: "1" },
 ];
-
-function plotX(value: number, max: number, width = 420, padding = 36) {
-  return padding + (value / max) * (width - padding * 2);
-}
-
-function plotY(value: number, max: number, height = 280, padding = 28) {
-  return height - padding - (value / max) * (height - padding * 2);
-}
 
 const RBF_CURVE = "M 154 34 C 236 68 258 132 244 198 C 228 250 188 262 134 244";
 

@@ -1719,3 +1719,23 @@ main {
 .module-page[data-tone="module-3"] { --module-tint: var(--module-3-tint); --module-line: var(--module-3-line); }
 .module-page[data-tone="module-4"] { --module-tint: var(--module-4-tint); --module-line: var(--module-4-line); }
 .module-page[data-tone="module-6"] { --module-tint: var(--module-6-tint); --module-line: var(--module-6-line); }
+
+/* ---------- Skip link ---------- */
+
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 50;
+  padding: var(--space-2) var(--space-4);
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+  border-radius: var(--radius-sm);
+  transform: translateY(-200%);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
