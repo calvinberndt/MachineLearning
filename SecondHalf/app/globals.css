@@ -1551,7 +1551,7 @@ main {
   border-right: 1px solid var(--line-strong);
   box-shadow: 12px 0 40px rgba(27, 27, 27, 0.08);
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: 1fr auto;
   transform: translateX(-100%);
   transition: transform var(--dur-med) var(--ease);
 }
@@ -1564,33 +1564,16 @@ main {
   pointer-events: none;
 }
 
-.nav-drawer__head {
-  position: relative;
-  padding: var(--space-6) var(--space-6) var(--space-4);
-  border-bottom: 1px solid var(--line);
-}
-
-.nav-drawer__kicker {
-  margin: 0 0 var(--space-1);
-  font-family: var(--font-mono), "JetBrains Mono", monospace;
-  font-size: var(--text-xs);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.nav-drawer__title {
-  margin: 0;
-  font-family: var(--font-display), Fraunces, serif;
-  font-size: var(--text-xl);
-  font-weight: 500;
-  color: var(--ink);
+/* Hide the in-page sidebar <details> while the nav drawer is open so
+   it doesn't peek through the right edge of the 90vw drawer on mobile. */
+body[data-nav-open="true"] .sidebar {
+  display: none;
 }
 
 .nav-drawer__close {
   position: absolute;
-  top: var(--space-4);
-  right: var(--space-4);
+  top: var(--space-3);
+  right: var(--space-3);
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 999px;
@@ -1599,6 +1582,7 @@ main {
   line-height: 1;
   display: grid;
   place-items: center;
+  z-index: 1;
   transition: color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
 }
 
@@ -1609,9 +1593,11 @@ main {
 
 .nav-drawer__nav {
   overflow-y: auto;
-  padding: var(--space-4) var(--space-4);
+  /* top padding clears the absolute-positioned close button (≈44px + var(--space-3) above) */
+  padding: calc(2.75rem + var(--space-3) + var(--space-2)) var(--space-4) var(--space-4);
   display: grid;
   gap: var(--space-3);
+  align-content: start;
 }
 
 .nav-drawer__group {
