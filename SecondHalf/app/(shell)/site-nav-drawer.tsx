@@ -77,6 +77,15 @@ export function SiteNavDrawer() {
     setOpen(false);
   }, [pathname]);
 
+  // Sync open state to body so CSS can hide the in-page sidebar while drawer
+  // is open (body[data-nav-open="true"] .sidebar { display: none }).
+  useEffect(() => {
+    document.body.dataset.navOpen = open ? "true" : "false";
+    return () => {
+      delete document.body.dataset.navOpen;
+    };
+  }, [open]);
+
   return (
     <>
       <button
@@ -110,21 +119,17 @@ export function SiteNavDrawer() {
         aria-hidden={!open}
         inert={open ? undefined : true}
       >
-        <header className="nav-drawer__head">
-          <p className="nav-drawer__kicker">COMP&nbsp;SCI&nbsp;465</p>
-          <p className="nav-drawer__title">ML Study Lab</p>
-          <button
-            type="button"
-            className="nav-drawer__close"
-            aria-label="Close navigation"
-            onClick={() => {
-              setOpen(false);
-              buttonRef.current?.focus();
-            }}
-          >
-            ×
-          </button>
-        </header>
+        <button
+          type="button"
+          className="nav-drawer__close"
+          aria-label="Close navigation"
+          onClick={() => {
+            setOpen(false);
+            buttonRef.current?.focus();
+          }}
+        >
+          ×
+        </button>
 
         <nav
           className="nav-drawer__nav"
