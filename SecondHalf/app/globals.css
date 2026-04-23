@@ -1504,3 +1504,28 @@ main {
 .margin-note__body > :last-child {
   margin-bottom: 0;
 }
+
+/* ---------- Math ---------- */
+
+.math-block {
+  padding: var(--space-5) var(--space-6);
+  background: var(--paper-strong);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  font-size: 1.1em;
+}
+
+.math-inline .katex-fallback,
+.math-block .katex-fallback {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  background: var(--correction-tint);
+  color: var(--correction);
+  padding: 0.1em 0.35em;
+  border-radius: var(--radius-sm);
+}
+
+.math-inline .katex,
+.math-block .katex {
+  font-size: 1em;
+}
