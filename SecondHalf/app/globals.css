@@ -1065,28 +1065,55 @@ main {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-2);
-    padding: var(--space-2) 0;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
     cursor: pointer;
     font-family: var(--font-display), Fraunces, serif;
-    font-size: var(--text-base);
+    font-size: var(--text-lg);
     font-weight: 500;
     color: var(--ink);
+    background: var(--paper-strong);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-md);
     min-height: 44px;
+    box-shadow: 0 1px 0 rgba(27, 27, 27, 0.04);
+    transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  }
+  .sidebar__summary:hover {
+    background: var(--paper);
+    border-color: var(--ink);
   }
   .sidebar__summary::-webkit-details-marker { display: none; }
   .sidebar__summary::after {
-    content: "▸";
+    content: "▾";
     font-family: var(--font-mono), monospace;
-    color: var(--muted-2);
-    font-size: var(--text-xs);
+    color: var(--primary);
+    font-size: var(--text-sm);
     transition: transform var(--dur-fast) var(--ease);
   }
+  .sidebar__details[open] .sidebar__summary {
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border-bottom-color: var(--line);
+    background: var(--paper);
+  }
   .sidebar__details[open] .sidebar__summary::after {
-    transform: rotate(90deg);
+    transform: rotate(180deg);
+  }
+  .sidebar__details[open] .sidebar__details-body {
+    padding: var(--space-3) var(--space-4) var(--space-4);
+    background: var(--paper-strong);
+    border: 1px solid var(--line-strong);
+    border-top: 0;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
   }
   .sidebar__details .sidebar__group {
-    padding-bottom: var(--space-3);
+    padding-bottom: var(--space-2);
+  }
+  .sidebar__details .sidebar__link {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    font-size: var(--text-base);
   }
 }
 
@@ -1695,6 +1722,104 @@ body[data-nav-open="true"] .sidebar {
 @media (prefers-reduced-motion: reduce) {
   .nav-drawer {
     transition: none;
+  }
+}
+
+/* ---------- Nav drawer: mobile polish ----------
+   Bigger readable type, full-width on phones so there's no peek strip,
+   stronger active states, and the Home footer styled as a real link button. */
+@media (max-width: 600px) {
+  .nav-drawer {
+    width: 100vw;
+  }
+
+  .nav-drawer__nav {
+    gap: var(--space-4);
+    padding: calc(2.75rem + var(--space-3) + var(--space-4)) var(--space-5) var(--space-5);
+  }
+
+  .nav-drawer__module {
+    padding: var(--space-4) var(--space-5);
+    border: 1px solid var(--line);
+    background: var(--paper-strong);
+    gap: var(--space-1);
+  }
+
+  .nav-drawer__module[data-active="true"] {
+    background: var(--primary-tint);
+    border-color: var(--primary);
+    box-shadow: inset 4px 0 0 var(--primary);
+  }
+
+  .nav-drawer__module-label {
+    font-size: var(--text-xl);
+    font-weight: 500;
+  }
+
+  .nav-drawer__module-kicker {
+    font-size: var(--text-xs);
+    color: var(--muted-strong, var(--muted));
+    letter-spacing: 0.16em;
+  }
+
+  .nav-drawer__sections {
+    margin: var(--space-2) 0 0 var(--space-5);
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--primary-tint);
+    gap: 0;
+  }
+
+  .nav-drawer__section {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    font-family: var(--font-body), "IBM Plex Sans", sans-serif;
+    font-size: var(--text-base);
+    color: var(--ink);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-drawer__section:last-child { border-bottom: 0; }
+
+  .nav-drawer__section:hover,
+  .nav-drawer__section:active {
+    color: var(--primary);
+    background: var(--primary-tint);
+    border-radius: var(--radius-sm);
+  }
+
+  .nav-drawer__foot {
+    padding: var(--space-5);
+  }
+
+  .nav-drawer__home {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: var(--space-3) var(--space-5);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    font-size: var(--text-sm);
+    letter-spacing: 0.2em;
+    color: var(--ink);
+    background: var(--paper);
+  }
+
+  .nav-drawer__home[data-active="true"] {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .nav-drawer__close {
+    width: 3rem;
+    height: 3rem;
+    background: var(--paper-strong);
+    border: 1px solid var(--line-strong);
+    font-size: var(--text-2xl);
+    color: var(--ink);
   }
 }
 

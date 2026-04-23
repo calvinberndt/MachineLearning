@@ -78,7 +78,7 @@ export function Sidebar({
         <summary className="sidebar__summary">
           {moduleLabel ?? "On this page"}
         </summary>
-        {tocContent}
+        <div className="sidebar__details-body">{tocContent}</div>
       </details>
       {/* Desktop / tablet — visible always (details hidden via CSS) */}
       <div className="sidebar__always" aria-hidden="true">
