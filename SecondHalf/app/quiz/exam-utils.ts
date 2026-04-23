@@ -204,6 +204,161 @@ const questionBank: Question[] = [
     explanation:
       "Backpropagation computes gradients and updates weights based on model error.",
   },
+  {
+    id: "m3-q6",
+    module: "Module 3",
+    type: "multiple-choice",
+    prompt: "What is the main advantage of k-means++ over random initialisation?",
+    choices: [
+      "It guarantees the global minimum",
+      "It picks initial centroids that are spread apart, reducing bad local minima",
+      "It removes the need to choose k",
+      "It lets k-means handle non-globular clusters",
+    ],
+    answer: "It picks initial centroids that are spread apart, reducing bad local minima",
+    explanation:
+      "Arthur & Vassilvitskii (2007) showed k-means++ seeds centroids with probability proportional to squared distance from existing centroids, which gives provably better starting points than uniform random selection. It does not guarantee the global minimum — scikit-learn still runs n_init restarts on top.",
+  },
+  {
+    id: "m3-q7",
+    module: "Module 3",
+    type: "multiple-choice",
+    prompt: "In SVM, what happens when you increase the regularisation parameter C?",
+    choices: [
+      "The margin widens and the model becomes more regularised",
+      "The margin shrinks and the model becomes less regularised (harder margin)",
+      "The kernel switches from RBF to linear",
+      "The number of support vectors always increases",
+    ],
+    answer: "The margin shrinks and the model becomes less regularised (harder margin)",
+    explanation:
+      "C points the opposite way from the λ in ridge regression. Large C penalises every slack violation heavily, producing a harder margin that classifies training points more aggressively — less regularisation, more overfitting risk.",
+  },
+  {
+    id: "m3-q8",
+    module: "Module 3",
+    type: "fill-blank",
+    prompt:
+      "KNN suffers from the curse of dimensionality; scikit-learn switches to brute-force search past roughly D > ______ features.",
+    answer: "15",
+    explanation:
+      "Above ~15 dimensions, tree-based indexes (KD-tree, ball-tree) lose their speed advantage and brute force becomes competitive or faster.",
+  },
+  {
+    id: "m4-q6",
+    module: "Module 4",
+    type: "multiple-choice",
+    prompt: "Approximately what fraction of training points are out-of-bag for each tree in a Random Forest?",
+    choices: ["1/2 ≈ 50%", "1/e ≈ 37%", "1/π ≈ 32%", "1/10 = 10%"],
+    answer: "1/e ≈ 37%",
+    explanation:
+      "Bootstrapping draws n points with replacement from n. The probability any specific point is not drawn is (1 − 1/n)^n → 1/e ≈ 0.368. Those out-of-bag points give a free hold-out estimate without a validation split.",
+  },
+  {
+    id: "m4-q7",
+    module: "Module 4",
+    type: "multiple-choice",
+    prompt: "For a Random Forest classifier, what is scikit-learn's default number of features considered at each split?",
+    choices: [
+      "All features (no subsetting)",
+      "log2(n_features)",
+      "sqrt(n_features)",
+      "n_features / 3",
+    ],
+    answer: "sqrt(n_features)",
+    explanation:
+      "max_features='sqrt' is the classification default; regression defaults to max_features=1.0 (all). The subsetting decorrelates the trees and is what distinguishes Random Forest from plain bagging.",
+  },
+  {
+    id: "m4-q8",
+    module: "Module 4",
+    type: "multiple-choice",
+    prompt: "Why does scikit-learn recommend permutation_importance over the default feature_importances_?",
+    choices: [
+      "Permutation importance is faster to compute",
+      "feature_importances_ is biased toward high-cardinality features and reflects training data only",
+      "feature_importances_ only works for regression",
+      "Permutation importance always gives larger numbers",
+    ],
+    answer: "feature_importances_ is biased toward high-cardinality features and reflects training data only",
+    explanation:
+      "Impurity-based importance has two known flaws: it inflates importance for features with many unique values (e.g. IDs), and it's computed on training data so it doesn't measure generalisation. Permutation importance shuffles each feature on held-out data and measures the drop in score — both flaws disappear.",
+  },
+  {
+    id: "m5-q7",
+    module: "Module 5",
+    type: "multiple-choice",
+    prompt: "If you stack two linear (no activation) layers, the composition is equivalent to:",
+    choices: [
+      "A deeper non-linear function",
+      "A single affine transformation",
+      "A sigmoid classifier",
+      "A convolutional layer",
+    ],
+    answer: "A single affine transformation",
+    explanation:
+      "W₂(W₁x + b₁) + b₂ = (W₂W₁)x + (W₂b₁ + b₂) — a linear map composed with a linear map is still a single linear map. This is the algebraic reason activation functions are essential; otherwise depth adds no expressive power.",
+  },
+  {
+    id: "m5-q8",
+    module: "Module 5",
+    type: "multiple-choice",
+    prompt: "Which loss function is standard for multi-class classification with a neural network?",
+    choices: ["Mean squared error", "Hinge loss", "Cross-entropy loss", "L1 loss"],
+    answer: "Cross-entropy loss",
+    explanation:
+      "Cross-entropy L = −Σ y_c log ŷ_c pairs with a softmax output to give well-behaved gradients. MSE is for regression; hinge is for SVM-style classification.",
+  },
+  {
+    id: "m5-q9",
+    module: "Module 5",
+    type: "fill-blank",
+    prompt:
+      "For a CNN conv layer, the output spatial dimension is (H − F + 2P) / S + ______.",
+    answer: "1",
+    explanation:
+      "The canonical output-dim formula: H_out = ⌊(H_in − F + 2P) / S⌋ + 1, where F = filter size, P = padding, S = stride.",
+  },
+  {
+    id: "m5-q10",
+    module: "Module 5",
+    type: "multiple-choice",
+    prompt: "What does weight sharing in a convolutional layer accomplish?",
+    choices: [
+      "Reduces parameters and produces translation-tolerant feature detectors",
+      "Forces all filters to learn the same pattern",
+      "Eliminates the need for non-linear activations",
+      "Makes training slower but more accurate",
+    ],
+    answer: "Reduces parameters and produces translation-tolerant feature detectors",
+    explanation:
+      "A fully-connected layer would have H·W·C·H'·W'·C' parameters for image input. A conv layer shares the same F×F×C filter across every spatial location, reducing parameters to F·F·C·C'. As a side-effect, the same feature is detected regardless of where it appears in the input.",
+  },
+  {
+    id: "m5-q11",
+    module: "Module 5",
+    type: "multiple-choice",
+    prompt: "What is a key limitation of the classroom NLP pipeline (tokenise + stop-words + lemmatise + BoW)?",
+    choices: [
+      "It can't handle English text",
+      "Production systems typically use subword tokenisation (BPE/WordPiece) and learned embeddings instead",
+      "It only works for sentiment analysis",
+      "It requires GPU acceleration",
+    ],
+    answer: "Production systems typically use subword tokenisation (BPE/WordPiece) and learned embeddings instead",
+    explanation:
+      "Modern NLP replaces hand-crafted tokens with data-driven subword algorithms and replaces bag-of-words with context-aware learned embeddings (Word2Vec, GloVe, BERT). The classroom pipeline teaches the ideas; production rarely uses its code.",
+  },
+  {
+    id: "m5-q12",
+    module: "Module 5",
+    type: "fill-blank",
+    prompt:
+      "The derivative of the sigmoid peaks at 0.25, which causes the ______ gradient problem in deep networks.",
+    answer: "vanishing",
+    explanation:
+      "Multiplying many sub-unity derivatives through the chain rule of backprop drives gradients toward zero in early layers. ReLU (derivative 0 or 1) is the standard fix for hidden-layer activations.",
+  },
 ];
 
 function createGenerator(seed: number) {

@@ -26,11 +26,20 @@ const MODULES: ModuleEntry[] = [
     label: "Module 4",
     kicker: "Ensemble learning + random forests",
     href: "/module-4",
+    sections: [
+      { id: "s-4-1-ensemble-methods", label: "§4.1 Ensembles" },
+      { id: "s-4-2-random-forest", label: "§4.2 Random Forest" },
+    ],
   },
   {
     label: "Module 5",
     kicker: "Deep learning, NLP, CNNs",
     href: "/module-5",
+    sections: [
+      { id: "s-5-1-neural-networks", label: "§5.1 Neural networks" },
+      { id: "s-5-2-nlp-pipeline", label: "§5.2 NLP pipeline" },
+      { id: "s-5-3-convolutional-neural-networks", label: "§5.3 CNNs" },
+    ],
   },
   {
     label: "Quiz",
