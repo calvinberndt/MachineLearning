@@ -76,7 +76,7 @@ function Pitfall({ title, children }: { title: string; children: ReactNode }) {
     <aside className="concept__pitfall" role="note">
       <span className="concept__slot-tag concept__slot-tag--correction">Pitfall</span>
       <h3 className="concept__pitfall-title">{title}</h3>
-      <div className="concept__pitfall-body">{children}</div>
+      {children}
     </aside>
   );
 }

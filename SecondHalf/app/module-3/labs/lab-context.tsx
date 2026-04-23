@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, use, useCallback, useMemo, useState, type ReactNode } from "react";
+import { createContext, use, useMemo, useState, type ReactNode } from "react";
 
 export type Module3LabState = {
   clusterStep: number;
@@ -28,20 +28,15 @@ export function Module3LabProvider({ children }: { children: ReactNode }) {
   const [kernel, setKernel] = useState<"linear" | "rbf">("linear");
   const [cValue, setCValue] = useState(1.0);
 
-  const setTestPointStable = useCallback(
-    (point: { x: number; y: number }) => setTestPoint(point),
-    [],
-  );
-
   const value = useMemo<Module3LabState>(
     () => ({
       clusterStep, setClusterStep,
-      testPoint, setTestPoint: setTestPointStable,
+      testPoint, setTestPoint,
       k, setK,
       kernel, setKernel,
       cValue, setCValue,
     }),
-    [clusterStep, testPoint, k, kernel, cValue, setTestPointStable],
+    [clusterStep, testPoint, k, kernel, cValue],
   );
 
   return <Module3LabContext value={value}>{children}</Module3LabContext>;

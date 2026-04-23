@@ -69,7 +69,7 @@ Headings use `text-wrap: balance`. Body uses `text-wrap: pretty`. Numerics use `
 | `--primary` | `#2d5a6b` | Links, active nav, primary diagrams |
 | `--primary-tint` | `rgba(45,90,107,0.08)` | Subtle fills, module tints |
 | `--correction` | `#b8583a` | Pitfalls, errata, correction marks — nowhere else |
-| `--focus-ring` | `rgba(45,90,107,0.45)` | `focus-visible` outline |
+| `--focus-ring` | `rgba(45,90,107,0.75)` | `focus-visible` outline (≥3:1 WCAG 2.2 SC 1.4.11 on `--paper`) |
 
 **Module tints** (desaturated — classification, not decoration):
 
