@@ -198,7 +198,7 @@ code, kbd, samp {
 }
 
 .module-copy {
-  max-width: 62ch;
+  max-width: min(62ch, 100%);
 }
 
 .quiz-toolbar,
@@ -561,9 +561,11 @@ code, kbd, samp {
   align-items: flex-start;
   gap: 0.65rem;
   padding: 0.85rem 0.95rem;
+  min-height: 44px;
   border: 2px solid rgba(32, 32, 32, 0.1);
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
   transition:
     transform 160ms ease,
     border-color 160ms ease,
@@ -836,6 +838,8 @@ code, kbd, samp {
   justify-content: space-between;
   gap: var(--space-4);
   padding: var(--space-4) clamp(var(--space-4), 4vw, var(--space-8));
+  /* safe-area top for iPhone notch */
+  padding-top: calc(var(--space-4) + env(safe-area-inset-top, 0px));
   background: var(--paper);
   background: color-mix(in srgb, var(--paper) 88%, transparent);
   backdrop-filter: blur(14px);
@@ -852,6 +856,7 @@ code, kbd, samp {
   text-decoration: none;
   color: var(--ink);
   padding: var(--space-2) var(--space-3);
+  min-height: 44px;
   border-radius: var(--radius-md);
   transition: background-color var(--dur-fast) var(--ease);
   text-align: left;
@@ -904,8 +909,18 @@ code, kbd, samp {
   border-radius: 999px;
 }
 
+/* On narrow phones the pill nav overflows — hide it, rely on drawer */
+@media (max-width: 600px) {
+  .site-nav {
+    display: none;
+  }
+}
+
 .site-link {
   padding: var(--space-2) var(--space-4);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
   border-radius: 999px;
   text-decoration: none;
   transition: color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
@@ -988,12 +1003,20 @@ main {
 }
 
 .sidebar__link {
-  display: block;
+  display: flex;
+  align-items: center;
   padding: var(--space-2) var(--space-3);
+  min-height: 36px;
   border-radius: var(--radius-sm);
   text-decoration: none;
   color: var(--muted);
   transition: color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+
+@media (max-width: 600px) {
+  .sidebar__link {
+    min-height: 44px;
+  }
 }
 
 .sidebar__link:hover {
@@ -1017,6 +1040,56 @@ main {
   }
 }
 
+/* Sidebar disclosure pattern:
+   - ≥601px: always-visible div shown, details element hidden
+   - ≤600px: always-visible div hidden, details element shown (collapsible)
+*/
+.sidebar__details { display: none; }
+.sidebar__always  { display: contents; }
+
+@media (max-width: 600px) {
+  .sidebar {
+    padding: var(--space-2) var(--space-4);
+  }
+  .sidebar__module {
+    font-size: var(--text-base);
+  }
+  .sidebar__details {
+    display: block;
+  }
+  .sidebar__always {
+    display: none;
+  }
+  .sidebar__summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    padding: var(--space-2) 0;
+    cursor: pointer;
+    font-family: var(--font-display), Fraunces, serif;
+    font-size: var(--text-base);
+    font-weight: 500;
+    color: var(--ink);
+    min-height: 44px;
+  }
+  .sidebar__summary::-webkit-details-marker { display: none; }
+  .sidebar__summary::after {
+    content: "▸";
+    font-family: var(--font-mono), monospace;
+    color: var(--muted-2);
+    font-size: var(--text-xs);
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .sidebar__details[open] .sidebar__summary::after {
+    transform: rotate(90deg);
+  }
+  .sidebar__details .sidebar__group {
+    padding-bottom: var(--space-3);
+  }
+}
+
 /* ---------- Page shell ---------- */
 
 .module-page {
@@ -1035,6 +1108,8 @@ main {
   display: grid;
   gap: var(--space-10);
   padding-bottom: var(--space-10);
+  /* Prevent children with ch/fixed max-widths from blowing out the grid track */
+  min-width: 0;
 }
 
 .module-page__main > section {
@@ -1153,12 +1228,13 @@ main {
   grid-column: 1 / 2;
   display: grid;
   gap: var(--space-5);
+  min-width: 0;
 }
 
 .concept__definition {
   font-size: var(--text-lg);
   color: var(--ink);
-  max-width: 60ch;
+  max-width: min(60ch, 100%);
 }
 
 .concept__slot-tag {
@@ -1186,7 +1262,7 @@ main {
 
 .concept__intuition p {
   color: var(--ink);
-  max-width: 62ch;
+  max-width: min(62ch, 100%);
 }
 
 .concept__worked {
@@ -1262,6 +1338,8 @@ main {
   border-radius: var(--radius-lg);
   display: grid;
   gap: var(--space-4);
+  /* prevent interior content from blowing out the viewport */
+  overflow-x: hidden;
 }
 
 .lab-surface__controls {
@@ -1287,6 +1365,7 @@ main {
 }
 
 .mini-switch {
+  min-height: 44px;
   padding: var(--space-2) var(--space-4);
   border: 1px solid var(--line-strong);
   border-radius: 999px;
@@ -1351,7 +1430,8 @@ main {
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: var(--space-3);
-  min-width: 14rem;
+  min-width: 10rem;
+  min-height: 44px;
   padding: var(--space-2) var(--space-3);
   background: var(--paper);
   border: 1px solid var(--line);
@@ -1393,6 +1473,10 @@ main {
   gap: var(--space-3);
   padding-bottom: var(--space-6);
   border-bottom: 1px solid var(--line);
+  /* Prevent the grid from expanding beyond its container.
+     62ch max-width on .module-hero__deck otherwise sets the row track size. */
+  min-width: 0;
+  max-width: 100%;
 }
 
 .module-hero__kicker {
@@ -1405,12 +1489,12 @@ main {
 }
 
 .module-hero__title {
-  font-size: var(--text-4xl);
-  max-width: 22ch;
+  font-size: clamp(2rem, 11vw, var(--text-4xl));
+  max-width: min(22ch, 100%);
 }
 
 .module-hero__deck {
-  max-width: 62ch;
+  max-width: min(62ch, 100%);
   color: var(--muted);
   font-size: var(--text-lg);
 }
@@ -1507,8 +1591,8 @@ main {
   position: absolute;
   top: var(--space-4);
   right: var(--space-4);
-  width: 2rem;
-  height: 2rem;
+  width: 2.75rem;
+  height: 2.75rem;
   border-radius: 999px;
   color: var(--muted);
   font-size: var(--text-xl);
@@ -1795,7 +1879,7 @@ main {
 
 .control-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
   gap: var(--space-3);
 }
 
@@ -1945,7 +2029,8 @@ main {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 3px;
-  width: min(100%, 14rem);
+  /* On mobile: use more of the available width so cells hit ≥44px tap targets */
+  width: min(100%, 18rem);
   aspect-ratio: 1;
 }
 
@@ -1954,7 +2039,15 @@ main {
   background: var(--paper-strong);
   border-radius: 2px;
   cursor: pointer;
+  /* Ensure each cell has at least a 44px tap target via min-height */
+  min-height: 44px;
   transition: background-color var(--dur-fast) var(--ease);
+}
+
+@media (max-width: 600px) {
+  .matrix {
+    width: min(100%, 20rem);
+  }
 }
 
 .matrix-cell[data-on="true"] {
@@ -2025,13 +2118,13 @@ main {
   color: var(--ink);
   margin: 0;
   text-wrap: balance;
-  max-width: 14ch;
+  max-width: min(14ch, 100%);
 }
 
 .home-hero__deck {
   font-size: var(--text-lg);
   color: var(--muted);
-  max-width: 56ch;
+  max-width: min(56ch, 100%);
   line-height: 1.65;
   margin: 0;
 }
@@ -2048,6 +2141,7 @@ main {
   align-items: center;
   gap: var(--space-2);
   padding: var(--space-3) var(--space-5);
+  min-height: 44px;
   border-radius: 999px;
   font-family: var(--font-mono), "JetBrains Mono", monospace;
   font-size: var(--text-xs);
@@ -2186,7 +2280,7 @@ main {
   font-size: var(--text-base);
   color: var(--muted);
   margin: 0;
-  max-width: 58ch;
+  max-width: min(58ch, 100%);
   line-height: 1.65;
 }
 
@@ -2207,7 +2301,7 @@ main {
   background: var(--paper-strong);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  max-width: 68ch;
+  max-width: min(68ch, 100%);
 }
 
 .home-approach p {
@@ -2224,4 +2318,131 @@ main {
   }
   .home-chapter__arrow { display: none; }
   .home-chapter__number { font-size: var(--text-xl); }
+}
+
+/* ============================================================
+   Mobile + responsive additions
+   Breakpoints:
+     --bp-phone   : 600px  (phones up to ~390px, single column)
+     --bp-tablet  : 780px  (tablet portrait transition)
+     --bp-desktop : 1040px (sidebar visible, two-column concept)
+   ============================================================ */
+
+/* ---------- Global overflow guard ---------- */
+/* Prevent any single element from forcing horizontal scroll */
+main, .module-page__main, .home {
+  overflow-x: hidden;
+}
+
+/* On narrow phones, lab controls stack vertically so range-fields get full width */
+@media (max-width: 600px) {
+  .lab-surface__controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .lab-surface__controls .mini-switch {
+    width: 100%;
+    border-radius: var(--radius-md);
+    text-align: left;
+  }
+  .range-field {
+    min-width: 0;
+    width: 100%;
+  }
+}
+
+/* ---------- Concept body clamp on narrow ---------- */
+@media (max-width: 600px) {
+  .concept__title {
+    font-size: clamp(1.6rem, 8vw, var(--text-3xl));
+  }
+
+  /* Pitfall and worked sections use full width cleanly */
+  .concept__worked,
+  .concept__pitfall {
+    margin-inline: 0;
+  }
+
+  /* Margin notes inline: compact them on phones */
+  .margin-note {
+    font-size: var(--text-xs);
+  }
+
+  /* Home hero: slightly tighter on 375 */
+  .home-hero__title {
+    font-size: clamp(2.2rem, 10vw, 5.5rem);
+  }
+
+  .home-approach {
+    padding: var(--space-5) var(--space-4);
+  }
+}
+
+/* ---------- Nav drawer safe-area bottom ---------- */
+.nav-drawer__foot {
+  padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+}
+
+/* ---------- Forest lab: sliders single-column at ≤600px ---------- */
+@media (max-width: 600px) {
+  .forest-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- NLP pipeline: 1 column at ≤600px ---------- */
+@media (max-width: 600px) {
+  .pipeline-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Vote chips: full width on phones ---------- */
+@media (max-width: 600px) {
+  .vote-chip {
+    min-height: 44px;
+    width: 100%;
+  }
+}
+
+/* ---------- Nav drawer sections: bigger tap areas ---------- */
+.nav-drawer__section {
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+/* ---------- Concept definition max-width: let it breathe on small screens ---------- */
+@media (max-width: 600px) {
+  .concept__definition {
+    max-width: 100%;
+  }
+  .concept__intuition p {
+    max-width: 100%;
+  }
+}
+
+/* ---------- Lab nav tabs: wrap gracefully ---------- */
+.lab-nav {
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .lab-tab {
+    min-height: 44px;
+    flex: 1 1 auto;
+  }
+}
+
+/* ---------- Math blocks: horizontal scroll stays within block ---------- */
+.math-block {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ---------- Module hero: reduce top padding on phones ---------- */
+@media (max-width: 600px) {
+  .module-page__body {
+    padding-top: var(--space-4);
+    gap: var(--space-4);
+  }
 }

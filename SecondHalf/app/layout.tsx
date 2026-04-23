@@ -35,6 +35,9 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: "#fbf7ee",
   colorScheme: "light",
+  width: "device-width",
+  initialScale: 1,
+  // Do NOT set maximumScale or userScalable — pinch-to-zoom must remain enabled
 };
 
 export default function RootLayout({
