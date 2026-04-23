@@ -22,7 +22,9 @@ export function SiteHeader() {
       </Link>
       <nav className="site-nav" aria-label="Main navigation">
         {NAV.map((item) => {
-          const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          const active = item.href === "/"
+            ? pathname === "/"
+            : pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <Link
               key={item.href}
