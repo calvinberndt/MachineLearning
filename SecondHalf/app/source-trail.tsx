@@ -73,7 +73,7 @@ export const sourceGroups = {
       note: "Feature-importance details and the caution that impurity importances can mislead.",
     },
   ],
-  module6: [
+  module5: [
     {
       title: "Canvas notes: Deep Learning, NLP, CNN Algorithm Details",
       href: "#",

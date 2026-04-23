@@ -24,8 +24,8 @@
   --module-3-line: rgba(45, 90, 107, 0.28);
   --module-4-tint: rgba(96, 122, 85, 0.08);
   --module-4-line: rgba(96, 122, 85, 0.28);
-  --module-6-tint: rgba(99, 89, 130, 0.08);
-  --module-6-line: rgba(99, 89, 130, 0.28);
+  --module-5-tint: rgba(99, 89, 130, 0.08);
+  --module-5-line: rgba(99, 89, 130, 0.28);
 
   /* Type scale */
   --text-xs: 12px;
@@ -537,8 +537,8 @@ code, kbd, samp {
   --accent-2: var(--marker-green);
 }
 
-.module-ticket[data-tone="module-6"]::before,
-.module-page[data-tone="module-6"] {
+.module-ticket[data-tone="module-5"]::before,
+.module-page[data-tone="module-5"] {
   --accent: var(--marker-blue);
   --accent-2: var(--marker-yellow);
 }
@@ -557,7 +557,7 @@ code, kbd, samp {
   background: var(--marker-teal);
 }
 
-.module-ticket[data-tone="module-6"]::before {
+.module-ticket[data-tone="module-5"]::before {
   background: var(--marker-blue);
 }
 
@@ -1718,7 +1718,7 @@ main {
 
 .module-page[data-tone="module-3"] { --module-tint: var(--module-3-tint); --module-line: var(--module-3-line); }
 .module-page[data-tone="module-4"] { --module-tint: var(--module-4-tint); --module-line: var(--module-4-line); }
-.module-page[data-tone="module-6"] { --module-tint: var(--module-6-tint); --module-line: var(--module-6-line); }
+.module-page[data-tone="module-5"] { --module-tint: var(--module-5-tint); --module-line: var(--module-5-line); }
 
 /* ---------- Skip link ---------- */
 

@@ -21,10 +21,10 @@ const modules = [
     bullets: ["Bagging vs boosting", "Voting and stacking", "Random forest intuition"],
   },
   {
-    href: "/module-6",
-    label: "Module 6",
+    href: "/module-5",
+    label: "Module 5",
     title: "Deep learning, NLP, and CNNs",
-    tone: "module-6",
+    tone: "module-5",
     note:
       "Move from neural-network foundations into an NLP pipeline and a visual CNN sandbox that shows convolution, ReLU, and pooling.",
     bullets: ["Neural network flow", "NLP preprocessing pipeline", "CNN feature extraction"],
@@ -102,7 +102,7 @@ export default function HomePage() {
               <span>Bagging, forests, voting</span>
             </div>
             <div className="poster-rail__stop">
-              <strong>Module 6</strong>
+              <strong>Module 5</strong>
               <span>NLP, deep learning, CNNs</span>
             </div>
             <div className="poster-rail__stop">
@@ -160,7 +160,7 @@ export default function HomePage() {
           <h2 className="section-title">What this covers from your posted material</h2>
           <p className="section-copy">
             Module 3: clustering, KNN code, SVM. Module 4: ensemble learning and random forests.
-            Module 6: deep learning, what NLP is, and CNN algorithm details.
+            Module 5: deep learning, what NLP is, and CNN algorithm details.
           </p>
         </article>
         <article className="study-panel">

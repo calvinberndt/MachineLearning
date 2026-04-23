@@ -2,7 +2,7 @@ export type QuestionType = "multiple-choice" | "fill-blank";
 
 export type Question = {
   id: string;
-  module: "Module 3" | "Module 4" | "Module 6";
+  module: "Module 3" | "Module 4" | "Module 5";
   type: QuestionType;
   prompt: string;
   choices?: string[];
@@ -138,7 +138,7 @@ const questionBank: Question[] = [
   },
   {
     id: "m6-q1",
-    module: "Module 6",
+    module: "Module 5",
     type: "multiple-choice",
     prompt: "Which layer of a neural network receives the raw data first?",
     choices: ["Output layer", "Input layer", "Loss layer", "Pooling layer"],
@@ -147,7 +147,7 @@ const questionBank: Question[] = [
   },
   {
     id: "m6-q2",
-    module: "Module 6",
+    module: "Module 5",
     type: "multiple-choice",
     prompt: "Why are activation functions such as ReLU important?",
     choices: [
@@ -162,7 +162,7 @@ const questionBank: Question[] = [
   },
   {
     id: "m6-q3",
-    module: "Module 6",
+    module: "Module 5",
     type: "multiple-choice",
     prompt: "Which NLP step breaks text into words or smaller units?",
     choices: ["Pooling", "Tokenization", "Backpropagation", "Bagging"],
@@ -172,7 +172,7 @@ const questionBank: Question[] = [
   },
   {
     id: "m6-q4",
-    module: "Module 6",
+    module: "Module 5",
     type: "multiple-choice",
     prompt: "What is the main purpose of pooling in a CNN?",
     choices: [
@@ -187,7 +187,7 @@ const questionBank: Question[] = [
   },
   {
     id: "m6-q5",
-    module: "Module 6",
+    module: "Module 5",
     type: "multiple-choice",
     prompt: "Which output-layer function is commonly used for multi-class image classification?",
     choices: ["ReLU", "Sigmoid", "Softmax", "TF-IDF"],
@@ -196,7 +196,7 @@ const questionBank: Question[] = [
   },
   {
     id: "m6-q6",
-    module: "Module 6",
+    module: "Module 5",
     type: "fill-blank",
     prompt:
       "The process of sending prediction error backward through a neural network is called ______.",
