@@ -1555,8 +1555,11 @@ main {
 .nav-drawer-backdrop {
   position: fixed;
   inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
   z-index: 40;
-  background: rgba(27, 27, 27, 0.28);
+  background: rgba(27, 27, 27, 0.45);
   backdrop-filter: blur(2px);
   -webkit-backdrop-filter: blur(2px);
   animation: fade-in var(--dur-fast) var(--ease);
@@ -1571,9 +1574,10 @@ main {
   position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
   z-index: 41;
   width: min(360px, 90vw);
+  height: 100vh;
+  height: 100dvh;
   background: var(--paper);
   border-right: 1px solid var(--line-strong);
   box-shadow: 12px 0 40px rgba(27, 27, 27, 0.08);
