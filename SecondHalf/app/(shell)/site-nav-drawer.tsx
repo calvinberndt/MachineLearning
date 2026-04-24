@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 type ModuleEntry = {
   label: string;
@@ -50,10 +51,15 @@ const MODULES: ModuleEntry[] = [
 
 export function SiteNavDrawer() {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const panelRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLElement | null>(null);
   const labelId = useId();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -79,29 +85,23 @@ export function SiteNavDrawer() {
 
   // Sync open state to body so CSS can hide the in-page sidebar while drawer
   // is open (body[data-nav-open="true"] .sidebar { display: none }).
+  // Also locks body scroll when the drawer is open.
   useEffect(() => {
+    if (!mounted) return;
     document.body.dataset.navOpen = open ? "true" : "false";
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
     return () => {
       delete document.body.dataset.navOpen;
+      document.body.style.overflow = "";
     };
-  }, [open]);
+  }, [open, mounted]);
 
-  return (
+  const drawerElements = (
     <>
-      <button
-        ref={buttonRef}
-        type="button"
-        className="site-mark"
-        aria-expanded={open}
-        aria-controls={labelId}
-        aria-haspopup="dialog"
-        onClick={() => setOpen((prev) => !prev)}
-      >
-        <span className="site-mark__kicker">COMP&nbsp;SCI&nbsp;465</span>
-        <span className="site-mark__title">ML Study Lab</span>
-        <span className="site-mark__chevron" aria-hidden="true">{open ? "▾" : "▸"}</span>
-      </button>
-
       {open ? (
         <div
           className="nav-drawer-backdrop"
@@ -184,6 +184,29 @@ export function SiteNavDrawer() {
           </Link>
         </footer>
       </aside>
+    </>
+  );
+
+  return (
+    <>
+      <button
+        ref={buttonRef}
+        type="button"
+        className="site-mark"
+        aria-expanded={open}
+        aria-controls={labelId}
+        aria-haspopup="dialog"
+        onClick={() => setOpen((prev) => !prev)}
+      >
+        <span className="site-mark__kicker">COMP&nbsp;SCI&nbsp;465</span>
+        <span className="site-mark__title">ML Study Lab</span>
+        <span className="site-mark__chevron" aria-hidden="true">{open ? "▾" : "▸"}</span>
+      </button>
+
+      {/* Portal the drawer + backdrop to document.body so they can never be
+          trapped by any ancestor's stacking/containing block (e.g. header with
+          backdrop-filter, transform, or contain: paint). */}
+      {mounted ? createPortal(drawerElements, document.body) : null}
     </>
   );
 }
