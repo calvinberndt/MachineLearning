@@ -1,245 +1,117 @@
 ---
 name: canvas-course-sync
-description: Use this project-local skill when asked to scan Canvas, sync Canvas modules into this course web app, run a manual Canvas ingest, create a PR for Canvas-derived app changes, or deploy a Vercel preview. It uses local Canvas credentials, Canvas MCP when available, local headless Codex for app edits, a gitignored snapshot/hash manifest, GitHub PRs for review, and production deploy only after merging main.
+description: Project-local skill for syncing Canvas course content into the SecondHalf course web app. Use whenever the user asks to scan Canvas, sync modules, ingest Canvas content, prepare a Canvas-derived PR, deploy a Vercel preview from Canvas changes, or schedule Canvas polling — even when they don't say "Canvas Course Sync" by name. App edits follow `DESIGN.md` (Studio Notebook system) and mirror the most recent `app/module-N/` pattern. Uses local Canvas credentials, Canvas MCP (REST fallback), subscription-auth Codex for headless edits, a gitignored hash manifest, GitHub PRs for review, and production deploy only after merge to `main`.
 ---
 
 # Canvas Course Sync
 
-This skill is local to `SecondHalf`. It is self-contained and does not depend on
-global skills, OpenAI API keys, or GitHub Actions running an agent. It uses the
-local Codex subscription-auth CLI when headless app edits are needed.
+Local to `SecondHalf/`. No global skills, no model API keys, no GitHub Actions agent. Layer this on top of the global git/secret rules in `~/.claude/CLAUDE.md` — don't restate them.
 
-## Goals
+## Course
+- API: `https://uwgby.instructure.com/api/v1`
+- Course: `809921` · `Machine Learning` · `COMP SCI 465-0001`
+- Env keys: `CANVAS_API_URL`, `CANVAS_API_TOKEN`, `CANVAS_COURSE_ID`
 
-- Fetch the full Canvas course content for this Machine Learning course.
-- Detect Canvas content that is new or changed compared with the web app.
-- Update the app using its existing theme and module patterns.
-- Verify locally with tests, typecheck, build, and browser review when pages change.
-- Prepare a GitHub PR and Vercel preview for manual review.
-- Let production deploy happen only after the PR is accepted and merged into `main`.
+## Modes
+Pick the smallest one that satisfies the request:
+- `scan` — fetch Canvas, report new/changed items.
+- `sync` — scan + update app + verify, leave a local diff.
+- `pr` — sync + commit + push branch + open/update PR.
+- `preview` — deploy current branch to a Vercel preview.
+- `schedule` — local poller, only after the manual modes work end-to-end.
 
-## Local Facts
-
-- App root: `SecondHalf`
-- Canvas API URL: `https://uwgby.instructure.com/api/v1`
-- Canvas course id: `809921`
-- Canvas course name: `Machine Learning`
-- Canvas course code: `COMP SCI 465-0001`
-- Required local env keys: `CANVAS_API_URL`, `CANVAS_API_TOKEN`, `CANVAS_COURSE_ID`
-
-## Secret Boundary
-
-Before any Canvas operation, verify only key names:
+## Secrets
+Read key *names* only, never values:
 
 ```bash
 test -f .env && awk -F= '/^CANVAS_/ {print $1}' .env
 ```
 
-Never print `.env` values. Never run `cat .env`. Never source `.env`; parse it in
-Node or the app so special characters in tokens cannot mutate.
+Don't `cat .env`. Don't `source .env` — special chars in tokens mutate. Parse env in Node or the app. If a token is missing or expired, ask before regenerating — that creates persistent Canvas access.
 
-If a Canvas token is missing or expired, ask the user before the final token
-generation action because that creates persistent Canvas API access.
+## State (gitignored)
+- `.canvas-sync/state.json` — normalized hashes + last-seen Canvas ids.
+- `.canvas-sync/raw/<ts>.json` — raw payloads for debugging.
 
-## State Strategy
+Hash *normalized* content (stable ids, titles, types, URLs, due dates, page text, attachment metadata) — not raw JSON. Strip signed download URLs and pagination noise so reruns are idempotent. Move to SQLite only when JSON hurts: multi-machine scan history, conflict resolution, or a dashboard.
 
-Do not create a database for the first version. Use a gitignored manifest:
-
-- `.canvas-sync/state.json` - latest normalized hashes and last-seen Canvas ids.
-- `.canvas-sync/raw/<timestamp>.json` - raw Canvas payloads for local debugging.
-- Tracked tests/schema - only for normalization code, not for private Canvas content.
-
-Manifest shape:
-
+Manifest item shape:
 ```json
-{
-  "courseId": "809921",
-  "courseName": "Machine Learning",
-  "lastScanAt": "2026-04-28T19:00:00.000Z",
-  "items": {
-    "module-item:31472421": {
-      "moduleName": "Module 6: OpenAI & Large Language Model (LLM)",
-      "title": "OpenAI & LLM.pptx",
-      "type": "File",
-      "htmlUrl": "https://uwgby.instructure.com/courses/809921/modules/items/31472421",
-      "contentHash": "sha256:...",
-      "updatedAt": "2026-04-28T18:30:00.000Z"
-    }
-  }
-}
+{ "moduleName": "...", "title": "...", "type": "File",
+  "htmlUrl": "...", "contentHash": "sha256:...", "updatedAt": "..." }
 ```
 
-Hash normalized content, not raw JSON order. Include stable ids, titles, types,
-Canvas URLs, due dates, page body text, and attachment metadata. Strip volatile
-fields, signed download URLs, access tokens, and pagination noise.
+## Ingest
+Prefer Canvas MCP. If unavailable, use Canvas REST from a deterministic local script that writes the same manifest. Fetch: course details, modules, *each module's items endpoint* (Canvas often omits `items` from the module list), plus linked pages, assignments, quizzes, discussions, files, announcements when relevant.
 
-Move to SQLite only if JSON becomes painful: multiple machines, multi-user scan
-history, conflict resolution, or a dashboard for scan history.
+Files: store metadata + hash first, only download what the app actually renders, keep raw downloads under `.canvas-sync/raw/`. Commit Canvas-derived assets only when both repo and deploy target are private.
 
-## Modes
-
-Pick the smallest useful mode from the user request:
-
-- `scan`: fetch Canvas and report new/changed items.
-- `sync`: fetch Canvas, update the app, verify, and leave a ready local diff.
-- `pr`: complete sync, commit, push a feature branch, and open/update a PR.
-- `preview`: deploy the current branch to a Vercel preview for manual review.
-- `schedule`: add a local poller only after manual scan/sync/pr/preview works.
-
-## Canvas Ingest
-
-Prefer Canvas MCP when it is configured for Codex. If not available, use Canvas
-REST from a deterministic local script that writes the same normalized manifest.
-
-Minimum fetch set:
-
-- Course details.
-- Modules.
-- Module items for every module. Canvas can omit `items` from the module list, so
-  call each module's items endpoint when needed.
-- Linked pages, assignments, quizzes, discussions, external URLs, files, and
-  announcements when relevant.
-
-Files:
-
-- Store file metadata and hashes first.
-- Download only files needed to render or summarize app content.
-- Keep private raw downloads under `.canvas-sync/raw/`.
-- Only commit Canvas-derived assets if the repo and deploy target are private and
-  the asset is intended to appear in the app.
-
-## Headless Codex Edit Loop
-
+## Headless Codex
 Find Codex without assuming a global install:
 
 ```bash
 CODEX_BIN="$(command -v codex || true)"
-if [ -z "$CODEX_BIN" ] && [ -x /Applications/Codex.app/Contents/Resources/codex ]; then
-  CODEX_BIN="/Applications/Codex.app/Contents/Resources/codex"
-fi
+[ -z "$CODEX_BIN" ] && [ -x /Applications/Codex.app/Contents/Resources/codex ] \
+  && CODEX_BIN="/Applications/Codex.app/Contents/Resources/codex"
 ```
 
-Use local subscription auth only:
+Run with subscription auth — no model API keys:
 
 ```bash
-"$CODEX_BIN" exec "<prompt>" \
-  -C "$PWD" \
-  -s workspace-write \
-  -a never \
-  -c 'model_reasoning_effort="high"' \
-  --json
+"$CODEX_BIN" exec "<prompt>" -C "$PWD" -s workspace-write -a never \
+  -c 'model_reasoning_effort="high"' --json
 ```
 
-Prompt boundary for the headless agent:
+Pass the *normalized diff*, not the token. Tell Codex: don't read or print `.env`, don't call model APIs directly, don't touch unrelated course folders, keep raw snapshots gitignored, follow the App update spec below, run `npm test && npm run typecheck && npm run build` before reporting ready, never deploy production.
 
-```text
-You are updating a private course web app from Canvas content.
-Use the provided Canvas diff and existing app patterns.
-Do not read or print .env values.
-Do not call OpenAI, Anthropic, or other model APIs directly.
-Do not modify unrelated course folders.
-Keep raw Canvas snapshots gitignored.
-Create or update pages so the app follows the existing theme.
-Run tests, typecheck, and build before reporting ready.
-Production deploy happens only after the PR merges to main.
-```
+## App update spec
+Read these before editing:
+- `DESIGN.md` — Studio Notebook design system: palette, module tone tokens, typography, accessibility, and the **Source Policy** (Canvas first; external sources supplement, never replace; summarize, don't quote long text).
+- The most recent `app/module-N/` (highest N) — canonical pattern to mirror.
 
-Give Codex the normalized Canvas diff, not the token. If it needs raw payloads,
-point it at a gitignored local file and restate the secret boundary.
+Module shape: `app/module-N/{page.tsx, concept-<slug>.tsx, labs/{lab-context.tsx, <slug>-lab.tsx, <slug>-utils.ts}}`. Each `concept-*.tsx` uses `<Concept>` from `(shell)/concept` with sub-components `Definition`, `Formula` (KaTeX from `(shell)/katex`), `Intuition`, `WorkedExample`, `Pitfall`, `FurtherReading`. Section numbers dotted (`5.3`), slugs kebab-case. Labs are pure-client TSX with deterministic fixtures — never live model API calls, never network calls in the preview.
 
-## Branch Workflow
+Cross-cutting updates required for every new module:
+- `app/page.tsx` — add a `CHAPTERS` entry (zero-padded `number`, `kicker`, `href`); renumber the `Practice` entry if inserting before it.
+- `app/source-trail.tsx` — add `sourceGroups.moduleN`: Canvas notes link first, then 2–4 external supplements (scikit-learn, Distill, arxiv, GFG, official framework docs). Each gets a one-line `note` saying *why* it helps.
+- `app/globals.css` — add `--module-N-tint` (`0.08` alpha) and `--module-N-line` (`0.28` alpha), plus a `.module-page[data-tone="module-N"]` rule mapping `--module-tint`/`--module-line`.
+- `app/quiz/exam-utils.ts` — extend the `Question.module` union; add ~8–12 questions for the new module (mix multiple-choice and fill-blank, each with an `explanation`).
 
-Start with:
+External sources live in two places: per-concept `<Concept.FurtherReading>` (1–3 links, summarize the idea) and module-level `sourceGroups.moduleN` (curated overview list). Never paste long external text into TSX — paraphrase and link.
 
+**No duplicated content.** Before writing any concept, lab, source link, or quiz question, grep the existing modules and `sourceGroups.*`: cross-link to an existing concept (cite its section number, e.g., "see §5.3") rather than restate it; pick external sources not already in any `sourceGroups.*`; confirm new quiz prompts don't echo existing ones. Every addition must be fresh and load-bearing — if Canvas overlaps with prior coverage, link rather than copy.
+
+## Verify
 ```bash
-git rev-parse --show-toplevel
-git status --short --branch
-git remote -v
+npm test && npm run typecheck && npm run build
 ```
 
-Do not work directly on `main`. If the current repo has unrelated changes, use a
-feature worktree:
+Run the ingest twice — the second run should report no changes unless Canvas changed (idempotency check).
 
-```bash
-git worktree add -b codex/canvas-sync-<date> .worktrees/canvas-sync-<date> origin/main
-```
+For page changes, before opening the PR:
+- `npm run dev`, then use the `/browse` skill (not puppeteer MCP) to navigate `/module-N` and the most recent prior module — screenshot at desktop + 390px and confirm the new module matches the existing visual rhythm.
+- Run `/design-review` against the diff — it catches spacing, hierarchy, AI-slop patterns, and DESIGN.md drift, and proposes fixes.
+- Run `/dogfood` once — exercises labs, quiz, and navigation to surface crashes or interaction regressions before the human sees them.
+- Do **not** invoke `/frontend-design` here. That skill is for distinctive new UI; this skill's job is to fit into the established Studio Notebook system, so it would push the diff away from DESIGN.md.
 
-Only commit intentional app, tests, sync scripts, and safe docs. Never commit
-`.env`, `.canvas-sync/`, raw Canvas payloads, private downloads, or agent auth.
-
-## Verification
-
-For this app:
-
-```bash
-npm test
-npm run typecheck
-npm run build
-```
-
-Run the ingest command twice:
-
-- First run detects Canvas changes and writes state.
-- Second run should be idempotent and report no new changes unless Canvas changed.
-
-For page changes, start the dev server and inspect changed routes on desktop and
-mobile widths.
-
-## PR and Preview
-
-PR flow:
-
-1. Commit only intentional files.
-2. Push the feature branch.
-3. Open or update a GitHub PR.
-4. Let Vercel's GitHub integration create the PR preview.
-5. If a manual preview is requested, use Vercel CLI after login/install is ready.
-
-Manual preview command:
+## PR & preview
+Use a feature branch / worktree per the global git rules. Commit only intentional app, tests, sync scripts, safe docs. Never commit `.env`, `.canvas-sync/`, raw payloads, or agent auth. Push, open/update a GitHub PR, let Vercel's GitHub integration build the preview. Manual preview only when needed:
 
 ```bash
 npx vercel deploy --yes
 ```
 
-Never run `vercel --prod` from this skill. Production deploy is the normal Vercel
-production deployment after the accepted PR is merged into `main`.
+Never run `vercel --prod` from this skill — production is the normal Vercel deploy after the PR merges to `main`.
 
-## Schedule Mode
+## Schedule mode
+Only after `scan`, `sync`, `pr`, `preview` all work manually. Use a local LaunchAgent or cron — never GitHub Actions for Canvas polling or subscription-auth agents. The job runs scan, exits clean on no changes, notifies on changes. It must not merge PRs, deploy production, or store tokens outside `.env`/keychain.
 
-Configure scheduling only after manual `scan`, `sync`, `pr`, and `preview` work.
-
-Use a local LaunchAgent or cron job on the user's machine. The scheduled job should:
-
-- Run scan.
-- Exit cleanly when there are no changes.
-- Stop and notify the user by default when changes exist.
-- Create branches/PRs unattended only if the user explicitly approves that later.
-- Never merge PRs.
-- Never deploy production.
-- Never store Canvas tokens outside local `.env` or an OS keychain.
-
-GitHub Actions is for CI only: tests, typecheck, build, and Vercel preview status.
-Do not run Canvas polling or subscription-auth coding agents in GitHub Actions.
-
-## Stop Conditions
-
-Stop and ask when:
-
-- Canvas auth fails or token generation/regeneration is needed.
-- New Canvas content contains grades, submissions, peer data, or student PII.
+## Stop and ask
+- Canvas auth fails or a token must be generated/regenerated.
+- New Canvas content includes grades, submissions, peer data, or PII.
 - Repo or Vercel privacy is unclear before committing Canvas-derived content.
-- GitHub, Vercel, or Codex login is required.
-- A new CLI/package install is needed.
-- The scan finds a large ambiguous content change that needs editorial judgment.
+- GitHub, Vercel, or Codex login is needed, or a new CLI/package install.
+- A scan finds a large ambiguous change needing editorial judgment.
 
-## Completion Report
-
-End with:
-
-- Canvas course id/name scanned.
-- New/changed item count.
-- Files changed.
-- Verification commands and results.
-- PR URL if created.
-- Vercel preview URL if deployed.
-- Note that production deploy is pending merge to `main`.
+## Done
+Report: course id/name · new/changed item count · files changed · verification results · PR URL · preview URL · note that production deploy is pending merge to `main`.
