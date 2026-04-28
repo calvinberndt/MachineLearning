@@ -1,0 +1,6 @@
+interface:
+  display_name: "Canvas Course Sync"
+  short_description: "Scan Canvas, update this course app, and prepare PR/preview deploys."
+  default_prompt: "Use Canvas Course Sync to scan Canvas and update the course app."
+policy:
+  allow_implicit_invocation: true
