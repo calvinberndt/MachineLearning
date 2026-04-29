@@ -1,5 +1,6 @@
 import { Concept } from "../(shell)/concept";
 import { MarginNote } from "../(shell)/margin-note";
+import { LandscapeLab } from "./labs/landscape-lab";
 
 export function ConceptLlmLandscape() {
   return (
@@ -38,22 +39,7 @@ export function ConceptLlmLandscape() {
       </Concept.Intuition>
 
       <Concept.WorkedExample title="Classify the layer being described">
-        <div className="lab-surface">
-          <div className="landscape-grid">
-            <article className="pipeline-step">
-              <span className="kicker">Model-level</span>
-              <p>Tokenizer, embeddings, self-attention, feedforward layers, output logits.</p>
-            </article>
-            <article className="pipeline-step">
-              <span className="kicker">System-level</span>
-              <p>API gateway, frontend app, moderation, logs, latency controls, access policy.</p>
-            </article>
-            <article className="pipeline-step">
-              <span className="kicker">Landscape-level</span>
-              <p>GPT, Claude, Gemini, Llama, DeepSeek, Mistral, and Grok as model families or platforms.</p>
-            </article>
-          </div>
-        </div>
+        <LandscapeLab />
       </Concept.WorkedExample>
 
       <Concept.Pitfall title="A leaderboard is not a concept definition.">

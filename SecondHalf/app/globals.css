@@ -2272,6 +2272,143 @@ body[data-nav-open="true"] .sidebar {
   font-size: var(--text-xl);
 }
 
+/* §6.3 LandscapeLab — interactive layer-classification game.
+   Mobile-first: choices auto-collapse from a 3-column row to a single column. */
+.landscape-classify {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.landscape-classify__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.landscape-classify__score {
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+.landscape-classify__prompt {
+  margin: 0;
+  font-size: 1.0625rem;
+  line-height: 1.5;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.landscape-classify__choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-3);
+}
+
+.landscape-classify__choice {
+  appearance: none;
+  cursor: pointer;
+  padding: var(--space-3) var(--space-4);
+  min-height: 44px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-md);
+  background: var(--paper-strong);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 500;
+  text-align: center;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    opacity var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease);
+}
+
+.landscape-classify__choice:hover:not([disabled]) {
+  background: var(--paper-sunken);
+  border-color: var(--ink);
+}
+
+.landscape-classify__choice:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.landscape-classify__choice[data-state="correct"] {
+  background: rgba(96, 122, 85, 0.18);
+  border-color: rgba(96, 122, 85, 0.6);
+}
+
+.landscape-classify__choice[data-state="wrong"] {
+  background: var(--correction-tint);
+  border-color: var(--correction);
+}
+
+.landscape-classify__choice[data-state="muted"] {
+  opacity: 0.45;
+}
+
+.landscape-classify__choice[disabled] {
+  cursor: default;
+}
+
+.landscape-classify__feedback {
+  border-left: 3px solid var(--line-strong);
+  padding: var(--space-3) var(--space-4);
+  background: var(--paper-strong);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.landscape-classify__feedback.is-correct {
+  border-left-color: rgba(96, 122, 85, 0.7);
+}
+
+.landscape-classify__feedback.is-wrong {
+  border-left-color: var(--correction);
+}
+
+.landscape-classify__feedback p {
+  margin: 0;
+  color: var(--muted);
+  text-wrap: pretty;
+}
+
+.landscape-classify__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.landscape-classify__next,
+.landscape-classify__reset {
+  appearance: none;
+  cursor: pointer;
+  padding: var(--space-2) var(--space-3);
+  min-height: 36px;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font: inherit;
+  font-weight: 500;
+}
+
+.landscape-classify__next:hover,
+.landscape-classify__reset:hover {
+  background: var(--paper-sunken);
+}
+
+.landscape-classify__next:focus-visible,
+.landscape-classify__reset:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
 @media (max-width: 600px) {
   .token-table__row {
     grid-template-columns: 1fr;
@@ -2288,6 +2425,10 @@ body[data-nav-open="true"] .sidebar {
   .attention-tokens,
   .attention-heatmap {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .landscape-classify__choices {
+    grid-template-columns: 1fr;
   }
 }
 
