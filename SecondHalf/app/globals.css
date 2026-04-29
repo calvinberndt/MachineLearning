@@ -26,6 +26,8 @@
   --module-4-line: rgba(96, 122, 85, 0.28);
   --module-5-tint: rgba(99, 89, 130, 0.08);
   --module-5-line: rgba(99, 89, 130, 0.28);
+  --module-6-tint: rgba(166, 112, 35, 0.08);
+  --module-6-line: rgba(166, 112, 35, 0.28);
 
   /* Type scale */
   --text-xs: 12px;
@@ -298,6 +300,11 @@ code, kbd, samp {
 .module-page[data-tone="module-5"] {
   --accent: var(--marker-blue);
   --accent-2: var(--marker-yellow);
+}
+
+.module-page[data-tone="module-6"] {
+  --accent: #d6a34a;
+  --accent-2: var(--correction);
 }
 
 .module-page[data-tone="quiz"] {
@@ -1529,6 +1536,7 @@ main {
 .module-page[data-tone="module-3"] { --module-tint: var(--module-3-tint); --module-line: var(--module-3-line); }
 .module-page[data-tone="module-4"] { --module-tint: var(--module-4-tint); --module-line: var(--module-4-line); }
 .module-page[data-tone="module-5"] { --module-tint: var(--module-5-tint); --module-line: var(--module-5-line); }
+.module-page[data-tone="module-6"] { --module-tint: var(--module-6-tint); --module-line: var(--module-6-line); }
 
 /* ---------- Skip link ---------- */
 
@@ -2117,6 +2125,170 @@ body[data-nav-open="true"] .sidebar {
   border-color: var(--primary);
   color: var(--primary);
   background: var(--primary-tint);
+}
+
+.token-mode-field {
+  width: min(100%, 24rem);
+}
+
+.token-table {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.token-table__row {
+  display: grid;
+  grid-template-columns: minmax(5rem, 0.8fr) 4rem minmax(10rem, 1.4fr);
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--paper);
+  min-width: 0;
+}
+
+.token-table__row--head {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: transparent;
+  border-color: transparent;
+}
+
+.embedding-bars {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.embedding-bars__bar {
+  display: grid;
+  grid-template-columns: 1fr 3.5rem;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.embedding-bars__bar > span {
+  height: 0.42rem;
+  transform-origin: left center;
+  background: var(--primary);
+  border-radius: 999px;
+}
+
+.embedding-bars__bar em {
+  color: var(--muted);
+  font-style: normal;
+  font-size: var(--text-xs);
+  text-align: right;
+}
+
+.attention-grid,
+.landscape-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-3);
+}
+
+.attention-panel {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  min-width: 0;
+}
+
+.attention-panel p {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--text-sm);
+}
+
+.attention-tokens {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.attention-token {
+  display: grid;
+  gap: 2px;
+  place-items: center;
+  min-height: 4.2rem;
+  padding: var(--space-2);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--paper-strong);
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: var(--text-xs);
+}
+
+.attention-token[data-active="true"] {
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.attention-token em {
+  color: inherit;
+  opacity: 0.72;
+  font-style: normal;
+}
+
+.attention-heatmap {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-2);
+}
+
+.attention-cell {
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  min-height: 4.8rem;
+  padding: var(--space-2);
+  border: 1px solid rgba(166, 112, 35, 0.36);
+  border-radius: var(--radius-md);
+  background: #a67023;
+  color: var(--paper-strong);
+}
+
+.attention-cell span {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+  font-size: var(--text-xs);
+}
+
+.attention-cell strong,
+.attention-vector {
+  font-family: var(--font-mono), "JetBrains Mono", monospace;
+}
+
+.attention-vector {
+  color: var(--ink);
+  font-size: var(--text-xl);
+}
+
+@media (max-width: 600px) {
+  .token-table__row {
+    grid-template-columns: 1fr;
+  }
+
+  .token-table__row--head {
+    display: none;
+  }
+
+  .embedding-bars__bar {
+    grid-template-columns: 1fr 3rem;
+  }
+
+  .attention-tokens,
+  .attention-heatmap {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .micro-list {

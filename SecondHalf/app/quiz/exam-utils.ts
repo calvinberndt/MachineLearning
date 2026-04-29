@@ -2,7 +2,7 @@ export type QuestionType = "multiple-choice" | "fill-blank";
 
 export type Question = {
   id: string;
-  module: "Module 3" | "Module 4" | "Module 5";
+  module: "Module 3" | "Module 4" | "Module 5" | "Module 6";
   type: QuestionType;
   prompt: string;
   choices?: string[];
@@ -137,7 +137,7 @@ const questionBank: Question[] = [
       "Stacking uses a meta-model to learn how to combine the predictions of base models.",
   },
   {
-    id: "m6-q1",
+    id: "m5-q1",
     module: "Module 5",
     type: "multiple-choice",
     prompt: "Which layer of a neural network receives the raw data first?",
@@ -146,7 +146,7 @@ const questionBank: Question[] = [
     explanation: "The input layer holds the raw features before hidden layers transform them.",
   },
   {
-    id: "m6-q2",
+    id: "m5-q2",
     module: "Module 5",
     type: "multiple-choice",
     prompt: "Why are activation functions such as ReLU important?",
@@ -161,7 +161,7 @@ const questionBank: Question[] = [
       "Without an activation function, stacked layers collapse into a linear transformation.",
   },
   {
-    id: "m6-q3",
+    id: "m5-q3",
     module: "Module 5",
     type: "multiple-choice",
     prompt: "Which NLP step breaks text into words or smaller units?",
@@ -171,7 +171,7 @@ const questionBank: Question[] = [
       "Tokenization is the step where raw text is split into smaller processable pieces.",
   },
   {
-    id: "m6-q4",
+    id: "m5-q4",
     module: "Module 5",
     type: "multiple-choice",
     prompt: "What is the main purpose of pooling in a CNN?",
@@ -186,7 +186,7 @@ const questionBank: Question[] = [
       "Pooling keeps the strongest local signals while shrinking the map and reducing computation.",
   },
   {
-    id: "m6-q5",
+    id: "m5-q5",
     module: "Module 5",
     type: "multiple-choice",
     prompt: "Which output-layer function is commonly used for multi-class image classification?",
@@ -195,7 +195,7 @@ const questionBank: Question[] = [
     explanation: "Softmax converts class scores into a probability distribution across classes.",
   },
   {
-    id: "m6-q6",
+    id: "m5-q6",
     module: "Module 5",
     type: "fill-blank",
     prompt:
@@ -358,6 +358,139 @@ const questionBank: Question[] = [
     answer: "vanishing",
     explanation:
       "Multiplying many sub-unity derivatives through the chain rule of backprop drives gradients toward zero in early layers. ReLU (derivative 0 or 1) is the standard fix for hidden-layer activations.",
+  },
+  {
+    id: "m6-q1",
+    module: "Module 6",
+    type: "multiple-choice",
+    prompt: "Why does an LLM tokenizer run before the transformer sees a prompt?",
+    choices: [
+      "It converts text into token IDs the model can map to vectors",
+      "It performs RLHF automatically",
+      "It downloads the latest model weights",
+      "It removes the need for embeddings",
+    ],
+    answer: "It converts text into token IDs the model can map to vectors",
+    explanation:
+      "The tokenizer is the bridge from raw text to integer token IDs. Those IDs index embeddings, extending the Module 5 NLP pipeline idea without using hand-built bag-of-words features.",
+  },
+  {
+    id: "m6-q2",
+    module: "Module 6",
+    type: "fill-blank",
+    prompt: "The learned numeric vector associated with a token ID is called an ______.",
+    answer: "embedding",
+    explanation:
+      "An embedding is a learned vector representation. It lets the transformer operate on numbers while preserving useful relationships between tokens.",
+  },
+  {
+    id: "m6-q3",
+    module: "Module 6",
+    type: "multiple-choice",
+    prompt: "In self-attention, what does the selected query token compute over the other tokens?",
+    choices: [
+      "A set of weights for mixing relevant value vectors",
+      "A fixed alphabetical order",
+      "A new Canvas module number",
+      "A bootstrap sample of training rows",
+    ],
+    answer: "A set of weights for mixing relevant value vectors",
+    explanation:
+      "Self-attention compares a query to keys, normalizes the scores, and uses the resulting weights to mix value vectors into a contextual representation.",
+  },
+  {
+    id: "m6-q4",
+    module: "Module 6",
+    type: "multiple-choice",
+    prompt: "What role does RLHF play in the Canvas training pipeline?",
+    choices: [
+      "Humans rank responses so the model can learn preferred, safer behavior",
+      "It replaces pretraining with a hand-coded rule table",
+      "It turns images into pixels",
+      "It guarantees that every answer is factually correct",
+    ],
+    answer: "Humans rank responses so the model can learn preferred, safer behavior",
+    explanation:
+      "RLHF means reinforcement learning from human feedback. It aligns response style and safety after broad pretraining and task-oriented tuning, but it does not make the model infallible.",
+  },
+  {
+    id: "m6-q5",
+    module: "Module 6",
+    type: "multiple-choice",
+    prompt: "Compared with a classic RNN, why is a transformer better suited to long prompt context?",
+    choices: [
+      "Self-attention lets tokens consult one another directly instead of passing state step by step",
+      "It removes positional information entirely",
+      "It trains only on labeled classroom datasets",
+      "It uses decision trees inside every layer",
+    ],
+    answer: "Self-attention lets tokens consult one another directly instead of passing state step by step",
+    explanation:
+      "RNNs process sequences through recurrent state. Transformers use attention across token positions, then add positional information so order is still available.",
+  },
+  {
+    id: "m6-q6",
+    module: "Module 6",
+    type: "multiple-choice",
+    prompt: "Which statement best captures the OpenAI-vs-LLM distinction from Module 6?",
+    choices: [
+      "An LLM is the model engine; OpenAI-style products add interfaces, safety, APIs, and infrastructure",
+      "OpenAI and LLM are exact synonyms",
+      "An LLM is only an image generator",
+      "OpenAI systems do not use transformer models",
+    ],
+    answer: "An LLM is the model engine; OpenAI-style products add interfaces, safety, APIs, and infrastructure",
+    explanation:
+      "Canvas uses the engine-vs-car analogy: the LLM is the core model, while a deployed OpenAI-style system includes the surrounding product and safety layers.",
+  },
+  {
+    id: "m6-q7",
+    module: "Module 6",
+    type: "multiple-choice",
+    prompt: "What does a multimodal extension add to a language-model system?",
+    choices: [
+      "The ability to work across input types such as text, images, and audio",
+      "A guarantee that no tokenization is needed",
+      "A switch from neural networks to K-means",
+      "A rule that every model must be open source",
+    ],
+    answer: "The ability to work across input types such as text, images, and audio",
+    explanation:
+      "Canvas lists text, images, and audio as modern OpenAI system inputs. Multimodal systems connect those modalities inside a broader user-facing product.",
+  },
+  {
+    id: "m6-q8",
+    module: "Module 6",
+    type: "fill-blank",
+    prompt: "The maximum amount of prompt and generated text a model can consider at once is its ______ window.",
+    answer: "context",
+    explanation:
+      "A context window bounds how many tokens the model can use during inference. Larger windows help with long documents but still have limits and cost tradeoffs.",
+  },
+  {
+    id: "m6-q9",
+    module: "Module 6",
+    type: "multiple-choice",
+    prompt: "Which popular LLM family is associated with Meta and open-weight releases in the Canvas landscape?",
+    choices: ["Llama", "Whisper", "DALL·E", "K-means"],
+    answer: "Llama",
+    explanation:
+      "Canvas lists Llama as Meta's prominent open-weight model family. Whisper and DALL·E are OpenAI speech/image tools, and K-means is an unsupervised clustering algorithm from Module 3.",
+  },
+  {
+    id: "m6-q10",
+    module: "Module 6",
+    type: "multiple-choice",
+    prompt: "What is the main objective during broad LLM pretraining in Module 6?",
+    choices: [
+      "Predict the next token from large text datasets",
+      "Vote across decision trees",
+      "Manually label every possible prompt",
+      "Compute Euclidean distance to a centroid",
+    ],
+    answer: "Predict the next token from large text datasets",
+    explanation:
+      "Canvas describes pretraining as learning grammar, facts, and patterns by predicting the next token before later fine-tuning and RLHF stages.",
   },
 ];
 

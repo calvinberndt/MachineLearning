@@ -100,6 +100,33 @@ export const sourceGroups = {
       note: "Reference for visualizing high-dimensional embeddings as explorable spaces.",
     },
   ],
+  module6: [
+    {
+      title: "Canvas notes: OpenAI & Large Language Models",
+      href: "#",
+      note: "Source of truth for OpenAI tools, transformer architecture, training stages, and the LLM comparison table.",
+    },
+    {
+      title: "Vaswani et al. 2017 · Attention Is All You Need",
+      href: "https://arxiv.org/abs/1706.03762",
+      note: "Primary transformer paper for the scaled dot-product attention formula and multi-head attention vocabulary.",
+    },
+    {
+      title: "Jay Alammar · The Illustrated Transformer",
+      href: "https://jalammar.github.io/illustrated-transformer/",
+      note: "Visual supplement for seeing token embeddings, positional information, and attention blocks in sequence.",
+    },
+    {
+      title: "OpenAI Cookbook",
+      href: "https://cookbook.openai.com/",
+      note: "Practical supplement for understanding how model APIs are used inside applications without replacing Canvas.",
+    },
+    {
+      title: "Vellum LLM Leaderboard",
+      href: "https://www.vellum.ai/llm-leaderboard",
+      note: "Current-model landscape reference that helps compare families while keeping definitions architecture-first.",
+    },
+  ],
   quiz: [
     {
       title: "Canvas notes: Professor-style question patterns",
