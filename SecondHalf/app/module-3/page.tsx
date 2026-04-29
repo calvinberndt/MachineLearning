@@ -28,7 +28,7 @@ export default function Module3Page() {
         <h1 className="module-hero__title">Finding structure in data — with labels, and without.</h1>
         <p className="module-hero__deck">
           K-means groups unlabeled points by proximity. KNN and SVM are supervised classifiers that also
-          organise points in space — but from labelled training examples. Your Canvas notes group all three
+          organise points in space — but from labelled training examples. These three algorithms are studied
           together because the geometric intuition carries across them.
         </p>
       </section>

@@ -41,7 +41,7 @@ export function ConceptNeuralNetworks() {
           turns the knobs to make the output closer to the true label.
         </p>
         <p>
-          Canvas terminology: <strong>forward propagation</strong> is the prediction direction;
+          Standard terminology: <strong>forward propagation</strong> is the prediction direction;
           <strong> backpropagation</strong> is the gradient-flowing direction. Gradient descent uses those
           gradients to update every weight by a small step against the error surface.
         </p>

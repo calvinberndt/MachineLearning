@@ -135,6 +135,12 @@ External sources live in two places: per-concept `<Concept.FurtherReading>` (1�
 
 **No duplicated content.** Before writing any concept, lab, source link, or quiz question, grep the existing modules and `sourceGroups.*`: cross-link to an existing concept (cite its section number, e.g., "see §5.3") rather than restate it; pick external sources not already in any `sourceGroups.*`; confirm new quiz prompts don't echo existing ones. Every addition must be fresh and load-bearing — if Canvas overlaps with prior coverage, link rather than copy.
 
+**Voice rule for user-facing surfaces.** Anything a student reads — `concept-*.tsx` prose, lab UIs, module hero/lede, `<Concept.Formula caption=…>` labels, source-trail intro copy and badges, quiz prompts, page metadata — names the *concept* directly. Never write "Canvas", "Canvas notes", "the slides", "the professor", or any wording that signals the page is a paraphrase of an LMS. The rendered page should read like an authoritative textbook, not a relayed lecture. Source-trail entries internal to the course are titled `"Course notes: …"` (not `"Canvas notes: …"`) and the badge label is `Course notes`. Provenance is tracked in three internal places only: the gitignored `.canvas-sync/` manifest, commit messages, and this skill — never on the rendered page. Do **not** add `<MarginNote variant="citation">Canvas notes, slides X-Y…</MarginNote>` blocks; the source trail is sufficient attribution.
+
+**Visuals are interactive by default.** Every diagram, graph, or chart inside `Concept.WorkedExample` is a stateful client component with sliders, toggles, dropdowns, or click targets — never a static SVG, a frozen heatmap, or a row of three explanatory cards. If a concept calls for a one-off interactive explorer (parameter sweep, tokenization split, attention heatmap, decision boundary, embedding projection, layer-classification game), prefer the `/playground` skill — it scaffolds an HTML playground with controls + live preview faster than hand-rolling — and inline the result as a deterministic React component. Determinism still holds: interactive does **not** mean live API. Static diagrams belong only in `Concept.Formula` (a labeled equation/figure pair) and `Concept.Intuition` (an explanatory image), and even there, prefer KaTeX rendering or in-file SVG over raster. If a `WorkedExample` has no interaction, it is not done.
+
+**Mobile + desktop is a hard requirement, not a stretch goal.** Every UI surface — page hero, TOC, concept blocks, formula panels, lab UIs, source trail, quiz — must render correctly at desktop *and* at 390px wide (iPhone reading width). Build mobile-first: grids use `repeat(auto-fit, minmax(<col>, 1fr))` so they collapse gracefully; tap targets are ≥44px; hero/lede text stays readable without horizontal scroll; nothing gets cropped or overflows. Test both widths during the visual QA pass below — a layout that looks right on desktop but breaks on phone is a regression and blocks the PR.
+
 ## Verify
 ```bash
 npm test && npm run typecheck && npm run build
@@ -152,6 +158,7 @@ For page changes, before opening the PR:
 - `npm run dev`, then use available browser automation or the Codex app browser to navigate `/module-N` and the most recent prior module.
 - Check desktop and a 390px mobile width. Confirm the new module matches the existing visual rhythm.
 - Exercise labs, quiz, and navigation manually or with available browser automation.
+- Verify every interactive visual responds to input: sliders move, toggles flip, click targets reveal answers, and nothing overflows or collapses awkwardly on phone.
 - Do not introduce a new visual direction. This workflow fits the established Studio Notebook system in `DESIGN.md`.
 
 ## PR & preview
