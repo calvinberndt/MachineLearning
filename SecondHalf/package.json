@@ -8,7 +8,9 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/*.test.ts"
+    "test": "bash scripts/test-local.sh",
+    "canvas:scan": "bash scripts/canvas-scan.sh",
+    "verify": "bash scripts/verify-local.sh"
   },
   "dependencies": {
     "katex": "^0.16.45",

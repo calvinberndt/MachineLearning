@@ -5,11 +5,14 @@ description: Project-local skill for syncing Canvas course content into the Seco
 
 # Canvas Course Sync
 
-Local to `SecondHalf/`. No global skills, no model API keys, no GitHub Actions agent. Layer this on top of the global git/secret rules in `~/.claude/CLAUDE.md` — don't restate them.
+Local to `SecondHalf/`. No global skills, no model API keys, no GitHub Actions agent.
+Follow the repository `AGENTS.md`, this skill, and the current user request.
 
 ## Course
 - API: `https://uwgby.instructure.com/api/v1`
 - Course: `809921` · `Machine Learning` · `COMP SCI 465-0001`
+- App scope: this is the second-half study lab, so Canvas Modules 3+ are in scope;
+  Modules 0-2 are useful context but not app-missing work by default.
 - Env keys: `CANVAS_API_URL`, `CANVAS_API_TOKEN`, `CANVAS_COURSE_ID`
 
 ## Modes
@@ -29,6 +32,22 @@ test -f .env && awk -F= '/^CANVAS_/ {print $1}' .env
 
 Don't `cat .env`. Don't `source .env` — special chars in tokens mutate. Parse env in Node or the app. If a token is missing or expired, ask before regenerating — that creates persistent Canvas access.
 
+## Content policy
+
+Canvas is the anchor, not a bulk-copy target. Use Canvas to decide topic order,
+module boundaries, professor emphasis, examples to preserve, and exam style. Do
+not mirror every Canvas artifact into the app.
+
+The app output should be public-safe study content:
+- Original/paraphrased explanations aligned to Canvas.
+- Interactive diagrams, formulas, and deterministic labs where they improve learning.
+- Supplemental public web sources when they sharpen the explanation.
+- Visible citations in the same SourceTrail style documented by `DESIGN.md`.
+
+Do not commit Canvas PPTX files, raw Canvas payloads, or long verbatim Canvas-only
+text. If Canvas points to a public topic or public source, cite the public source
+directly and keep Canvas listed first as the course source of truth.
+
 ## State (gitignored)
 - `.canvas-sync/state.json` — normalized hashes + last-seen Canvas ids.
 - `.canvas-sync/raw/<ts>.json` — raw payloads for debugging.
@@ -42,9 +61,37 @@ Manifest item shape:
 ```
 
 ## Ingest
-Prefer Canvas MCP. If unavailable, use Canvas REST from a deterministic local script that writes the same manifest. Fetch: course details, modules, *each module's items endpoint* (Canvas often omits `items` from the module list), plus linked pages, assignments, quizzes, discussions, files, announcements when relevant.
+Prefer Canvas MCP. If unavailable, use the tracked REST fallback. The shell
+wrapper works even when automation cannot see `npm` on PATH:
 
-Files: store metadata + hash first, only download what the app actually renders, keep raw downloads under `.canvas-sync/raw/`. Commit Canvas-derived assets only when both repo and deploy target are private.
+```bash
+bash scripts/canvas-scan.sh
+```
+
+When `npm` is available, this is equivalent:
+
+```bash
+npm run canvas:scan
+```
+
+For machine-readable output:
+
+```bash
+bash scripts/canvas-scan.sh --json
+```
+
+This writes the same manifest every run. Fetch: course details, modules, *each
+module's items endpoint* (Canvas often omits `items` from the module list), plus
+linked pages, assignments, quizzes, discussions, files, announcements when relevant.
+
+Important: Canvas can be unchanged while the app is incomplete. If the scan reports
+`App-missing modules`, that is actionable `sync` work even when Canvas changes are
+`0 added, 0 changed, 0 removed`.
+
+Files: store metadata + hash first, only download what the app actually renders,
+keep raw downloads under `.canvas-sync/raw/`. Commit Canvas-derived assets only
+when both repo and deploy target are private and the asset is intended to appear
+in the public app.
 
 ## Headless Codex
 Find Codex without assuming a global install:
@@ -53,6 +100,13 @@ Find Codex without assuming a global install:
 CODEX_BIN="$(command -v codex || true)"
 [ -z "$CODEX_BIN" ] && [ -x /Applications/Codex.app/Contents/Resources/codex ] \
   && CODEX_BIN="/Applications/Codex.app/Contents/Resources/codex"
+```
+
+Find GitHub CLI without assuming the automation PATH:
+
+```bash
+GH_BIN="$(command -v gh || true)"
+[ -z "$GH_BIN" ] && [ -x /opt/homebrew/bin/gh ] && GH_BIN="/opt/homebrew/bin/gh"
 ```
 
 Run with subscription auth — no model API keys:
@@ -77,7 +131,7 @@ Cross-cutting updates required for every new module:
 - `app/globals.css` — add `--module-N-tint` (`0.08` alpha) and `--module-N-line` (`0.28` alpha), plus a `.module-page[data-tone="module-N"]` rule mapping `--module-tint`/`--module-line`.
 - `app/quiz/exam-utils.ts` — extend the `Question.module` union; add ~8–12 questions for the new module (mix multiple-choice and fill-blank, each with an `explanation`).
 
-External sources live in two places: per-concept `<Concept.FurtherReading>` (1–3 links, summarize the idea) and module-level `sourceGroups.moduleN` (curated overview list). Never paste long external text into TSX — paraphrase and link.
+External sources live in two places: per-concept `<Concept.FurtherReading>` (1–3 links, summarize the idea) and module-level `sourceGroups.moduleN` (curated overview list). Never paste long external text into TSX — paraphrase and link. Canvas source cards come first in `sourceGroups.moduleN`; supplemental public sources follow.
 
 **No duplicated content.** Before writing any concept, lab, source link, or quiz question, grep the existing modules and `sourceGroups.*`: cross-link to an existing concept (cite its section number, e.g., "see §5.3") rather than restate it; pick external sources not already in any `sourceGroups.*`; confirm new quiz prompts don't echo existing ones. Every addition must be fresh and load-bearing — if Canvas overlaps with prior coverage, link rather than copy.
 
@@ -92,16 +146,26 @@ External sources live in two places: per-concept `<Concept.FurtherReading>` (1�
 npm test && npm run typecheck && npm run build
 ```
 
+If automation cannot see `npm` on PATH, use the local wrapper:
+
+```bash
+bash scripts/verify-local.sh
+```
+
 Run the ingest twice — the second run should report no changes unless Canvas changed (idempotency check).
 
 For page changes, before opening the PR:
-- `npm run dev`, then use the `/browse` skill (not puppeteer MCP) to navigate `/module-N` and the most recent prior module — screenshot at desktop + 390px and confirm the new module matches the existing visual rhythm.
-- Run `/design-review` against the diff — it catches spacing, hierarchy, AI-slop patterns, and DESIGN.md drift, and proposes fixes.
-- Run `/dogfood` once at desktop and at 390px — its job here is **UI/UX correctness**, not just bug-finding. Dogfood verifies that every interactive visual actually responds to input (sliders move, toggles flip, click targets reveal answers), that sizing and spacing read well at both widths (no overflow, no cramped cards, no oversized hero, tap targets ≥44px), that hierarchy is preserved on small screens (TOC collapses or pins correctly), and that the labs feel as polished as the surrounding prose. Mobile parity is non-negotiable: if a `WorkedExample` looks static or sized wrong on phone, that's a fail — fix before the PR. Walk every route (`/`, `/module-3..6`, `/quiz`) at both widths, not just the new one.
-- Do **not** invoke `/frontend-design` here. That skill is for distinctive new UI; this skill's job is to fit into the established Studio Notebook system, so it would push the diff away from DESIGN.md.
+- `npm run dev`, then use available browser automation or the Codex app browser to navigate `/module-N` and the most recent prior module.
+- Check desktop and a 390px mobile width. Confirm the new module matches the existing visual rhythm.
+- Exercise labs, quiz, and navigation manually or with available browser automation.
+- Verify every interactive visual responds to input: sliders move, toggles flip, click targets reveal answers, and nothing overflows or collapses awkwardly on phone.
+- Do not introduce a new visual direction. This workflow fits the established Studio Notebook system in `DESIGN.md`.
 
 ## PR & preview
-Use a feature branch / worktree per the global git rules. Commit only intentional app, tests, sync scripts, safe docs. Never commit `.env`, `.canvas-sync/`, raw payloads, or agent auth. Push, open/update a GitHub PR, let Vercel's GitHub integration build the preview. Manual preview only when needed:
+Use a feature branch or worktree. Commit only intentional app, tests, sync scripts,
+safe docs. Never commit `.env`, `.canvas-sync/`, raw payloads, or agent auth.
+Push, open/update a GitHub PR using `$GH_BIN`, let Vercel's GitHub integration
+build the preview. Manual preview only when needed:
 
 ```bash
 npx vercel deploy --yes
@@ -110,7 +174,11 @@ npx vercel deploy --yes
 Never run `vercel --prod` from this skill — production is the normal Vercel deploy after the PR merges to `main`.
 
 ## Schedule mode
-Only after `scan`, `sync`, `pr`, `preview` all work manually. Use a local LaunchAgent or cron — never GitHub Actions for Canvas polling or subscription-auth agents. The job runs scan, exits clean on no changes, notifies on changes. It must not merge PRs, deploy production, or store tokens outside `.env`/keychain.
+Only after `scan`, `sync`, `pr`, `preview` all work manually. Use Codex cron,
+a local LaunchAgent, or cron — never GitHub Actions for Canvas polling or
+subscription-auth agents. The job runs scan, exits clean on no Canvas changes
+and no app-missing modules, and creates reviewable work when either exists. It
+must not merge PRs, deploy production, or store tokens outside `.env`/keychain.
 
 ## Stop and ask
 - Canvas auth fails or a token must be generated/regenerated.
