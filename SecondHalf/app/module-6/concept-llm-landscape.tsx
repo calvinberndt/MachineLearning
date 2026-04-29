@@ -19,10 +19,9 @@ export function ConceptLlmLandscape() {
 
       <Concept.Intuition>
         <p>
-          Canvas separates the engine from the car: an LLM is the engine; an OpenAI product is the full car
-          system with steering, safety, dashboard, controls, and user experience. That analogy is the cleanest
-          way to answer architecture questions. The model generates token probabilities; the product decides how
-          a person safely and reliably uses that model.
+          The cleanest mental model is engine versus car: an LLM is the engine; a deployed product like ChatGPT
+          is the full car system with steering, safety, dashboard, controls, and user experience. The model
+          generates token probabilities; the product decides how a person safely and reliably uses that model.
         </p>
         <p>
           The &quot;large&quot; in LLM points to both training data and parameters. The &quot;language&quot; part points to
@@ -31,10 +30,10 @@ export function ConceptLlmLandscape() {
           section is about scope.
         </p>
         <p>
-          Canvas names the major 2026 families students are likely to hear about: GPT, Claude, Gemini, Llama,
-          DeepSeek, Mistral, and Grok. Treat that list as a landscape map, not a permanent leaderboard. The
-          durable exam idea is comparison by ownership, context length, multimodal support, openness,
-          deployment layer, and safety/alignment strategy.
+          The dominant 2026 families are GPT, Claude, Gemini, Llama, DeepSeek, Mistral, and Grok. Treat that
+          list as a landscape map, not a permanent leaderboard. The durable exam idea is comparison by
+          ownership, context length, multimodal support, openness, deployment layer, and safety/alignment
+          strategy.
         </p>
       </Concept.Intuition>
 
@@ -79,10 +78,6 @@ export function ConceptLlmLandscape() {
         </ul>
       </Concept.FurtherReading>
 
-      <MarginNote variant="citation">
-        Canvas notes, slides 14-20: LLM definition, architecture comparison, engine-vs-car analogy, and model
-        family examples.
-      </MarginNote>
       <MarginNote variant="aside" label="Exam phrasing">
         If asked whether OpenAI and an LLM are the same, answer with scope: model-level core versus deployed
         product ecosystem.

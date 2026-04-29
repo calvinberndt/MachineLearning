@@ -81,6 +81,8 @@ External sources live in two places: per-concept `<Concept.FurtherReading>` (1�
 
 **No duplicated content.** Before writing any concept, lab, source link, or quiz question, grep the existing modules and `sourceGroups.*`: cross-link to an existing concept (cite its section number, e.g., "see §5.3") rather than restate it; pick external sources not already in any `sourceGroups.*`; confirm new quiz prompts don't echo existing ones. Every addition must be fresh and load-bearing — if Canvas overlaps with prior coverage, link rather than copy.
 
+**Voice rule for user-facing surfaces.** Anything a student reads — `concept-*.tsx` prose, lab UIs, module hero/lede, `<Concept.Formula caption=…>` labels, source-trail intro copy and badges, quiz prompts, page metadata — names the *concept* directly. Never write "Canvas", "Canvas notes", "the slides", "the professor", or any wording that signals the page is a paraphrase of an LMS. The rendered page should read like an authoritative textbook, not a relayed lecture. Source-trail entries internal to the course are titled `"Course notes: …"` (not `"Canvas notes: …"`) and the badge label is `Course notes`. Provenance is tracked in three internal places only: the gitignored `.canvas-sync/` manifest, commit messages, and this skill — never on the rendered page. Do **not** add `<MarginNote variant="citation">Canvas notes, slides X-Y…</MarginNote>` blocks; the source trail is sufficient attribution.
+
 ## Verify
 ```bash
 npm test && npm run typecheck && npm run build

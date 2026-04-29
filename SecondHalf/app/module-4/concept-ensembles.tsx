@@ -34,7 +34,7 @@ export function ConceptEnsembles() {
 
       <Concept.Intuition>
         <p>
-          Your professor&apos;s Canvas notes group four ensemble families. The exam-critical distinctions:
+          Four ensemble families to know. The exam-critical distinctions:
           <strong> bagging</strong> runs base learners in parallel on bootstrap samples and reduces{" "}
           <em>variance</em>; <strong>boosting</strong> runs them sequentially with reweighted training data and
           reduces <em>bias</em>; <strong>stacking</strong> uses a meta-learner over the base predictions; and

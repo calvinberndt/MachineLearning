@@ -34,8 +34,8 @@ export function ConceptTransformersAndTraining() {
 
       <Concept.Intuition>
         <p>
-          Canvas lists the transformer stack as embeddings, positional information, self-attention,
-          multi-head attention, feedforward layers, and an output layer. The embeddings and learned features are
+          The transformer stack is embeddings, positional information, self-attention, multi-head attention,
+          feedforward layers, and an output layer. The embeddings and learned features are
           the same representation idea from §5.1 and §5.2; the new move is attention, which lets every token
           consult every other token instead of passing information through a strict RNN-style sequence.
         </p>
@@ -78,9 +78,6 @@ export function ConceptTransformersAndTraining() {
         </ul>
       </Concept.FurtherReading>
 
-      <MarginNote variant="citation">
-        Canvas notes, slides 6-12: transformer architecture, training stages, system layers, and infrastructure.
-      </MarginNote>
       <MarginNote variant="correction">
         Transformers still need positional information. Self-attention compares all tokens at once, so order has
         to be supplied through positional encodings or learned position embeddings.

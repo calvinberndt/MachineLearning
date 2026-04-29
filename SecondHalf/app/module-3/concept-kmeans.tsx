@@ -32,7 +32,7 @@ export function ConceptKMeans() {
 
       <Concept.Intuition>
         <p>
-          The algorithm is the Canvas four-step loop: seed centroids, assign every point to its nearest centroid,
+          The algorithm is a four-step loop: seed centroids, assign every point to its nearest centroid,
           recompute centroids as cluster means, repeat until nobody switches sides. The geometric picture is simpler
           than the formula: each centroid &quot;claims&quot; a Voronoi region, and points in each region contribute
           their squared distances to the running total.

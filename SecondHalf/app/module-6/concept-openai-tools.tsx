@@ -10,7 +10,7 @@ export function ConceptOpenAiTools() {
         language, images, speech, code, and assisted problem solving.
       </Concept.Definition>
 
-      <Concept.Formula caption="Canvas product map">
+      <Concept.Formula caption="OpenAI product map">
         <div className="concept__derivation">
           <span><strong>GPT / ChatGPT.</strong> Conversational text generation, tutoring, analysis, and code help.</span>
           <span><strong>DALL·E.</strong> Image generation from natural-language descriptions.</span>
@@ -21,10 +21,10 @@ export function ConceptOpenAiTools() {
 
       <Concept.Intuition>
         <p>
-          Canvas frames OpenAI as both a research organisation and a deployment stack: the same broad research
-          agenda becomes student-facing tutors, developer tools, transcription systems, and creative image
-          workflows. The important distinction is that a product is more than a model. It includes the interface,
-          safety policies, data handling, monitoring, and the workflow around the model.
+          OpenAI sits at the intersection of foundation-model research and consumer-facing deployment: the same
+          broad research agenda becomes student-facing tutors, developer tools, transcription systems, and
+          creative image workflows. The important distinction is that a product is more than a model. It
+          includes the interface, safety policies, data handling, monitoring, and the workflow around the model.
         </p>
         <p>
           The language side builds directly on Module 5 foundations: neural networks learn parameters through
@@ -40,7 +40,7 @@ export function ConceptOpenAiTools() {
       <Concept.Pitfall title="Do not equate a brand with one model.">
         <p>
           ChatGPT, DALL·E, Whisper, and Codex are product surfaces or model families with different input and
-          output types. Saying &quot;OpenAI is an LLM&quot; loses the system-level layers Canvas emphasizes: tools,
+          output types. Saying &quot;OpenAI is an LLM&quot; collapses the system-level layers that matter: tools,
           alignment, APIs, safety, and infrastructure.
         </p>
       </Concept.Pitfall>
@@ -60,9 +60,6 @@ export function ConceptOpenAiTools() {
         </ul>
       </Concept.FurtherReading>
 
-      <MarginNote variant="citation">
-        Canvas notes, slides 2-5: OpenAI overview and major tool families.
-      </MarginNote>
       <MarginNote variant="aside" label="Cross-link">
         The tokenizer demo extends the §5.2 NLP pipeline. It keeps the old idea, &quot;split text into units,&quot;
         but swaps hand-built word features for token IDs and learned vectors.

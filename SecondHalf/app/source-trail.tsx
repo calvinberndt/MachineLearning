@@ -26,7 +26,7 @@ export const sourceGroups = {
   ],
   module3: [
     {
-      title: "Canvas notes: Clustering, KNN code, SVM",
+      title: "Course notes: Clustering, KNN code, SVM",
       href: "#",
       note: "Source of truth for definitions, examples, and the professor's exam emphasis.",
     },
@@ -53,7 +53,7 @@ export const sourceGroups = {
   ],
   module4: [
     {
-      title: "Canvas notes: Ensemble Learning and Random Forest",
+      title: "Course notes: Ensemble Learning and Random Forest",
       href: "#",
       note: "Source of truth for bagging, boosting, stacking, voting, and the student-performance case study.",
     },
@@ -75,7 +75,7 @@ export const sourceGroups = {
   ],
   module5: [
     {
-      title: "Canvas notes: Deep Learning, NLP, CNN Algorithm Details",
+      title: "Course notes: Deep Learning, NLP, CNN Algorithm Details",
       href: "#",
       note: "Source of truth for neural-network vocabulary, NLP steps, and CNN layer order.",
     },
@@ -102,7 +102,7 @@ export const sourceGroups = {
   ],
   module6: [
     {
-      title: "Canvas notes: OpenAI & Large Language Models",
+      title: "Course notes: OpenAI & Large Language Models",
       href: "#",
       note: "Source of truth for OpenAI tools, transformer architecture, training stages, and the LLM comparison table.",
     },
@@ -119,7 +119,7 @@ export const sourceGroups = {
     {
       title: "OpenAI Cookbook",
       href: "https://cookbook.openai.com/",
-      note: "Practical supplement for understanding how model APIs are used inside applications without replacing Canvas.",
+      note: "Practical supplement for understanding how model APIs are used inside applications, without replacing the core lesson material.",
     },
     {
       title: "Vellum LLM Leaderboard",
@@ -129,7 +129,7 @@ export const sourceGroups = {
   ],
   quiz: [
     {
-      title: "Canvas notes: Professor-style question patterns",
+      title: "Course notes: Professor-style question patterns",
       href: "#",
       note: "Source of truth for the multiple-choice and fill-in-the-blank topics used in practice mode.",
     },
@@ -159,15 +159,15 @@ export function SourceTrail({
         <p className="section-tag">Visible citations</p>
         <h2 className="section-title">{title}</h2>
         <p className="section-copy">
-          Canvas stays the source of truth. These links are the outside references used to sharpen
-          diagrams, representations, and optional deeper review.
+          The course material is the source of truth. These links are the outside references used to
+          sharpen diagrams, representations, and optional deeper review.
         </p>
       </div>
       <div className="source-list">
         {sources.map((source) =>
           source.href === "#" ? (
             <div key={source.title} className="source-card source-card--canvas">
-              <span>Canvas</span>
+              <span>Course notes</span>
               <strong>{source.title}</strong>
               <p>{source.note}</p>
             </div>

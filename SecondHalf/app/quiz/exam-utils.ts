@@ -391,7 +391,7 @@ const questionBank: Question[] = [
     choices: [
       "A set of weights for mixing relevant value vectors",
       "A fixed alphabetical order",
-      "A new Canvas module number",
+      "A new module number",
       "A bootstrap sample of training rows",
     ],
     answer: "A set of weights for mixing relevant value vectors",
@@ -402,7 +402,7 @@ const questionBank: Question[] = [
     id: "m6-q4",
     module: "Module 6",
     type: "multiple-choice",
-    prompt: "What role does RLHF play in the Canvas training pipeline?",
+    prompt: "What role does RLHF play in the LLM training pipeline?",
     choices: [
       "Humans rank responses so the model can learn preferred, safer behavior",
       "It replaces pretraining with a hand-coded rule table",
@@ -441,7 +441,7 @@ const questionBank: Question[] = [
     ],
     answer: "An LLM is the model engine; OpenAI-style products add interfaces, safety, APIs, and infrastructure",
     explanation:
-      "Canvas uses the engine-vs-car analogy: the LLM is the core model, while a deployed OpenAI-style system includes the surrounding product and safety layers.",
+      "The engine-vs-car analogy captures it: the LLM is the core model, while a deployed OpenAI-style system includes the surrounding product and safety layers.",
   },
   {
     id: "m6-q7",
@@ -456,7 +456,7 @@ const questionBank: Question[] = [
     ],
     answer: "The ability to work across input types such as text, images, and audio",
     explanation:
-      "Canvas lists text, images, and audio as modern OpenAI system inputs. Multimodal systems connect those modalities inside a broader user-facing product.",
+      "Modern OpenAI systems route text, images, and audio as inputs. Multimodal systems connect those modalities inside a broader user-facing product.",
   },
   {
     id: "m6-q8",
@@ -471,11 +471,11 @@ const questionBank: Question[] = [
     id: "m6-q9",
     module: "Module 6",
     type: "multiple-choice",
-    prompt: "Which popular LLM family is associated with Meta and open-weight releases in the Canvas landscape?",
+    prompt: "Which popular LLM family is associated with Meta and open-weight releases?",
     choices: ["Llama", "Whisper", "DALL·E", "K-means"],
     answer: "Llama",
     explanation:
-      "Canvas lists Llama as Meta's prominent open-weight model family. Whisper and DALL·E are OpenAI speech/image tools, and K-means is an unsupervised clustering algorithm from Module 3.",
+      "Llama is Meta's prominent open-weight model family. Whisper and DALL·E are OpenAI speech/image tools, and K-means is an unsupervised clustering algorithm from Module 3.",
   },
   {
     id: "m6-q10",
@@ -490,7 +490,7 @@ const questionBank: Question[] = [
     ],
     answer: "Predict the next token from large text datasets",
     explanation:
-      "Canvas describes pretraining as learning grammar, facts, and patterns by predicting the next token before later fine-tuning and RLHF stages.",
+      "Pretraining teaches the model grammar, facts, and patterns by predicting the next token before later fine-tuning and RLHF stages.",
   },
 ];
 

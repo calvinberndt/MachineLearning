@@ -49,8 +49,8 @@ export default function HomePage() {
           A study lab for the second half of machine learning.
         </h1>
         <p className="home-hero__deck">
-          Four interactive modules and a practice quiz, aligned to the professor&apos;s Canvas
-          notes. Work through a concept, move the sliders, then test yourself.
+          Four interactive modules and a practice quiz, aligned to the COMP SCI 465 syllabus.
+          Work through a concept, move the sliders, then test yourself.
         </p>
         <div className="home-hero__actions">
           <Link className="home-cta home-cta--primary" href="/module-3">
@@ -97,7 +97,7 @@ export default function HomePage() {
         <span className="home-kicker">How each module reads</span>
         <p>
           Every concept follows the same six-slot template: a one-sentence definition, a rendered
-          formula with short derivation, the Canvas intuition, an interactive worked example, a
+          formula with short derivation, an intuition section, an interactive worked example, a
           correction-marked pitfall, and a curated pair of further-reading links. Click the ML Study
           Lab wordmark to jump across modules; each module&apos;s sidebar indexes its own sections.
         </p>
