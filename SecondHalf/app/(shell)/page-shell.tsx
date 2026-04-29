@@ -10,7 +10,7 @@ export function PageShell({
 }: {
   moduleLabel?: string;
   tocGroups?: TocGroup[];
-  moduleTone?: "module-3" | "module-4" | "module-5";
+  moduleTone?: "module-3" | "module-4" | "module-5" | "module-6";
   children: ReactNode;
 }) {
   return (

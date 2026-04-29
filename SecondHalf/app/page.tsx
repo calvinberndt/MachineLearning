@@ -25,6 +25,13 @@ const CHAPTERS = [
   },
   {
     number: "04",
+    kicker: "Module 6 · OpenAI & LLMs",
+    title: "From transformer cores to usable AI systems.",
+    lede: "OpenAI tools, self-attention, training stages, and the LLM landscape.",
+    href: "/module-6",
+  },
+  {
+    number: "05",
     kicker: "Practice",
     title: "Exam-style quiz generator.",
     lede: "Fresh multiple-choice and fill-in-the-blank sets drawn from every module.",
@@ -42,8 +49,8 @@ export default function HomePage() {
           A study lab for the second half of machine learning.
         </h1>
         <p className="home-hero__deck">
-          Three interactive modules and a practice quiz, aligned to the professor&apos;s Canvas
-          notes. Work through a concept, move the sliders, then test yourself.
+          Four interactive modules and a practice quiz, aligned to the COMP SCI 465 syllabus.
+          Work through a concept, move the sliders, then test yourself.
         </p>
         <div className="home-hero__actions">
           <Link className="home-cta home-cta--primary" href="/module-3">
@@ -60,7 +67,7 @@ export default function HomePage() {
       <section id="chapters" className="home-chapters" aria-label="Modules">
         <header className="home-chapters__head">
           <span className="home-kicker">The second-half syllabus</span>
-          <h2 className="home-chapters__title">Four stops in sequence.</h2>
+          <h2 className="home-chapters__title">Five stops in sequence.</h2>
         </header>
         <ol className="home-chapters__list">
           {CHAPTERS.map((chapter, index) => (
@@ -90,7 +97,7 @@ export default function HomePage() {
         <span className="home-kicker">How each module reads</span>
         <p>
           Every concept follows the same six-slot template: a one-sentence definition, a rendered
-          formula with short derivation, the Canvas intuition, an interactive worked example, a
+          formula with short derivation, an intuition section, an interactive worked example, a
           correction-marked pitfall, and a curated pair of further-reading links. Click the ML Study
           Lab wordmark to jump across modules; each module&apos;s sidebar indexes its own sections.
         </p>

@@ -43,6 +43,16 @@ const MODULES: ModuleEntry[] = [
     ],
   },
   {
+    label: "Module 6",
+    kicker: "OpenAI, transformers, LLMs",
+    href: "/module-6",
+    sections: [
+      { id: "s-6-1-openai-tools", label: "§6.1 OpenAI tools" },
+      { id: "s-6-2-transformers-and-training", label: "§6.2 Transformers" },
+      { id: "s-6-3-llm-landscape", label: "§6.3 LLM landscape" },
+    ],
+  },
+  {
     label: "Quiz",
     kicker: "Practice exam generator",
     href: "/quiz",

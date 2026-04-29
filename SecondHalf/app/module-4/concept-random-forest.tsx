@@ -40,7 +40,7 @@ export function ConceptRandomForest() {
           tend to cancel when averaged.
         </p>
         <p>
-          The Canvas example: five hand-made trees, each keyed on a different feature pair, voting on whether a
+          A worked example: five hand-made trees, each keyed on a different feature pair, voting on whether a
           student will pass. Toggle the sliders below to watch individual tree predictions flip while the forest
           vote stays stable. That stability <em>is</em> the variance reduction.
         </p>

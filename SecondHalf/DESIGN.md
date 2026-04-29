@@ -16,6 +16,7 @@ Canvas material is the source of truth. Outside sources supplement it; they neve
   trail.
 - Source trails are short, curated, and clickable — for students who want to verify or go deeper.
 - Do not copy long text from outside sources. Summarize the idea and link to the source.
+- **Voice rule for user-facing surfaces.** Body prose, lab UIs, hero/lede text, formula captions, source-trail badges and intro copy, and quiz prompts name the *concepts* directly — never "Canvas", "Canvas notes", "the slides", or "the professor". Source-trail entries internal to the course are titled `Course notes: …` and labelled `Course notes`. Provenance is internal: it lives in the gitignored manifest and commit history, not on the rendered page.
 
 ---
 

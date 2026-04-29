@@ -11,7 +11,7 @@ export function ConceptNlpPipeline() {
         task-specific scoring.
       </Concept.Definition>
 
-      <Concept.Formula caption="Canvas 6-step pipeline">
+      <Concept.Formula caption="6-step NLP pipeline">
         <div className="concept__derivation">
           <span>1. <strong>Clean.</strong> Lowercase, strip punctuation + numbers, collapse whitespace.</span>
           <span>2. <strong>Tokenise.</strong> Split on whitespace / punctuation into units.</span>
