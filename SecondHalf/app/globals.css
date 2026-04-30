@@ -1289,6 +1289,10 @@ main {
   margin-bottom: var(--space-2);
 }
 
+.concept__formula {
+  min-width: 0;
+}
+
 .concept__intuition {
   display: grid;
   gap: var(--space-3);
@@ -2587,8 +2591,18 @@ body[data-nav-open="true"] .sidebar {
     grid-template-columns: 1fr;
   }
 
+  .evaluation-tabs .mini-switch {
+    width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+
   .evaluation-matrix {
     grid-template-columns: 1fr;
+  }
+
+  .math-block {
+    padding: var(--space-4);
   }
 }
 

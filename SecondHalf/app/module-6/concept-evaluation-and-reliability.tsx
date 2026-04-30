@@ -1,5 +1,5 @@
 import { Concept } from "../(shell)/concept";
-import { BlockMath, InlineMath } from "../(shell)/katex";
+import { BlockMath } from "../(shell)/katex";
 import { MarginNote } from "../(shell)/margin-note";
 import { EvaluationLab } from "./labs/evaluation-lab";
 
@@ -13,13 +13,17 @@ export function ConceptEvaluationAndReliability() {
 
       <Concept.Formula caption="Classification and generation metrics">
         <BlockMath ariaLabel="Precision recall F1 and perplexity formulas">
-          {`\\text{Precision}=\\frac{TP}{TP+FP},\\quad \\text{Recall}=\\frac{TP}{TP+FN},\\quad F_1=\\frac{2PR}{P+R},\\quad \\text{PPL}=e^{H}`}
+          {`\\begin{gathered}
+\\text{Precision}=\\frac{TP}{TP+FP}\\\\
+\\text{Recall}=\\frac{TP}{TP+FN}\\\\
+F_1=\\frac{2PR}{P+R}\\\\
+\\text{PPL}=e^{H}
+\\end{gathered}`}
         </BlockMath>
         <ul className="concept__derivation">
           <li>
             Accuracy is only safe when classes and costs are balanced. With rare positives, compare{" "}
-            <InlineMath>{`TP`}</InlineMath>, <InlineMath>{`FP`}</InlineMath>,{" "}
-            <InlineMath>{`FN`}</InlineMath>, precision, recall, and F1.
+            <strong>TP</strong>, <strong>FP</strong>, <strong>FN</strong>, precision, recall, and F1.
           </li>
           <li>
             Random Forests reduce variance through averaging; CNNs and NLP systems still need subgroup tests
