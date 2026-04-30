@@ -28,7 +28,7 @@ export const sourceGroups = {
     {
       title: "Course notes: Clustering, KNN code, SVM",
       href: "#",
-      note: "Source of truth for definitions, examples, and the professor's exam emphasis.",
+      note: "Source of truth for definitions, examples, and course exam emphasis.",
     },
     {
       title: "GFG K-means introduction",
@@ -102,9 +102,9 @@ export const sourceGroups = {
   ],
   module6: [
     {
-      title: "Course notes: OpenAI & Large Language Models",
+      title: "Course notes: OpenAI, Large Language Models, and Model Evaluation",
       href: "#",
-      note: "Source of truth for OpenAI tools, transformer architecture, training stages, and the LLM comparison table.",
+      note: "Source of truth for OpenAI tools, transformer architecture, training stages, LLM comparisons, and reliability checks.",
     },
     {
       title: "Vaswani et al. 2017 · Attention Is All You Need",
@@ -117,19 +117,19 @@ export const sourceGroups = {
       note: "Visual supplement for seeing token embeddings, positional information, and attention blocks in sequence.",
     },
     {
-      title: "OpenAI Cookbook",
-      href: "https://cookbook.openai.com/",
-      note: "Practical supplement for understanding how model APIs are used inside applications, without replacing the core lesson material.",
+      title: "Stanford CRFM HELM",
+      href: "https://crfm-helm.readthedocs.io/",
+      note: "Framework reference for evaluating language models across accuracy, robustness, fairness, bias, toxicity, and efficiency.",
     },
     {
-      title: "Vellum LLM Leaderboard",
-      href: "https://www.vellum.ai/llm-leaderboard",
-      note: "Current-model landscape reference that helps compare families while keeping definitions architecture-first.",
+      title: "OpenAI Evals",
+      href: "https://github.com/openai/evals",
+      note: "Practical reference for turning application-specific LLM behavior into repeatable evaluation checks.",
     },
   ],
   quiz: [
     {
-      title: "Course notes: Professor-style question patterns",
+      title: "Course notes: Exam-style question patterns",
       href: "#",
       note: "Source of truth for the multiple-choice and fill-in-the-blank topics used in practice mode.",
     },
