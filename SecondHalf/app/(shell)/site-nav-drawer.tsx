@@ -50,6 +50,7 @@ const MODULES: ModuleEntry[] = [
       { id: "s-6-1-openai-tools", label: "§6.1 OpenAI tools" },
       { id: "s-6-2-transformers-and-training", label: "§6.2 Transformers" },
       { id: "s-6-3-llm-landscape", label: "§6.3 LLM landscape" },
+      { id: "s-6-4-evaluation-and-reliability", label: "§6.4 Evaluation" },
     ],
   },
   {

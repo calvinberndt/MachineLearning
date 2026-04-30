@@ -27,7 +27,7 @@ const CHAPTERS = [
     number: "04",
     kicker: "Module 6 · OpenAI & LLMs",
     title: "From transformer cores to usable AI systems.",
-    lede: "OpenAI tools, self-attention, training stages, and the LLM landscape.",
+    lede: "OpenAI tools, self-attention, training stages, LLM families, and evaluation reliability.",
     href: "/module-6",
   },
   {

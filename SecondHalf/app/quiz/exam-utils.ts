@@ -285,6 +285,37 @@ const questionBank: Question[] = [
       "Impurity-based importance has two known flaws: it inflates importance for features with many unique values (e.g. IDs), and it's computed on training data so it doesn't measure generalisation. Permutation importance shuffles each feature on held-out data and measures the drop in score — both flaws disappear.",
   },
   {
+    id: "m4-q9",
+    module: "Module 4",
+    type: "multiple-choice",
+    prompt:
+      "A bank's single decision tree flags too many legitimate transactions as fraud. Which evaluation move is most appropriate before switching models?",
+    choices: [
+      "Compare precision, recall, false-positive cost, and variance against an ensemble baseline",
+      "Keep only accuracy because fraud is rare",
+      "Switch to boosting and ignore interpretability",
+      "Remove all negative examples from training",
+    ],
+    answer: "Compare precision, recall, false-positive cost, and variance against an ensemble baseline",
+    explanation:
+      "Fraud is imbalanced and cost-sensitive. Random Forest or boosting may improve robustness, but the decision should compare precision/recall and operational costs, not headline accuracy alone.",
+  },
+  {
+    id: "m4-q10",
+    module: "Module 4",
+    type: "multiple-choice",
+    prompt: "When can combining SVM, logistic regression, and neural-network predictions fail to help?",
+    choices: [
+      "When the models make highly correlated errors on the same hard cases",
+      "When each model has a different architecture",
+      "When a validation set exists",
+      "When the task uses labeled data",
+    ],
+    answer: "When the models make highly correlated errors on the same hard cases",
+    explanation:
+      "Ensembles need useful diversity. If the base learners fail for the same reasons, voting or stacking mostly repeats the same mistake and adds complexity.",
+  },
+  {
     id: "m5-q7",
     module: "Module 5",
     type: "multiple-choice",
@@ -358,6 +389,68 @@ const questionBank: Question[] = [
     answer: "vanishing",
     explanation:
       "Multiplying many sub-unity derivatives through the chain rule of backprop drives gradients toward zero in early layers. ReLU (derivative 0 or 1) is the standard fix for hidden-layer activations.",
+  },
+  {
+    id: "m5-q13",
+    module: "Module 5",
+    type: "multiple-choice",
+    prompt:
+      "A deep learning model reaches 95% accuracy but performs poorly for a minority population. What is the strongest deployment conclusion?",
+    choices: [
+      "Do not approve it from the average score alone; inspect subgroup metrics and data bias",
+      "Approve it because 95% accuracy is high",
+      "Use a larger batch size and skip evaluation",
+      "Convert it to K-means clustering",
+    ],
+    answer: "Do not approve it from the average score alone; inspect subgroup metrics and data bias",
+    explanation:
+      "Averages can hide systematic failure. Deployment decisions need subgroup performance, data-balance checks, and real-world consequence analysis.",
+  },
+  {
+    id: "m5-q14",
+    module: "Module 5",
+    type: "multiple-choice",
+    prompt: "A CNN fails to detect objects in low-light images. What is the most direct improvement plan?",
+    choices: [
+      "Add low-light training examples, use appropriate preprocessing, and test robustness",
+      "Remove convolutional filters",
+      "Judge the model only on bright training images",
+      "Replace all labels with stop words",
+    ],
+    answer: "Add low-light training examples, use appropriate preprocessing, and test robustness",
+    explanation:
+      "The failure is a distribution and robustness problem. More representative data, preprocessing, and scenario-specific tests target the cause.",
+  },
+  {
+    id: "m5-q15",
+    module: "Module 5",
+    type: "multiple-choice",
+    prompt: "Why might a fake-news NLP model misclassify satire?",
+    choices: [
+      "Satire depends on context, ambiguity, and pragmatic meaning that simple features may miss",
+      "Tokenization makes classification impossible",
+      "All satire has identical vocabulary",
+      "Precision and recall are only for images",
+    ],
+    answer: "Satire depends on context, ambiguity, and pragmatic meaning that simple features may miss",
+    explanation:
+      "Satire often looks lexically similar to misinformation while relying on intent and context. Better representations and targeted evaluation examples are needed.",
+  },
+  {
+    id: "m5-q16",
+    module: "Module 5",
+    type: "multiple-choice",
+    prompt:
+      "A very deep neural network is accurate but slow and expensive to run. Which tradeoff belongs in the deployment decision?",
+    choices: [
+      "Accuracy versus latency, compute cost, scalability, and environmental impact",
+      "Accuracy versus whether K-means has labels",
+      "Only the number of hidden-layer names",
+      "Only whether the output uses a serif font",
+    ],
+    answer: "Accuracy versus latency, compute cost, scalability, and environmental impact",
+    explanation:
+      "Deployment is not only a validation metric. Runtime cost, latency, scaling, and resource use determine whether an accurate model is practical.",
   },
   {
     id: "m6-q1",
@@ -491,6 +584,60 @@ const questionBank: Question[] = [
     answer: "Predict the next token from large text datasets",
     explanation:
       "Pretraining teaches the model grammar, facts, and patterns by predicting the next token before later fine-tuning and RLHF stages.",
+  },
+  {
+    id: "m6-q11",
+    module: "Module 6",
+    type: "multiple-choice",
+    prompt: "Why is accuracy weak evidence for an imbalanced LLM safety classifier?",
+    choices: [
+      "A model can score high by mostly predicting the majority class while missing rare harmful cases",
+      "Accuracy cannot be computed from predictions",
+      "Accuracy always equals recall",
+      "Imbalanced data only affects regression",
+    ],
+    answer: "A model can score high by mostly predicting the majority class while missing rare harmful cases",
+    explanation:
+      "When positives are rare, a majority-class model can look accurate while recall on the important class is poor. Precision, recall, F1, and cost matter more.",
+  },
+  {
+    id: "m6-q12",
+    module: "Module 6",
+    type: "fill-blank",
+    prompt: "For language models, lower ______ means the model assigns higher probability to the observed text.",
+    answer: "perplexity",
+    explanation:
+      "Perplexity is derived from cross-entropy. Lower perplexity means better next-token prediction on the evaluated text, but it does not guarantee truth or safety.",
+  },
+  {
+    id: "m6-q13",
+    module: "Module 6",
+    type: "multiple-choice",
+    prompt: "How can an LLM system reduce answer variance across similar prompts?",
+    choices: [
+      "Use lower temperature, prompt standardization, and repeatable evaluation cases",
+      "Increase temperature for every production request",
+      "Remove all examples from the prompt",
+      "Evaluate only one lucky response",
+    ],
+    answer: "Use lower temperature, prompt standardization, and repeatable evaluation cases",
+    explanation:
+      "Variance appears as inconsistent outputs. Deterministic decoding choices, stable prompts, and repeatable evals reduce that instability.",
+  },
+  {
+    id: "m6-q14",
+    module: "Module 6",
+    type: "multiple-choice",
+    prompt: "What does hallucination rate try to measure in an LLM evaluation?",
+    choices: [
+      "How often generated answers contain fabricated or unsupported claims",
+      "How many trees are in a Random Forest",
+      "How wide an SVM margin is",
+      "How many pixels a CNN input contains",
+    ],
+    answer: "How often generated answers contain fabricated or unsupported claims",
+    explanation:
+      "Hallucination rate focuses on factual reliability. It complements fluency, relevance, safety, and task metrics such as accuracy or F1.",
   },
 ];
 
